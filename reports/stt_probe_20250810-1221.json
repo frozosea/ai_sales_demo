@@ -1,0 +1,95 @@
+{
+  "params": {
+    "wav": "stt_yandex/test/test_data/example_8k.wav",
+    "chunk_ms": 5,
+    "repeats": 2,
+    "report_dir": "reports",
+    "config": "configs/stt_config.yml"
+  },
+  "wav_info": {
+    "sr": 8000,
+    "nch": 1,
+    "sampwidth": 2
+  },
+  "metrics": {
+    "handshake_ms": {
+      "avg": 515.25,
+      "p50": 515.25,
+      "p95": 1030.42
+    },
+    "ttfp_ms": {
+      "avg": 0,
+      "p50": 0,
+      "p95": 0
+    },
+    "ttff_ms": {
+      "avg": 0,
+      "p50": 0,
+      "p95": 0
+    },
+    "total_ms": {
+      "avg": 0,
+      "p50": 0.0,
+      "p95": 0
+    },
+    "buffer_ms": {
+      "avg": 0,
+      "p50": 0.0,
+      "p95": 0
+    },
+    "buffer_size": {
+      "avg": 0,
+      "p50": 0.0,
+      "p95": 0
+    },
+    "bytes_sent": {
+      "avg": 277108,
+      "p50": 277108.0,
+      "p95": 277108
+    },
+    "chunks_sent": {
+      "avg": 3425,
+      "p50": 3425.0,
+      "p95": 3425
+    },
+    "queue_max_depth": {
+      "avg": 100,
+      "p50": 100.0,
+      "p95": 100
+    }
+  },
+  "runs": [
+    {
+      "handshake_ms": 1030.4236670017417,
+      "first_chunk_sent_ts": null,
+      "first_partial_ts": 31748.782118041,
+      "first_final_ts": null,
+      "ttfp_ms": null,
+      "ttff_ms": null,
+      "total_ms": 0,
+      "buffer_ms": 0,
+      "buffer_size": 0,
+      "bytes_sent": 277108,
+      "chunks_sent": 3425,
+      "partials_count": 5,
+      "finals_count": 0,
+      "queue_max_depth": 100
+    },
+    {
+      "handshake_ms": 0.0787919998401776,
+      "first_chunk_sent_ts": null,
+      "first_partial_ts": 31749.457858875,
+      "first_final_ts": null,
+      "ttfp_ms": null,
+      "ttff_ms": null,
+      "total_ms": 0,
+      "buffer_ms": 0,
+      "buffer_size": 0,
+      "bytes_sent": 277108,
+      "chunks_sent": 3425,
+      "partials_count": 3,
+      "finals_count": 0,
+      "queue_max_depth": 100
+    }
+  ]
+}

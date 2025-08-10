@@ -1,0 +1,26 @@
+# Yandex SpeechKit STT v3 Configuration
+# See for details: https://cloud.yandex.ru/docs/speechkit/stt/api/streaming-api-v3
+
+endpoint: "stt.api.cloud.yandex.net:443"
+
+# Recognition model
+# 'general' - General purpose model
+# 'general:rc' - Real-time communication model (optimized for low latency)
+language_code: "ru-RU"
+model: "general:rc"
+
+# Audio format (LINEAR16_PCM is the default for WAV)
+sample_rate_hertz: 8000
+audio_encoding: "LINEAR16_PCM"  # Using raw PCM format
+container_audio: false       # Not using container audio
+
+# Recognition options
+partial_results: true
+single_utterance: false
+profanity_filter: false
+raw_results: false
+
+# End-of-utterance sensitivity
+# LOW: waits longer, more tolerant to pauses
+eou_sensitivity: 0.5
+normalize_partials: true 

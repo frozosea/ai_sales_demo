@@ -1,0 +1,112 @@
+{
+  "params": {
+    "wav": "test_data/test_speech.wav",
+    "chunk_ms": 5,
+    "repeats": 3,
+    "report_dir": "reports",
+    "config": "configs/stt_config.yml",
+    "idle_time": 30
+  },
+  "wav_info": {
+    "sr": 8000,
+    "nch": 1,
+    "sampwidth": 2
+  },
+  "metrics": {
+    "handshake_ms": {
+      "avg": 0.16,
+      "p50": 0.09,
+      "p95": 0.32
+    },
+    "ttfp_ms": {
+      "avg": 276.97,
+      "p50": 208.62,
+      "p95": 413.98
+    },
+    "ttff_ms": {
+      "avg": 852.95,
+      "p50": 763.79,
+      "p95": 1080.18
+    },
+    "total_ms": {
+      "avg": 853.06,
+      "p50": 763.89,
+      "p95": 1080.3
+    },
+    "buffer_ms": {
+      "avg": 200,
+      "p50": 200,
+      "p95": 200
+    },
+    "buffer_size": {
+      "avg": 3200,
+      "p50": 3200,
+      "p95": 3200
+    },
+    "bytes_sent": {
+      "avg": 47740,
+      "p50": 47740,
+      "p95": 47740
+    },
+    "chunks_sent": {
+      "avg": 558,
+      "p50": 558,
+      "p95": 558
+    },
+    "queue_max_depth": {
+      "avg": 0,
+      "p50": 0,
+      "p95": 0
+    }
+  },
+  "runs": [
+    {
+      "handshake_ms": 0.3153750003548339,
+      "first_chunk_sent_ts": 33619.337854708,
+      "first_partial_ts": 33619.546477541,
+      "first_final_ts": 33620.101643791,
+      "ttfp_ms": 208.62,
+      "ttff_ms": 763.79,
+      "total_ms": 763.89,
+      "buffer_ms": 200,
+      "buffer_size": 3200,
+      "bytes_sent": 47740,
+      "chunks_sent": 558,
+      "partials_count": 8,
+      "finals_count": 2,
+      "queue_max_depth": 0
+    },
+    {
+      "handshake_ms": 0.08250000246334821,
+      "first_chunk_sent_ts": 33620.1022405,
+      "first_partial_ts": 33620.5162225,
+      "first_final_ts": 33621.182416458,
+      "ttfp_ms": 413.98,
+      "ttff_ms": 1080.18,
+      "total_ms": 1080.3,
+      "buffer_ms": 200,
+      "buffer_size": 3200,
+      "bytes_sent": 47740,
+      "chunks_sent": 558,
+      "partials_count": 8,
+      "finals_count": 2,
+      "queue_max_depth": 0
+    },
+    {
+      "handshake_ms": 0.09399999544257298,
+      "first_chunk_sent_ts": 33621.183053166,
+      "first_partial_ts": 33621.391357916,
+      "first_final_ts": 33621.897944166,
+      "ttfp_ms": 208.3,
+      "ttff_ms": 714.89,
+      "total_ms": 714.98,
+      "buffer_ms": 200,
+      "buffer_size": 3200,
+      "bytes_sent": 47740,
+      "chunks_sent": 558,
+      "partials_count": 8,
+      "finals_count": 2,
+      "queue_max_depth": 0
+    }
+  ]
+}

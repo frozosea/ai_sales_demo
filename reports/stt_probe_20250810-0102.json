@@ -1,0 +1,114 @@
+{
+  "params": {
+    "wav": "test_data/example.wav",
+    "chunk_ms": 10,
+    "repeats": 1,
+    "report_dir": "reports",
+    "config": "configs/stt_config.yml"
+  },
+  "wav_info": {
+    "sr": 8000,
+    "nch": 1,
+    "sampwidth": 2
+  },
+  "metrics": {
+    "handshake_ms": {
+      "avg": 19.36,
+      "p50": 19.36,
+      "p95": 19.36
+    },
+    "ttfp_ms": {
+      "avg": 851.89,
+      "p50": 851.89,
+      "p95": 851.89
+    },
+    "ttff_ms": {
+      "avg": 0,
+      "p50": 0,
+      "p95": 0
+    },
+    "total_ms": {
+      "avg": 952.99,
+      "p50": 952.99,
+      "p95": 952.99
+    },
+    "bytes_sent": {
+      "avg": 80000,
+      "p50": 80000,
+      "p95": 80000
+    },
+    "queue_max_depth": {
+      "avg": 0,
+      "p50": 0,
+      "p95": 0
+    },
+    "config_prepare_ms": {
+      "avg": 0.04,
+      "p50": 0.04,
+      "p95": 0.04
+    },
+    "config_send_ms": {
+      "avg": 624.45,
+      "p50": 624.45,
+      "p95": 624.45
+    },
+    "avg_chunk_queue_wait_ms": {
+      "avg": 0.0,
+      "p50": 0.0,
+      "p95": 0.0
+    },
+    "avg_chunk_send_ms": {
+      "avg": 0.04,
+      "p50": 0.04,
+      "p95": 0.04
+    },
+    "max_chunk_send_ms": {
+      "avg": 0.51,
+      "p50": 0.51,
+      "p95": 0.51
+    },
+    "avg_parse_ms": {
+      "avg": 0.01,
+      "p50": 0.01,
+      "p95": 0.01
+    },
+    "max_parse_ms": {
+      "avg": 0.01,
+      "p50": 0.01,
+      "p95": 0.01
+    },
+    "network_total_ms": {
+      "avg": 642.43,
+      "p50": 642.43,
+      "p95": 642.43
+    },
+    "parsing_total_ms": {
+      "avg": 0.01,
+      "p50": 0.01,
+      "p95": 0.01
+    }
+  },
+  "runs": [
+    {
+      "handshake_ms": 19.35754100122722,
+      "ttfp_ms": 851.8887499994889,
+      "ttff_ms": null,
+      "total_ms": 952.9898750006396,
+      "queue_max_depth": 0,
+      "bytes_sent": 80000,
+      "chunks_sent": 500,
+      "partials_count": 1,
+      "finals_count": 0,
+      "error": null,
+      "config_prepare_ms": 0.04,
+      "config_send_ms": 624.45,
+      "avg_chunk_queue_wait_ms": 2e-05,
+      "avg_chunk_send_ms": 0.03596,
+      "max_chunk_send_ms": 0.51,
+      "avg_parse_ms": 0.01,
+      "max_parse_ms": 0.01,
+      "network_total_ms": 642.4300000000001,
+      "parsing_total_ms": 0.01
+    }
+  ]
+}

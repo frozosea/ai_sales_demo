@@ -1,0 +1,97 @@
+{
+  "params": {
+    "wav": "test_data/test_speech.wav",
+    "chunk_ms": 5,
+    "repeats": 2,
+    "report_dir": "reports",
+    "config": "configs/stt_config.yml"
+  },
+  "wav_info": {
+    "sr": 8000,
+    "nch": 1,
+    "sampwidth": 2
+  },
+  "metrics": {
+    "handshake_ms": {
+      "avg": 10.26,
+      "p50": 10.26,
+      "p95": 20.02
+    },
+    "ttfp_ms": {
+      "avg": 0,
+      "p50": 0,
+      "p95": 0
+    },
+    "ttff_ms": {
+      "avg": 0,
+      "p50": 0,
+      "p95": 0
+    },
+    "total_ms": {
+      "avg": 4687.26,
+      "p50": 4687.26,
+      "p95": 4806.81
+    },
+    "bytes_sent": {
+      "avg": 47740,
+      "p50": 47740.0,
+      "p95": 47740
+    },
+    "chunks_sent": {
+      "avg": 597,
+      "p50": 597.0,
+      "p95": 597
+    },
+    "partials_count": {
+      "avg": 9,
+      "p50": 9.0,
+      "p95": 9
+    },
+    "finals_count": {
+      "avg": 1,
+      "p50": 1.0,
+      "p95": 1
+    },
+    "queue_max_depth": {
+      "avg": 0.5,
+      "p50": 0.5,
+      "p95": 1
+    }
+  },
+  "runs": [
+    {
+      "handshake_ms": 20.023291999677895,
+      "first_chunk_sent_ts": null,
+      "first_partial_ts": 30022.818695625,
+      "first_final_ts": 30025.595905333,
+      "stream_start_ts": 30021.8719125,
+      "stream_end_ts": 30026.678722708,
+      "ttfp_ms": null,
+      "ttff_ms": null,
+      "total_ms": 4806.81,
+      "bytes_sent": 47740,
+      "chunks_sent": 597,
+      "partials_count": 9,
+      "finals_count": 1,
+      "queue_max_depth": 1,
+      "error": null
+    },
+    {
+      "handshake_ms": 0.49983300050371327,
+      "first_chunk_sent_ts": null,
+      "first_partial_ts": 30027.499533958,
+      "first_final_ts": 30030.290044708,
+      "stream_start_ts": 30026.679201416,
+      "stream_end_ts": 30031.24691125,
+      "ttfp_ms": null,
+      "ttff_ms": null,
+      "total_ms": 4567.71,
+      "bytes_sent": 47740,
+      "chunks_sent": 597,
+      "partials_count": 9,
+      "finals_count": 1,
+      "queue_max_depth": 0,
+      "error": null
+    }
+  ]
+}

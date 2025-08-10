@@ -1,0 +1,60 @@
+{
+  "params": {
+    "wav": "stt_yandex/test/test_data/example.wav",
+    "chunk_ms": 20,
+    "repeats": 1,
+    "report_dir": "reports",
+    "config": "configs/stt_config.yml"
+  },
+  "wav_info": {
+    "sr": 44100,
+    "nch": 1,
+    "sampwidth": 2
+  },
+  "metrics": {
+    "handshake_ms": {
+      "avg": 27.45,
+      "p50": 27.45,
+      "p95": 27.45
+    },
+    "ttfp_ms": {
+      "avg": 832.83,
+      "p50": 832.83,
+      "p95": 832.83
+    },
+    "ttff_ms": {
+      "avg": 2117.6,
+      "p50": 2117.6,
+      "p95": 2117.6
+    },
+    "total_ms": {
+      "avg": 2782.28,
+      "p50": 2782.28,
+      "p95": 2782.28
+    },
+    "bytes_sent": {
+      "avg": 1527552,
+      "p50": 1527552,
+      "p95": 1527552
+    },
+    "queue_max_depth": {
+      "avg": 50,
+      "p50": 50,
+      "p95": 50
+    }
+  },
+  "runs": [
+    {
+      "handshake_ms": 27.449124998383923,
+      "ttfp_ms": 832.8287499971339,
+      "ttff_ms": 2117.6026670000283,
+      "total_ms": 2782.280791998346,
+      "queue_max_depth": 50,
+      "bytes_sent": 1527552,
+      "chunks_sent": 866,
+      "partials_count": 36,
+      "finals_count": 4,
+      "error": null
+    }
+  ]
+}

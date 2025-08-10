@@ -1,0 +1,144 @@
+{
+  "params": {
+    "wav": "test_data/test_speech.wav",
+    "chunk_ms": 5,
+    "repeats": 5,
+    "report_dir": "reports",
+    "config": "configs/stt_config.yml",
+    "idle_time": 30
+  },
+  "wav_info": {
+    "sr": 8000,
+    "nch": 1,
+    "sampwidth": 2
+  },
+  "metrics": {
+    "handshake_ms": {
+      "avg": 0.31,
+      "p50": 0.31,
+      "p95": 0.52
+    },
+    "ttfp_ms": {
+      "avg": 192.01,
+      "p50": 186.76,
+      "p95": 213.05
+    },
+    "ttff_ms": {
+      "avg": 719.81,
+      "p50": 698.86,
+      "p95": 796.94
+    },
+    "total_ms": {
+      "avg": 740.32,
+      "p50": 699.31,
+      "p95": 820.38
+    },
+    "buffer_ms": {
+      "avg": 200,
+      "p50": 200,
+      "p95": 200
+    },
+    "buffer_size": {
+      "avg": 3200,
+      "p50": 3200,
+      "p95": 3200
+    },
+    "bytes_sent": {
+      "avg": 47740,
+      "p50": 47740,
+      "p95": 47740
+    },
+    "chunks_sent": {
+      "avg": 558,
+      "p50": 558,
+      "p95": 558
+    },
+    "queue_max_depth": {
+      "avg": 0,
+      "p50": 0,
+      "p95": 0
+    }
+  },
+  "runs": [
+    {
+      "handshake_ms": 0.5160830041859299,
+      "first_chunk_sent_ts": 35107.96263225,
+      "first_partial_ts": 35108.145146666,
+      "first_final_ts": 35108.651920458,
+      "ttfp_ms": 182.51,
+      "ttff_ms": 689.29,
+      "total_ms": 689.43,
+      "buffer_ms": 200,
+      "buffer_size": 3200,
+      "bytes_sent": 47740,
+      "chunks_sent": 558,
+      "partials_count": 8,
+      "finals_count": 2,
+      "queue_max_depth": 0
+    },
+    {
+      "handshake_ms": 0.12279100337764248,
+      "first_chunk_sent_ts": 35108.65263375,
+      "first_partial_ts": 35108.843951083,
+      "first_final_ts": 35109.351495208,
+      "ttfp_ms": 191.32,
+      "ttff_ms": 698.86,
+      "total_ms": 699.31,
+      "buffer_ms": 200,
+      "buffer_size": 3200,
+      "bytes_sent": 47740,
+      "chunks_sent": 558,
+      "partials_count": 8,
+      "finals_count": 2,
+      "queue_max_depth": 0
+    },
+    {
+      "handshake_ms": 0.30995799897937104,
+      "first_chunk_sent_ts": 35109.353588166,
+      "first_partial_ts": 35109.5400085,
+      "first_final_ts": 35110.150526166,
+      "ttfp_ms": 186.42,
+      "ttff_ms": 796.94,
+      "total_ms": 797.58,
+      "buffer_ms": 200,
+      "buffer_size": 3200,
+      "bytes_sent": 47740,
+      "chunks_sent": 558,
+      "partials_count": 8,
+      "finals_count": 2,
+      "queue_max_depth": 0
+    },
+    {
+      "handshake_ms": 0.4029580013593659,
+      "first_chunk_sent_ts": 35110.153546,
+      "first_partial_ts": 35110.366595791,
+      "first_final_ts": 35110.872650333,
+      "ttfp_ms": 213.05,
+      "ttff_ms": 719.1,
+      "total_ms": 820.38,
+      "buffer_ms": 200,
+      "buffer_size": 3200,
+      "bytes_sent": 47740,
+      "chunks_sent": 558,
+      "partials_count": 8,
+      "finals_count": 2,
+      "queue_max_depth": 0
+    },
+    {
+      "handshake_ms": 0.1969170043594204,
+      "first_chunk_sent_ts": 35110.975251875,
+      "first_partial_ts": 35111.162011625,
+      "first_final_ts": 35111.670124041,
+      "ttfp_ms": 186.76,
+      "ttff_ms": 694.87,
+      "total_ms": 694.92,
+      "buffer_ms": 200,
+      "buffer_size": 3200,
+      "bytes_sent": 47740,
+      "chunks_sent": 558,
+      "partials_count": 8,
+      "finals_count": 2,
+      "queue_max_depth": 0
+    }
+  ]
+}

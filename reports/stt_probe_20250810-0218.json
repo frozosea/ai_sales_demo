@@ -1,0 +1,97 @@
+{
+  "params": {
+    "wav": "test_data/test_speech.wav",
+    "chunk_ms": 5,
+    "repeats": 2,
+    "report_dir": "reports",
+    "config": "configs/stt_config.yml"
+  },
+  "wav_info": {
+    "sr": 8000,
+    "nch": 1,
+    "sampwidth": 2
+  },
+  "metrics": {
+    "handshake_ms": {
+      "avg": 7.95,
+      "p50": 7.95,
+      "p95": 15.39
+    },
+    "ttfp_ms": {
+      "avg": 0,
+      "p50": 0,
+      "p95": 0
+    },
+    "ttff_ms": {
+      "avg": 0,
+      "p50": 0,
+      "p95": 0
+    },
+    "total_ms": {
+      "avg": 4639.65,
+      "p50": 4639.65,
+      "p95": 4700.23
+    },
+    "bytes_sent": {
+      "avg": 47740,
+      "p50": 47740.0,
+      "p95": 47740
+    },
+    "chunks_sent": {
+      "avg": 597,
+      "p50": 597.0,
+      "p95": 597
+    },
+    "partials_count": {
+      "avg": 9,
+      "p50": 9.0,
+      "p95": 9
+    },
+    "finals_count": {
+      "avg": 1,
+      "p50": 1.0,
+      "p95": 1
+    },
+    "queue_max_depth": {
+      "avg": 0,
+      "p50": 0.0,
+      "p95": 0
+    }
+  },
+  "runs": [
+    {
+      "handshake_ms": 15.386999999464024,
+      "first_chunk_sent_ts": null,
+      "first_partial_ts": 30161.203399666,
+      "first_final_ts": 30164.080200208,
+      "stream_start_ts": 30160.441451875,
+      "stream_end_ts": 30165.020531458,
+      "ttfp_ms": null,
+      "ttff_ms": null,
+      "total_ms": 4579.08,
+      "bytes_sent": 47740,
+      "chunks_sent": 597,
+      "partials_count": 9,
+      "finals_count": 1,
+      "queue_max_depth": 0,
+      "error": null
+    },
+    {
+      "handshake_ms": 0.513833001605235,
+      "first_chunk_sent_ts": null,
+      "first_partial_ts": 30165.828861583,
+      "first_final_ts": 30168.705082,
+      "stream_start_ts": 30165.021031208,
+      "stream_end_ts": 30169.721265083,
+      "ttfp_ms": null,
+      "ttff_ms": null,
+      "total_ms": 4700.23,
+      "bytes_sent": 47740,
+      "chunks_sent": 597,
+      "partials_count": 9,
+      "finals_count": 1,
+      "queue_max_depth": 0,
+      "error": null
+    }
+  ]
+}

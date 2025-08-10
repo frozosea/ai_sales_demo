@@ -1,0 +1,97 @@
+{
+  "params": {
+    "wav": "stt_yandex/test/test_data/example_8k.wav",
+    "chunk_ms": 5,
+    "repeats": 2,
+    "report_dir": "reports",
+    "config": "configs/stt_config.yml"
+  },
+  "wav_info": {
+    "sr": 8000,
+    "nch": 1,
+    "sampwidth": 2
+  },
+  "metrics": {
+    "handshake_ms": {
+      "avg": 2.61,
+      "p50": 2.61,
+      "p95": 5.1
+    },
+    "ttfp_ms": {
+      "avg": 0,
+      "p50": 0,
+      "p95": 0
+    },
+    "ttff_ms": {
+      "avg": 0,
+      "p50": 0,
+      "p95": 0
+    },
+    "total_ms": {
+      "avg": 20417.56,
+      "p50": 20417.56,
+      "p95": 20834.94
+    },
+    "bytes_sent": {
+      "avg": 277108,
+      "p50": 277108.0,
+      "p95": 277108
+    },
+    "chunks_sent": {
+      "avg": 3464,
+      "p50": 3464.0,
+      "p95": 3464
+    },
+    "partials_count": {
+      "avg": 54,
+      "p50": 54.0,
+      "p95": 54
+    },
+    "finals_count": {
+      "avg": 1,
+      "p50": 1.0,
+      "p95": 1
+    },
+    "queue_max_depth": {
+      "avg": 1,
+      "p50": 1.0,
+      "p95": 1
+    }
+  },
+  "runs": [
+    {
+      "handshake_ms": 5.102792001707712,
+      "first_chunk_sent_ts": null,
+      "first_partial_ts": 30243.389095333,
+      "first_final_ts": 30262.489405333,
+      "stream_start_ts": 30242.590424541,
+      "stream_end_ts": 30262.590618,
+      "ttfp_ms": null,
+      "ttff_ms": null,
+      "total_ms": 20000.19,
+      "bytes_sent": 277108,
+      "chunks_sent": 3464,
+      "partials_count": 54,
+      "finals_count": 1,
+      "queue_max_depth": 1,
+      "error": null
+    },
+    {
+      "handshake_ms": 0.11037500007660128,
+      "first_chunk_sent_ts": null,
+      "first_partial_ts": 30263.446288166,
+      "first_final_ts": 30282.364907666,
+      "stream_start_ts": 30262.592699416,
+      "stream_end_ts": 30283.42764025,
+      "ttfp_ms": null,
+      "ttff_ms": null,
+      "total_ms": 20834.94,
+      "bytes_sent": 277108,
+      "chunks_sent": 3464,
+      "partials_count": 54,
+      "finals_count": 1,
+      "queue_max_depth": 1,
+      "error": null
+    }
+  ]
+}
