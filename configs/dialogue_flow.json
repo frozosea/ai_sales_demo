@@ -1,0 +1,1387 @@
+{
+  "start_greeting": {
+    "description": "Приветствие и проверка, что говорим с нужным человеком",
+    "system_response": {
+      "template": "Здравствуйте, меня зовут Дарья, страховая компания Ингосстрах. Александр Владимирович, верно?",
+      "redis_key": "audio_start_greeting"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "confirm_no": {
+        "next_state": "ask_for_person",
+        "execute_code": ""
+      },
+      "ask_where_number": {
+        "next_state": "info_where_number",
+        "execute_code": ""
+      },
+      "ask_previous_client": {
+        "next_state": "info_previous_client",
+        "execute_code": ""
+      },
+      "ask_policy_used": {
+        "next_state": "info_policy_used",
+        "execute_code": ""
+      },
+      "ask_company": {
+        "next_state": "info_company",
+        "execute_code": ""
+      },
+      "ask_purpose": {
+        "next_state": "info_call_purpose",
+        "execute_code": ""
+      },
+      "ask_robot": {
+        "next_state": "info_robot",
+        "execute_code": ""
+      },
+      "ask_cost": {
+        "next_state": "info_cost_percentage",
+        "execute_code": ""
+      },
+      "has_insurance": {
+        "next_state": "existing_insurance_end",
+        "execute_code": ""
+      },
+      "request_callback": {
+        "next_state": "callback_end",
+        "execute_code": ""
+      },
+      "silence": {
+        "next_state": "no_response",
+        "execute_code": ""
+      },
+      "ask_program_details": {
+        "next_state": "info_program_details",
+        "execute_code": ""
+      },
+      "ask_limits": {
+        "next_state": "info_limits",
+        "execute_code": ""
+      },
+      "government_compensation": {
+        "next_state": "info_government_compensation",
+        "execute_code": ""
+      },
+      "ask_other_products": {
+        "next_state": "info_other_products",
+        "execute_code": ""
+      }
+    }
+  },
+  "ask_for_person": {
+    "description": "Просьба позвать нужного человека, если по номеру ответил другой",
+    "system_response": {
+      "template": "Скажите, пожалуйста, я могу услышать Александра Владимировича?",
+      "redis_key": "audio_ask_for_person"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "confirm_no": {
+        "next_state": "callback_end",
+        "execute_code": ""
+      },
+      "ask_where_number": {
+        "next_state": "info_where_number",
+        "execute_code": ""
+      },
+      "ask_company": {
+        "next_state": "info_company",
+        "execute_code": ""
+      },
+      "ask_purpose": {
+        "next_state": "info_call_purpose",
+        "execute_code": ""
+      },
+      "ask_robot": {
+        "next_state": "info_robot",
+        "execute_code": ""
+      },
+      "ask_cost": {
+        "next_state": "info_cost_percentage",
+        "execute_code": ""
+      },
+      "has_insurance": {
+        "next_state": "existing_insurance_end",
+        "execute_code": ""
+      },
+      "request_callback": {
+        "next_state": "callback_end",
+        "execute_code": ""
+      },
+      "silence": {
+        "next_state": "no_response",
+        "execute_code": ""
+      },
+      "ask_program_details": {
+        "next_state": "info_program_details",
+        "execute_code": ""
+      },
+      "ask_limits": {
+        "next_state": "info_limits",
+        "execute_code": ""
+      },
+      "government_compensation": {
+        "next_state": "info_government_compensation",
+        "execute_code": ""
+      },
+      "ask_other_products": {
+        "next_state": "info_other_products",
+        "execute_code": ""
+      }
+    }
+  },
+  "pitch_offer": {
+    "description": "Презентация полиса и предложение защиты от военных рисков",
+    "system_response": {
+      "template": "От лица компании благодарю вас за доверие — мы рады, что вы с нами. Хочу напомнить: ИНГОСТРАХ платит, и вы находитесь под надежной защитой. Мы видим, что сейчас, к сожалению, некоторые клиенты сталкиваются с ущербом из-за атак беспилотников. Именно поэтому я хочу предложить вам гарантированную компенсацию за повреждённую квартиру и ремонт — если произойдёт непредвиденное. Давайте я помогу вам сделать жизнь чуть спокойнее и защищённее?",
+      "redis_key": "audio_pitch_offer"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "ask_property_value",
+        "execute_code": ""
+      },
+      "confirm_no": {
+        "next_state": "refusal_inquiry",
+        "execute_code": ""
+      },
+      "ask_where_number": {
+        "next_state": "info_where_number",
+        "execute_code": ""
+      },
+      "ask_previous_client": {
+        "next_state": "info_previous_client",
+        "execute_code": ""
+      },
+      "ask_policy_used": {
+        "next_state": "info_policy_used",
+        "execute_code": ""
+      },
+      "ask_company": {
+        "next_state": "info_company",
+        "execute_code": ""
+      },
+      "ask_purpose": {
+        "next_state": "info_call_purpose",
+        "execute_code": ""
+      },
+      "ask_robot": {
+        "next_state": "info_robot",
+        "execute_code": ""
+      },
+      "ask_cost": {
+        "next_state": "info_cost_percentage",
+        "execute_code": ""
+      },
+      "has_insurance": {
+        "next_state": "existing_insurance_end",
+        "execute_code": ""
+      },
+      "request_callback": {
+        "next_state": "callback_end",
+        "execute_code": ""
+      },
+      "silence": {
+        "next_state": "no_response",
+        "execute_code": ""
+      },
+      "ask_program_details": {
+        "next_state": "info_program_details",
+        "execute_code": ""
+      },
+      "ask_limits": {
+        "next_state": "info_limits",
+        "execute_code": ""
+      },
+      "government_compensation": {
+        "next_state": "info_government_compensation",
+        "execute_code": ""
+      },
+      "ask_other_products": {
+        "next_state": "info_other_products",
+        "execute_code": ""
+      }
+    }
+  },
+  "refusal_inquiry": {
+    "description": "После отказа предлагаем клиенту озвучить причину отказа",
+    "system_response": {
+      "template": "Поняла вас. Подскажите, пожалуйста, почему отказываетесь?",
+      "redis_key": "audio_refusal_inquiry"
+    },
+    "transitions": {
+      "provide_reject_reason": {
+        "next_state": "refusal_end",
+        "execute_code": "session.variables['refuse_reason'] = user_message"
+      },
+      "has_insurance": {
+        "next_state": "existing_insurance_end",
+        "execute_code": ""
+      },
+      "request_callback": {
+        "next_state": "callback_end",
+        "execute_code": ""
+      },
+      "ask_cost": {
+        "next_state": "info_cost_percentage",
+        "execute_code": ""
+      },
+      "ask_where_number": {
+        "next_state": "info_where_number",
+        "execute_code": ""
+      },
+      "ask_company": {
+        "next_state": "info_company",
+        "execute_code": ""
+      },
+      "ask_purpose": {
+        "next_state": "info_call_purpose",
+        "execute_code": ""
+      },
+      "ask_robot": {
+        "next_state": "info_robot",
+        "execute_code": ""
+      },
+      "silence": {
+        "next_state": "no_response",
+        "execute_code": ""
+      },
+      "ask_program_details": {
+        "next_state": "info_program_details",
+        "execute_code": ""
+      },
+      "ask_limits": {
+        "next_state": "info_limits",
+        "execute_code": ""
+      },
+      "government_compensation": {
+        "next_state": "info_government_compensation",
+        "execute_code": ""
+      },
+      "ask_other_products": {
+        "next_state": "info_other_products",
+        "execute_code": ""
+      }
+    }
+  },
+  "refusal_end": {
+    "description": "Прощаемся после отказа и фиксируем причину",
+    "system_response": {
+      "template": "Хорошо. Благодарю за уделённое время. Всего доброго. До свидания!",
+      "redis_key": "audio_refusal_end"
+    },
+    "transitions": {}
+  },
+  "ask_property_value": {
+    "description": "Запрос стоимости недвижимости (конструктивных элементов) у клиента",
+    "system_response": {
+      "template": "Подскажите, на какую сумму оцениваете стоимость вашей недвижимости?",
+      "redis_key": "audio_ask_property_value"
+    },
+    "transitions": {
+      "provide_number": {
+        "next_state": "confirm_property_value",
+        "execute_code": "session.variables['property_value'] = entities['value']"
+      },
+      "confirm_no": {
+        "next_state": "refusal_inquiry",
+        "execute_code": ""
+      },
+      "ask_where_number": {
+        "next_state": "info_where_number",
+        "execute_code": ""
+      },
+      "ask_previous_client": {
+        "next_state": "info_previous_client",
+        "execute_code": ""
+      },
+      "ask_policy_used": {
+        "next_state": "info_policy_used",
+        "execute_code": ""
+      },
+      "ask_company": {
+        "next_state": "info_company",
+        "execute_code": ""
+      },
+      "ask_purpose": {
+        "next_state": "info_call_purpose",
+        "execute_code": ""
+      },
+      "ask_robot": {
+        "next_state": "info_robot",
+        "execute_code": ""
+      },
+      "ask_cost": {
+        "next_state": "info_cost_percentage",
+        "execute_code": ""
+      },
+      "has_insurance": {
+        "next_state": "existing_insurance_end",
+        "execute_code": ""
+      },
+      "request_callback": {
+        "next_state": "callback_end",
+        "execute_code": ""
+      },
+      "silence": {
+        "next_state": "no_response",
+        "execute_code": ""
+      },
+      "ask_program_details": {
+        "next_state": "info_program_details",
+        "execute_code": ""
+      },
+      "ask_limits": {
+        "next_state": "info_limits",
+        "execute_code": ""
+      },
+      "government_compensation": {
+        "next_state": "info_government_compensation",
+        "execute_code": ""
+      },
+      "ask_other_products": {
+        "next_state": "info_other_products",
+        "execute_code": ""
+      }
+    }
+  },
+  "confirm_property_value": {
+    "description": "Подтверждение суммы страхования конструкции, указанной клиентом",
+    "system_response": {
+      "template": "Правильно услышала, что хотели бы оформить полис на {{ session.variables['property_value'] }} рублей?",
+      "redis_key": "audio_confirm_property_value"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "ask_inner_amount",
+        "execute_code": ""
+      },
+      "confirm_no": {
+        "next_state": "ask_property_value",
+        "execute_code": "session.variables.pop('property_value', None)"
+      },
+      "ask_where_number": {
+        "next_state": "info_where_number",
+        "execute_code": ""
+      },
+      "ask_company": {
+        "next_state": "info_company",
+        "execute_code": ""
+      },
+      "ask_purpose": {
+        "next_state": "info_call_purpose",
+        "execute_code": ""
+      },
+      "ask_robot": {
+        "next_state": "info_robot",
+        "execute_code": ""
+      },
+      "ask_cost": {
+        "next_state": "info_cost_percentage",
+        "execute_code": ""
+      },
+      "request_callback": {
+        "next_state": "callback_end",
+        "execute_code": ""
+      },
+      "has_insurance": {
+        "next_state": "existing_insurance_end",
+        "execute_code": ""
+      },
+      "silence": {
+        "next_state": "no_response",
+        "execute_code": ""
+      },
+      "ask_program_details": {
+        "next_state": "info_program_details",
+        "execute_code": ""
+      },
+      "ask_limits": {
+        "next_state": "info_limits",
+        "execute_code": ""
+      },
+      "government_compensation": {
+        "next_state": "info_government_compensation",
+        "execute_code": ""
+      },
+      "ask_other_products": {
+        "next_state": "info_other_products",
+        "execute_code": ""
+      }
+    }
+  },
+  "ask_inner_amount": {
+    "description": "Запрос суммы страхования внутренней отделки жилья",
+    "system_response": {
+      "template": "На какую сумму хотели бы застраховать внутреннюю отделку?",
+      "redis_key": "audio:ask_inner_amount"
+    },
+    "transitions": {
+      "provide_number": {
+        "next_state": "confirm_inner_amount",
+        "execute_code": "session.variables['inner_amount'] = entities['value']"
+      },
+      "confirm_no": {
+        "next_state": "summary_single",
+        "execute_code": "session.variables['inner_amount'] = 0; session.variables['konstruct_amount'] = session.variables['property_value']"
+      },
+      "ask_where_number": {
+        "next_state": "info_where_number",
+        "execute_code": ""
+      },
+      "ask_company": {
+        "next_state": "info_company",
+        "execute_code": ""
+      },
+      "ask_purpose": {
+        "next_state": "info_call_purpose",
+        "execute_code": ""
+      },
+      "ask_robot": {
+        "next_state": "info_robot",
+        "execute_code": ""
+      },
+      "ask_cost": {
+        "next_state": "info_cost_percentage",
+        "execute_code": ""
+      },
+      "request_callback": {
+        "next_state": "callback_end",
+        "execute_code": ""
+      },
+      "has_insurance": {
+        "next_state": "existing_insurance_end",
+        "execute_code": ""
+      },
+      "silence": {
+        "next_state": "no_response",
+        "execute_code": ""
+      },
+      "ask_program_details": {
+        "next_state": "info_program_details",
+        "execute_code": ""
+      },
+      "ask_limits": {
+        "next_state": "info_limits",
+        "execute_code": ""
+      },
+      "government_compensation": {
+        "next_state": "info_government_compensation",
+        "execute_code": ""
+      },
+      "ask_other_products": {
+        "next_state": "info_other_products",
+        "execute_code": ""
+      }
+    }
+  },
+  "confirm_inner_amount": {
+    "description": "Подтверждение суммы страхования внутренней отделки",
+    "system_response": {
+      "template": "Правильно услышала, сумма внутренней отделки {{ session.variables['inner_amount'] }} рублей?",
+      "redis_key": "audio_confirm_inner_amount"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "summary_split",
+        "execute_code": "session.variables['konstruct_amount'] = session.variables['property_value'] - session.variables['inner_amount']; session.variables['sum_total'] = session.variables['property_value']; session.variables['price_konstruct'] = session.variables['konstruct_amount'] * 0.001; session.variables['price_inner'] = session.variables['inner_amount'] * 0.001"
+      },
+      "confirm_no": {
+        "next_state": "ask_inner_amount",
+        "execute_code": "session.variables.pop('inner_amount', None)"
+      },
+      "ask_where_number": {
+        "next_state": "info_where_number",
+        "execute_code": ""
+      },
+      "ask_company": {
+        "next_state": "info_company",
+        "execute_code": ""
+      },
+      "ask_purpose": {
+        "next_state": "info_call_purpose",
+        "execute_code": ""
+      },
+      "ask_robot": {
+        "next_state": "info_robot",
+        "execute_code": ""
+      },
+      "ask_cost": {
+        "next_state": "info_cost_percentage",
+        "execute_code": ""
+      },
+      "request_callback": {
+        "next_state": "callback_end",
+        "execute_code": ""
+      },
+      "has_insurance": {
+        "next_state": "existing_insurance_end",
+        "execute_code": ""
+      },
+      "silence": {
+        "next_state": "no_response",
+        "execute_code": ""
+      },
+      "ask_program_details": {
+        "next_state": "info_program_details",
+        "execute_code": ""
+      },
+      "ask_limits": {
+        "next_state": "info_limits",
+        "execute_code": ""
+      },
+      "government_compensation": {
+        "next_state": "info_government_compensation",
+        "execute_code": ""
+      },
+      "ask_other_products": {
+        "next_state": "info_other_products",
+        "execute_code": ""
+      }
+    }
+  },
+  "summary_split": {
+    "description": "Общая сумма страхования и стоимость полиса (разделено на конструктив и отделку)",
+    "system_response": {
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "static:summary_split_intro"
+        },
+        {
+          "type": "filler",
+          "key": "filler:hmm"
+        },
+        {
+          "type": "tts",
+          "text_template": "{{ session.variables['sum_total'] }}"
+        },
+        {
+          "type": "cache",
+          "key": "static:rubles_and_costs"
+        },
+        {
+          "type": "filler",
+          "key": "filler:hmm"
+        },
+        {
+          "type": "tts",
+          "text_template": "{{ session.variables['price_konstruct'] + session.variables['price_inner'] }}"
+        },
+        {
+          "type": "cache",
+          "key": "static:rubles_policy_address"
+        },
+        {
+          "type": "tts",
+          "text_template": "{{ session.variables['address'] }}"
+        },
+        {
+          "type": "cache",
+          "key": "static:final_question"
+        }
+      ]
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "address_confirmation",
+        "execute_code": ""
+      },
+      "confirm_no": {
+        "next_state": "ask_payment_reason",
+        "execute_code": ""
+      },
+      "request_callback": {
+        "next_state": "callback_end",
+        "execute_code": ""
+      },
+      "ask_where_number": {
+        "next_state": "info_where_number",
+        "execute_code": ""
+      },
+      "ask_company": {
+        "next_state": "info_company",
+        "execute_code": ""
+      },
+      "ask_purpose": {
+        "next_state": "info_call_purpose",
+        "execute_code": ""
+      },
+      "ask_robot": {
+        "next_state": "info_robot",
+        "execute_code": ""
+      },
+      "ask_cost": {
+        "next_state": "info_cost_percentage",
+        "execute_code": ""
+      },
+      "has_insurance": {
+        "next_state": "existing_insurance_end",
+        "execute_code": ""
+      },
+      "silence": {
+        "next_state": "no_response",
+        "execute_code": ""
+      },
+      "ask_program_details": {
+        "next_state": "info_program_details",
+        "execute_code": ""
+      },
+      "ask_limits": {
+        "next_state": "info_limits",
+        "execute_code": ""
+      },
+      "government_compensation": {
+        "next_state": "info_government_compensation",
+        "execute_code": ""
+      },
+      "ask_other_products": {
+        "next_state": "info_other_products",
+        "execute_code": ""
+      },
+      "request_extension": {
+        "next_state": "send_link_extension_end",
+        "execute_code": ""
+      }
+    }
+  },
+  "summary_single": {
+    "description": "Общая сумма страхования и стоимость полиса (только конструктивные элементы)",
+    "system_response": {
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "static:summary_single_intro"
+        },
+        {
+          "type": "filler",
+          "key": "filler:hmm"
+        },
+        {
+          "type": "tts",
+          "text_template": "{{ session.variables['property_value'] }}"
+        },
+        {
+          "type": "cache",
+          "key": "static:rubles_and_costs"
+        },
+        {
+          "type": "filler",
+          "key": "filler:hmm"
+        },
+        {
+          "type": "tts",
+          "text_template": "{{ (session.variables['property_value']) * 0.001 }}"
+        },
+        {
+          "type": "cache",
+          "key": "static:rubles_policy_address"
+        },
+        {
+          "type": "tts",
+          "text_template": "{{ session.variables['address'] }}"
+        },
+        {
+          "type": "cache",
+          "key": "static:final_question"
+        }
+      ]
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "address_confirmation",
+        "execute_code": "session.variables['price_konstruct'] = session.variables['property_value'] * 0.001"
+      },
+      "confirm_no": {
+        "next_state": "ask_payment_reason",
+        "execute_code": ""
+      },
+      "request_callback": {
+        "next_state": "callback_end",
+        "execute_code": ""
+      },
+      "ask_where_number": {
+        "next_state": "info_where_number",
+        "execute_code": ""
+      },
+      "ask_company": {
+        "next_state": "info_company",
+        "execute_code": ""
+      },
+      "ask_purpose": {
+        "next_state": "info_call_purpose",
+        "execute_code": ""
+      },
+      "ask_robot": {
+        "next_state": "info_robot",
+        "execute_code": ""
+      },
+      "ask_cost": {
+        "next_state": "info_cost_percentage",
+        "execute_code": ""
+      },
+      "has_insurance": {
+        "next_state": "existing_insurance_end",
+        "execute_code": ""
+      },
+      "silence": {
+        "next_state": "no_response",
+        "execute_code": ""
+      },
+      "ask_program_details": {
+        "next_state": "info_program_details",
+        "execute_code": ""
+      },
+      "ask_limits": {
+        "next_state": "info_limits",
+        "execute_code": ""
+      },
+      "government_compensation": {
+        "next_state": "info_government_compensation",
+        "execute_code": ""
+      },
+      "ask_other_products": {
+        "next_state": "info_other_products",
+        "execute_code": ""
+      },
+      "request_extension": {
+        "next_state": "send_link_extension_end",
+        "execute_code": ""
+      }
+    }
+  },
+  "ask_payment_reason": {
+    "description": "Выясняем, почему клиент не готов оплатить полис сегодня",
+    "system_response": {
+      "template": "А почему? По времени не успеете или что‑то в условиях не устроило?",
+      "redis_key": "audio_ask_payment_reason"
+    },
+    "transitions": {
+      "provide_reject_reason": {
+        "next_state": "refusal_end",
+        "execute_code": "session.variables['refuse_reason'] = user_message"
+      },
+      "request_callback": {
+        "next_state": "callback_end",
+        "execute_code": ""
+      },
+      "ask_cost": {
+        "next_state": "info_cost_percentage",
+        "execute_code": ""
+      },
+      "ask_where_number": {
+        "next_state": "info_where_number",
+        "execute_code": ""
+      },
+      "ask_company": {
+        "next_state": "info_company",
+        "execute_code": ""
+      },
+      "ask_purpose": {
+        "next_state": "info_call_purpose",
+        "execute_code": ""
+      },
+      "ask_robot": {
+        "next_state": "info_robot",
+        "execute_code": ""
+      },
+      "has_insurance": {
+        "next_state": "existing_insurance_end",
+        "execute_code": ""
+      },
+      "silence": {
+        "next_state": "no_response",
+        "execute_code": ""
+      },
+      "ask_program_details": {
+        "next_state": "info_program_details",
+        "execute_code": ""
+      },
+      "ask_limits": {
+        "next_state": "info_limits",
+        "execute_code": ""
+      },
+      "government_compensation": {
+        "next_state": "info_government_compensation",
+        "execute_code": ""
+      },
+      "ask_other_products": {
+        "next_state": "info_other_products",
+        "execute_code": ""
+      },
+      "request_extension": {
+        "next_state": "send_link_extension_end",
+        "execute_code": ""
+      }
+    }
+  },
+  "finalize_policy": {
+    "description": "Финальное подтверждение оформления полиса и отправка ссылки на оплату",
+    "system_response": {
+      "template": "Отлично! Я сейчас направлю вам ссылку для оплаты. Благодарю за выбор Ингосстрах. Всего доброго!",
+      "redis_key": "audio:finalize_policy"
+    },
+    "transitions": {}
+  },
+  "callback_end": {
+    "description": "Согласие клиента на перезвон",
+    "system_response": {
+      "template": "Хорошо. Я перезвоню вам позже. Всего доброго!",
+      "redis_key": "audio_callback_end"
+    },
+    "transitions": {}
+  },
+  "existing_insurance_end": {
+    "description": "Клиент сообщил, что у него уже есть страховка; прощаемся",
+    "system_response": {
+      "template": "Поняла. Хорошо, что вы заботитесь об этом. Всего доброго. До свидания!",
+      "redis_key": "audio_existing_insurance_end"
+    },
+    "transitions": {}
+  },
+  "no_response": {
+    "description": "Когда клиент молчит или связь прерывается, напоминаем о себе",
+    "system_response": {
+      "template": "Алло, вас не слышно. Вы на линии?",
+      "redis_key": "audio_no_response"
+    },
+    "transitions": {
+      "silence": {
+        "next_state": "max_attempts_end",
+        "execute_code": ""
+      },
+      "confirm_yes": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "request_callback": {
+        "next_state": "callback_end",
+        "execute_code": ""
+      },
+      "ask_where_number": {
+        "next_state": "info_where_number",
+        "execute_code": ""
+      },
+      "ask_company": {
+        "next_state": "info_company",
+        "execute_code": ""
+      },
+      "ask_purpose": {
+        "next_state": "info_call_purpose",
+        "execute_code": ""
+      },
+      "ask_robot": {
+        "next_state": "info_robot",
+        "execute_code": ""
+      },
+      "ask_program_details": {
+        "next_state": "info_program_details",
+        "execute_code": ""
+      },
+      "ask_limits": {
+        "next_state": "info_limits",
+        "execute_code": ""
+      },
+      "government_compensation": {
+        "next_state": "info_government_compensation",
+        "execute_code": ""
+      },
+      "ask_other_products": {
+        "next_state": "info_other_products",
+        "execute_code": ""
+      }
+    }
+  },
+  "max_attempts_end": {
+    "description": "Если несколько попыток связаться не удались, завершаем звонок",
+    "system_response": {
+      "template": "Извините за беспокойство. Всего доброго. До свидания.",
+      "redis_key": "audio_max_attempts_end"
+    },
+    "transitions": {}
+  },
+  "info_where_number": {
+    "description": "Отвечаем на вопрос клиента об источнике его номера",
+    "system_response": {
+      "template": "Ранее вы были клиентом Ингосстрах или рассчитывали страховку на нашем сайте, поэтому у нас сохранился ваш контакт.",
+      "redis_key": "audio_info_where_number"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "confirm_no": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "ask_company": {
+        "next_state": "info_company",
+        "execute_code": ""
+      },
+      "ask_purpose": {
+        "next_state": "info_call_purpose",
+        "execute_code": ""
+      },
+      "ask_robot": {
+        "next_state": "info_robot",
+        "execute_code": ""
+      },
+      "ask_cost": {
+        "next_state": "info_cost_percentage",
+        "execute_code": ""
+      },
+      "request_callback": {
+        "next_state": "callback_end",
+        "execute_code": ""
+      },
+      "has_insurance": {
+        "next_state": "existing_insurance_end",
+        "execute_code": ""
+      }
+    }
+  },
+  "info_previous_client": {
+    "description": "Отвечаем на вопрос о том, был ли человек клиентом ранее",
+    "system_response": {
+      "template": "Да, ранее вы уже являлись нашим клиентом или оставляли заявку на расчёт страховой защиты, поэтому мы решили связаться с вами.",
+      "redis_key": "audio_info_where_number"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "confirm_no": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "ask_where_number": {
+        "next_state": "info_where_number",
+        "execute_code": ""
+      },
+      "ask_company": {
+        "next_state": "info_company",
+        "execute_code": ""
+      },
+      "ask_purpose": {
+        "next_state": "info_call_purpose",
+        "execute_code": ""
+      },
+      "ask_robot": {
+        "next_state": "info_robot",
+        "execute_code": ""
+      },
+      "request_callback": {
+        "next_state": "callback_end",
+        "execute_code": ""
+      }
+    }
+  },
+  "info_policy_used": {
+    "description": "Отвечаем на вопрос о предыдущем страховом полисе",
+    "system_response": {
+      "template": "Вы пользовались страховым полисом от Ингосстрах ранее, поэтому мы предлагаем вам актуальное страховое решение, учитывающее новые риски.",
+      "redis_key": "audio_info_where_number"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "confirm_no": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "ask_where_number": {
+        "next_state": "info_where_number",
+        "execute_code": ""
+      },
+      "ask_company": {
+        "next_state": "info_company",
+        "execute_code": ""
+      },
+      "ask_purpose": {
+        "next_state": "info_call_purpose",
+        "execute_code": ""
+      },
+      "ask_robot": {
+        "next_state": "info_robot",
+        "execute_code": ""
+      },
+      "request_callback": {
+        "next_state": "callback_end",
+        "execute_code": ""
+      }
+    }
+  },
+  "info_company": {
+    "description": "Уточняем, какую компанию представляем",
+    "system_response": {
+      "template": "Это страховая компания Ингосстрах.",
+      "redis_key": "audio_info_company"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "confirm_no": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "ask_purpose": {
+        "next_state": "info_call_purpose",
+        "execute_code": ""
+      },
+      "ask_robot": {
+        "next_state": "info_robot",
+        "execute_code": ""
+      },
+      "ask_cost": {
+        "next_state": "info_cost_percentage",
+        "execute_code": ""
+      },
+      "ask_where_number": {
+        "next_state": "info_where_number",
+        "execute_code": ""
+      },
+      "request_callback": {
+        "next_state": "callback_end",
+        "execute_code": ""
+      }
+    }
+  },
+  "info_call_purpose": {
+    "description": "Отвечаем на вопрос о цели звонка",
+    "system_response": {
+      "template": "Я звоню по вопросу нового полиса страхования от военных рисков и хочу предложить вам гарантию компенсации за ущерб вашей недвижимости.",
+      "redis_key": "audio_info_call_purpose"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "confirm_no": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "ask_company": {
+        "next_state": "info_company",
+        "execute_code": ""
+      },
+      "ask_robot": {
+        "next_state": "info_robot",
+        "execute_code": ""
+      },
+      "ask_cost": {
+        "next_state": "info_cost_percentage",
+        "execute_code": ""
+      },
+      "ask_where_number": {
+        "next_state": "info_where_number",
+        "execute_code": ""
+      },
+      "request_callback": {
+        "next_state": "callback_end",
+        "execute_code": ""
+      }
+    }
+  },
+  "info_robot": {
+    "description": "Сообщаем, что звонит живой специалист, а не робот",
+    "system_response": {
+      "template": "Да, я представляю страховую компанию Ингосстрах и отвечу на все ваши вопросы.",
+      "redis_key": "audio_info_robot"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "confirm_no": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "ask_where_number": {
+        "next_state": "info_where_number",
+        "execute_code": ""
+      },
+      "ask_company": {
+        "next_state": "info_company",
+        "execute_code": ""
+      },
+      "ask_purpose": {
+        "next_state": "info_call_purpose",
+        "execute_code": ""
+      },
+      "ask_cost": {
+        "next_state": "info_cost_percentage",
+        "execute_code": ""
+      },
+      "request_callback": {
+        "next_state": "callback_end",
+        "execute_code": ""
+      }
+    }
+  },
+  "info_cost_percentage": {
+    "description": "Объясняем, как рассчитывается стоимость полиса",
+    "system_response": {
+      "template": "Стоимость страхового полиса составляет 0,1% от суммы страхования, то есть при страховании на 3 млн рублей стоимость полиса составит всего 3000 рублей. При этом полис действует 12 месяцев.",
+      "redis_key": "audio_info_cost_percentage"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "confirm_no": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "ask_where_number": {
+        "next_state": "info_where_number",
+        "execute_code": ""
+      },
+      "ask_company": {
+        "next_state": "info_company",
+        "execute_code": ""
+      },
+      "ask_purpose": {
+        "next_state": "info_call_purpose",
+        "execute_code": ""
+      },
+      "ask_robot": {
+        "next_state": "info_robot",
+        "execute_code": ""
+      },
+      "request_callback": {
+        "next_state": "callback_end",
+        "execute_code": ""
+      }
+    }
+  },
+  "info_program_details": {
+    "description": "Описание программы Бастион и покрываемых рисков",
+    "system_response": {
+      "template": "Программа Бастион – страхование от рисков налёта беспилотников, терактов и военных действий, в том числе на приграничных территориях. Она обеспечивает гарантированную компенсацию за повреждённую недвижимость и ремонт.",
+      "redis_key": "audio:info_program_details"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "confirm_no": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "ask_other_products": {
+        "next_state": "info_other_products",
+        "execute_code": ""
+      },
+      "ask_limits": {
+        "next_state": "info_limits",
+        "execute_code": ""
+      },
+      "government_compensation": {
+        "next_state": "info_government_compensation",
+        "execute_code": ""
+      },
+      "request_callback": {
+        "next_state": "callback_end",
+        "execute_code": ""
+      }
+    }
+  },
+  "info_government_compensation": {
+    "description": "Разъяснение, почему выплаты от государства не заменяют страховку",
+    "system_response": {
+      "template": "Согласна, что государство приходит на помощь в сложных ситуациях. Однако выплаты от государства ограничены и не всегда покрывают реальный ущерб. Страховой полис Бастион позволяет заранее зафиксировать сумму компенсации и получить деньги независимо от государственных выплат.",
+      "redis_key": "audio_info_government_compensation"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "confirm_no": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "ask_program_details": {
+        "next_state": "info_program_details",
+        "execute_code": ""
+      },
+      "ask_limits": {
+        "next_state": "info_limits",
+        "execute_code": ""
+      },
+      "ask_other_products": {
+        "next_state": "info_other_products",
+        "execute_code": ""
+      },
+      "request_callback": {
+        "next_state": "callback_end",
+        "execute_code": ""
+      }
+    }
+  },
+  "info_limits": {
+    "description": "Рассказываем о минимальных и максимальных суммах страхования и стоимости полиса",
+    "system_response": {
+      "template": "На конструктивные элементы действует лимит от 1 до 30 млн рублей, на внутреннюю отделку — от 500 тыс до 10 млн для квартир и комнат и до 5 млн для домов и таунхаусов. Минимальная стоимость полиса составляет 500 рублей, максимальная — 40 000 рублей.",
+      "redis_key": "audio_info_limits"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "confirm_no": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "ask_program_details": {
+        "next_state": "info_program_details",
+        "execute_code": ""
+      },
+      "ask_other_products": {
+        "next_state": "info_other_products",
+        "execute_code": ""
+      },
+      "government_compensation": {
+        "next_state": "info_government_compensation",
+        "execute_code": ""
+      },
+      "request_callback": {
+        "next_state": "callback_end",
+        "execute_code": ""
+      }
+    }
+  },
+  "info_other_products": {
+    "description": "Сообщаем, что в рамках звонка предлагаем только полис Бастион и передаем контакт куратору",
+    "system_response": {
+      "template": "По другим нашим продуктам, к сожалению, не могу проконсультировать в рамках этого звонка. Я передам ваш контакт куратору, и он дополнительно свяжется с вами. Также информацию по всем продуктам можно найти на нашем сайте. Давайте вернёмся к защите от военных рисков.",
+      "redis_key": "audio_info_other_products"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "confirm_no": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "request_callback": {
+        "next_state": "callback_end",
+        "execute_code": ""
+      },
+      "ask_program_details": {
+        "next_state": "info_program_details",
+        "execute_code": ""
+      },
+      "ask_limits": {
+        "next_state": "info_limits",
+        "execute_code": ""
+      },
+      "government_compensation": {
+        "next_state": "info_government_compensation",
+        "execute_code": ""
+      }
+    }
+  },
+  "upsell_inner_cover": {
+    "description": "Предлагаем включить страхование внутренней отделки на миллион рублей",
+    "system_response": {
+      "template": "Как вы наверняка знаете, сейчас ремонт может быть очень дорогостоящим. Может быть, включим в полис страхование внутренней отделки на миллион рублей? По стоимости это всего 1000 рублей.",
+      "redis_key": "audio_upsell_inner_cover"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "summary_split",
+        "execute_code": "session.variables['inner_amount'] = 1000000; session.variables['konstruct_amount'] = sessionvariables['property_value'] - 1000000; sessionvariables['sum_total'] = sessionvariables['property_value']; sessionvariables['price_konstruct'] = sessionvariables['konstruct_amount'] * 0.001; sessionvariables['price_inner'] = 1000000 * 0.001"
+      },
+      "confirm_no": {
+        "next_state": "ask_inner_amount",
+        "execute_code": ""
+      },
+      "ask_program_details": {
+        "next_state": "info_program_details",
+        "execute_code": ""
+      },
+      "ask_limits": {
+        "next_state": "info_limits",
+        "execute_code": ""
+      },
+      "government_compensation": {
+        "next_state": "info_government_compensation",
+        "execute_code": ""
+      },
+      "ask_other_products": {
+        "next_state": "info_other_products",
+        "execute_code": ""
+      },
+      "request_callback": {
+        "next_state": "callback_end",
+        "execute_code": ""
+      }
+    }
+  },
+  "address_confirmation": {
+    "description": "Уточняем адрес объекта страхования",
+    "system_response": {
+      "template": "Хорошо. Давайте теперь сверим адрес. Недвижимость расположена по адресу {{ session.variables['address'] }}, верно?",
+      "redis_key": "audio_address_confirmation"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "finalize_policy",
+        "execute_code": ""
+      },
+      "confirm_no": {
+        "next_state": "finalize_policy",
+        "execute_code": ""
+      },
+      "ask_program_details": {
+        "next_state": "info_program_details",
+        "execute_code": ""
+      },
+      "ask_limits": {
+        "next_state": "info_limits",
+        "execute_code": ""
+      },
+      "government_compensation": {
+        "next_state": "info_government_compensation",
+        "execute_code": ""
+      },
+      "ask_other_products": {
+        "next_state": "info_other_products",
+        "execute_code": ""
+      },
+      "request_callback": {
+        "next_state": "callback_end",
+        "execute_code": ""
+      }
+    }
+  },
+  "send_link_extension_end": {
+    "description": "Отправляем ссылку со сроком действия 5 дней и прощаемся",
+    "system_response": {
+      "template": "Поняла. Смс‑сообщение со ссылкой я направлю в ближайшее время и поставлю отметку, чтобы ссылка действовала ещё 5 дней для оформления. Спасибо за уделённое время. Хорошего дня!",
+      "redis_key": "audio_send_link_extension_end"
+    },
+    "transitions": {}
+  }
+}

@@ -107,8 +107,8 @@ class AbstractConversationManager(abc.ABC):
 4) Реализация (краткие требования)
 
 4.1. llm/connection.py — LLMConnectionManager
-	•	Держит один httpx.AsyncClient с:
-	•	headers={"Authorization": f"Bearer {api_key}"}, timeout=config.llm.http_timeout_sec, http2=True.
+	•	Держит пул httpx.AsyncClient с (на каждый звонок у нас своя цепочка llm модуля, то есть соединения будут сделаны для каждого звонка):
+	•	headers={"Authorization": f"Bearer {api_key}"}, timeout=config.llm.http_timeout_sec, http2=True. Прогревает модель делая handshanke и warmup, помимо этого отправляем пустой текст, чтоб модель всегда была готова к обработке. Работает на основе конфига, там указано время раз в которое надо прогревать модель. Соединение должно отдавать всегда прогретым где отправлен чанк. 
 	•	Метрики (JSON-лог, logger="llm.conn"):
 	•	conn_handshake_start/finish (ms): создание клиента,
 	•	keep_alive_ping_start/finish (ms): лёгкий GET/POST ping (конфигурируемый endpoint, можно /v1/models).
@@ -200,9 +200,9 @@ project_root/
 	•	.env должен содержать OPENAI_API_KEY (или совместимый ключ).
 
 3) Что измеряем
-	•	Handshake: время создания httpx.AsyncClient + первый лёгкий ping.
+	•	Handshake: время создания httpx.AsyncClient + первый лёгкий ping. А также время отправки пустого текста и получения сообщения. 
 	•	Network RTT: t_send_request → t_socket_written (опционально) → t_first_byte (приблизительно через time перед/после await client.stream(...)).
-	•	Time to First Token (TTFT): от request_send до первого чанка.
+	•	Time to First Token (TTFT): от request_send до первого чанка (не считаем время прогрева соединенрия). 
 	•	Average total response: от request_send до конца стрима.
 	•	Chunk rate: чанков/сек.
 	•	Context usage: ratio до/после.

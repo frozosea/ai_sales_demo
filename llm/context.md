@@ -107,9 +107,9 @@ summarization_prompt: |
 ```python
 # Концептуальные контракты (без кода)
 
+
 class LLMConnectionManager(abc.ABC):
-  # Держит один httpx.AsyncClient c headers/Auth и keep-alive.
-  # Консистентность: всегда возвращает один и тот же тёплый клиент.
+  # Держит пул httpx.AsyncClient c headers/Auth и keep-alive. Раз в time（конфиг） прогревает модель отправкой пустым запросов, делает warmup. (на каждый звонок у нас своя цепочка llm модуля, то есть соединения будут сделаны для каждого звонка)
   async def get_client(self) -> httpx.AsyncClient: ...
   async def shutdown(self) -> None: ...
   async def _keep_alive_ping(self) -> None: ...

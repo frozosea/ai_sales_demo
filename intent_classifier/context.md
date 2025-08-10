@@ -156,7 +156,7 @@ class BooleanExtractor:
 
 3. Логика работы classify_intent (Stateless-версия)
 
-Это ключевой метод, который будет вызываться Orchestrator-ом на каждый partial и final результат от STT.
+Это ключевой метод, который будет вызываться Orchestrator-ом на каждый partial и final результат от STT. Он не работает с model-wrapper напрямую, он использует класс `ModelManager`, который всегда держит модель прогретой.
 
 Вход:
 	•	text: Распознанная речь.
