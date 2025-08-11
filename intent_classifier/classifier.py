@@ -18,8 +18,25 @@ class IntentClassifier:
         self.repo = repo
         self.config = config
         self.extractors = extractors
+        self.heuristics = {
+            "exact_match": {
+                # confirm_yes
+                "ага": "confirm_yes",
+                "угу": "confirm_yes",
+                "конеч": "confirm_yes",
+                # confirm_no
+                "отбой": "confirm_no",
+                "не хочу": "confirm_no", # Часто это простое "нет", а не причина
+                "не не хочу": "confirm_no",
+                # ask_cost
+                # request_callback
+                "не сейчас": "request_callback",
+                "не могу говорить": "request_callback",
+            }
+        }
         # Инициализируем ModelManager вместо хранения ссылки на модель
         ModelManager.initialize(model_path, device)
+
 
     def _extract_number(self, text: str) -> Optional[Union[int, float]]:
         """Быстрое извлечение числа из текста."""
@@ -33,6 +50,20 @@ class IntentClassifier:
         try:
             return w2n.word_to_num(text)
         except:
+            return None
+
+    def _apply_heuristics(self, text: str) -> Optional[IntentResult]:
+            """Отдельный слой для правил и эвристик."""
+            clean_text = text.strip().lower()
+
+            # Проверка на точное совпадение
+            if clean_text in self.heuristics["exact_match"]:
+                intent_id = self.heuristics["exact_match"][clean_text]
+                logger.info(f"Heuristic applied: exact match for '{clean_text}' -> '{intent_id}'")
+                return IntentResult(intent_id=intent_id, score=0.95, entities=None,current_leader=intent_id) # Score 1.0 - мы уверены
+            
+            # ... другие эвристики, если есть ...
+            
             return None
 
     async def classify_intent(
@@ -59,6 +90,10 @@ class IntentClassifier:
                     entities={"value": number},
                     current_leader="provide_number"
                 )
+        heuristic_result = self._apply_heuristics(text)
+        if heuristic_result and heuristic_result.intent_id in expected_intents:
+            return heuristic_result
+        
         SILENCE_MARKERS = {'...', 'хм', 'ммм', 'эм', 'эээ', 'ааа'}
         # Проверяем точное совпадение после очистки
         if text.strip().lower() in SILENCE_MARKERS:

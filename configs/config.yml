@@ -1,7 +1,7 @@
 llm:
   api_key: "sk-..."
   models:
-    main: "gpt-4-turbo"
+    main: "gpt-4o-mini"
     summarization: "gpt-3.5-turbo"
   context_window_size: 8192
   dual_context:

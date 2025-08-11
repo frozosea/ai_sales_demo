@@ -20,16 +20,24 @@ class LLMContext(AbstractLLMContext):
         self._prompt_config = prompt_config
         self._max_tokens = max_tokens
         self._history: ConversationHistory = []
+        self._current_tokens = 0
         try:
             self._encoder = tiktoken.encoding_for_model(model_name)
         except KeyError:
             logger.warning(f"Warning: model {model_name} not found. Using cl100k_base encoding.")
             self._encoder = tiktoken.get_encoding("cl100k_base")
 
+        # Pre-calculate tokens for system prompts
+        self._system_prompt_tokens = len(self._encoder.encode(self._prompt_config.get('system_prompt', '')))
+        self._format_instruction_tokens = len(self._encoder.encode(self._prompt_config.get('response_format_instruction', '')))
+        self._current_tokens += self._system_prompt_tokens + self._format_instruction_tokens
+
     def add_message(self, message: ConversationMessage) -> None:
         self._history.append(message)
+        # Incrementally update token count
+        self._current_tokens += len(self._encoder.encode(message['content']))
         ratio = self.estimate_usage_ratio()
-        jlog({"event": "add_message", "role": message['role'], "usage_ratio": ratio})
+        jlog({"event": "add_message", "role": message['role'], "usage_ratio": ratio, "current_tokens": self._current_tokens})
 
     def build_prompt(self) -> str:
         # A more sophisticated implementation might prune the history
@@ -61,9 +69,7 @@ class LLMContext(AbstractLLMContext):
         return []
 
     def estimate_usage_ratio(self) -> float:
-        prompt = self.build_prompt()
-        num_tokens = len(self._encoder.encode(prompt))
-        return min(num_tokens / self._max_tokens, 1.0)
+        return min(self._current_tokens / self._max_tokens, 1.0)
 
 if __name__ == "__main__":
     # Load configs

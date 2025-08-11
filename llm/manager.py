@@ -49,8 +49,33 @@ class ConversationManager(AbstractConversationManager):
         )
         
         self._background_tasks: Set[asyncio.Task] = set()
+        self._is_initialized = False
 
-    async def process_user_turn(self, final_user_text: str) -> AsyncGenerator[LLMStreamChunk, None]:
+    async def initialize(self):
+        await self.connection_manager.get_client()
+        self._is_initialized = True
+        jlog({"event": "manager_initialized"})
+
+    async def _get_stream_iterator(self, model_name: str, prompt: str, low_latency: bool):
+        """Helper to get an async iterator from the LLM client."""
+        http_client = await self.connection_manager.get_client()
+        stream = self.llm_client.stream_structured_generate(
+            http_client,
+            prompt,
+            model_name,
+            LLMStructuredResponse,
+            low_latency_mode=low_latency
+        )
+        return stream.__aiter__()
+
+    async def process_user_turn(
+        self,
+        final_user_text: str,
+        low_latency_mode: bool = False
+    ) -> AsyncGenerator[LLMStreamChunk, None]:
+        if not self._is_initialized:
+            raise RuntimeError("ConversationManager must be initialized before processing a turn.")
+
         t_start_turn = time.monotonic()
         jlog({"event": "user_turn_start", "session_hash": self._session_id_hash})
         
@@ -64,23 +89,90 @@ class ConversationManager(AbstractConversationManager):
             task.add_done_callback(self._background_tasks.discard)
 
         full_prompt = self.dual_ctx.active_context.build_prompt()
-        http_client = await self.connection_manager.get_client()
+
+        main_model = self._config['models']['main']
+        draft_model = self._config['models'].get('draft', 'gpt-3.5-turbo')
+
+        # Create iterators for both streams
+        main_iterator = await self._get_stream_iterator(main_model, full_prompt, low_latency_mode)
+        draft_iterator = await self._get_stream_iterator(draft_model, full_prompt, True)
 
         t_first_chunk = None
         full_response = ""
-        
-        stream = self.llm_client.stream_structured_generate(
-            http_client, full_prompt, self._config['models']['main'], LLMStructuredResponse
-        )
-        
-        async for chunk in stream:
-            if t_first_chunk is None:
-                t_first_chunk = time.monotonic()
-                jlog({"event": "time_to_first_token_ms", "ms": (t_first_chunk - t_start_turn) * 1000})
+        draft_buffer = ""
+        main_stream_finished = False
+        first_chunk_metrics = {}
 
-            text_chunk = chunk.answer
-            full_response += text_chunk
-            yield LLMStreamChunk(text_chunk=text_chunk)
+        try:
+            while not main_stream_finished:
+                # 1. Get a chunk from the draft model first
+                try:
+                    draft_chunk = await asyncio.wait_for(draft_iterator.__anext__(), timeout=0.05)
+                    draft_token = draft_chunk.answer
+                    
+                    if t_first_chunk is None:
+                        t_first_chunk = time.monotonic()
+                        first_chunk_metrics = {
+                            "network_latency_ms": draft_chunk.network_latency_ms,
+                            "inference_ttft_ms": draft_chunk.inference_ttft_ms
+                        }
+                        jlog({
+                            "event": "time_to_first_token_ms", 
+                            "ms": (t_first_chunk - t_start_turn) * 1000, 
+                            "source": "draft",
+                            **first_chunk_metrics
+                        })
+                        yield LLMStreamChunk(
+                            text_chunk=draft_token, 
+                            network_latency_ms=draft_chunk.network_latency_ms, 
+                            inference_ttft_ms=draft_chunk.inference_ttft_ms
+                        )
+                    else:
+                        draft_buffer += draft_token
+                        
+                except (StopAsyncIteration, asyncio.TimeoutError):
+                    pass
+
+                # 2. Get a chunk from the main model and verify against the draft
+                try:
+                    main_chunk = await main_iterator.__anext__()
+                    main_token = main_chunk.answer
+
+                    if t_first_chunk is None:
+                        t_first_chunk = time.monotonic()
+                        first_chunk_metrics = {
+                            "network_latency_ms": main_chunk.network_latency_ms,
+                            "inference_ttft_ms": main_chunk.inference_ttft_ms
+                        }
+                        jlog({
+                            "event": "time_to_first_token_ms", 
+                            "ms": (t_first_chunk - t_start_turn) * 1000, 
+                            "source": "main",
+                            **first_chunk_metrics
+                        })
+
+                    if draft_buffer and main_token.startswith(draft_buffer):
+                        yield LLMStreamChunk(text_chunk=draft_buffer)
+                        full_response += draft_buffer
+                        main_token = main_token[len(draft_buffer):]
+                        draft_buffer = ""
+
+                    elif draft_buffer:
+                        jlog({"event": "speculative_correction", "draft": draft_buffer, "main": main_token})
+                        draft_buffer = ""
+
+                    yield LLMStreamChunk(text_chunk=main_token)
+                    full_response += main_token
+
+                except StopAsyncIteration:
+                    main_stream_finished = True
+                    if draft_buffer:
+                        yield LLMStreamChunk(text_chunk=draft_buffer)
+                        full_response += draft_buffer
+                    break
+
+        except Exception as e:
+            jlog({"event": "speculative_generation_error", "error": str(e)})
 
         # Finalize
         assistant_message: ConversationMessage = {"role": "assistant", "content": full_response}
