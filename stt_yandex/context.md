@@ -269,5 +269,3 @@ python -m stt_yandex.stt_yandex  # if __main__ внутри файла
 
 #### 4) Ручной e2e-тест со стримингом WAV
 python stt_yandex/test/manual_test_stt.py --wav test_data/example.wav --chunk-ms 20 --repeats 3 --report-dir reports --config configs/stt_config.yml
-
-Если хочешь, дальше могу выдать скелеты кода для каждого файла (клиент, протогенерация, тест) — уже с готовыми импортами, JSON-логами и заглушками под конкретные поля protobuf.
