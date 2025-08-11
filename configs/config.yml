@@ -1,0 +1,11 @@
+llm:
+  api_key: "sk-..."
+  models:
+    main: "gpt-4-turbo"
+    summarization: "gpt-3.5-turbo"
+  context_window_size: 8192
+  dual_context:
+    warmup_threshold_ratio: 0.5
+    handover_threshold_ratio: 0.9
+  keep_alive_interval_sec: 45
+  http_timeout_sec: 30

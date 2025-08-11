@@ -106,9 +106,8 @@ async def main():
     }
     
     config = {
-        "thresholds": {"confidence": 0.4, "gap": 0.05},
+        "thresholds": {"confidence": 0.75, "gap": 0.01},
         "faq": {"confidence": 0.55},
-        "fasttext_threshold": 0.7 # Порог для FastText
     }
     
     # Инициализируем гибридный классификатор
@@ -118,7 +117,6 @@ async def main():
         config=config,
         extractors=extractors,
         device=args.device,
-        fasttext_model_path=args.fasttext_model # Передаем путь к модели
     )
     
     # --- Запуск тестов ---

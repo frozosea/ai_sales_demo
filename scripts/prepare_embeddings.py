@@ -69,8 +69,20 @@ async def main():
     phrase_idx = 0
     for intent_id, count in intent_phrase_counts.items():
         intent_embeddings = all_embeddings[phrase_idx:phrase_idx+count]
+
+        # 1. Считаем средний вектор (центроид)
+        centroid = np.mean(intent_embeddings, axis=0)
+
+        # 2. Вычисляем его длину (L2-норму)
+        norm = np.linalg.norm(centroid)
+
+        # 3. Нормализуем вектор (делим на его длину), если он не нулевой
+        if norm > 0:
+            centroid = centroid / norm
+
+        # 4. Сохраняем уже нормализованный центроид
+        repo.centroids[intent_id] = centroid
         repo.vectors[intent_id] = intent_embeddings
-        repo.centroids[intent_id] = np.mean(intent_embeddings, axis=0)
         phrase_idx += count
         logging.info(json.dumps({
             "event": "intent_ready",

@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Optional, Dict, Any, Union
+from typing import List, Optional, Dict, Any, Tuple, Union
 import numpy as np
 import logging
 import time
@@ -9,32 +9,17 @@ from ru_word2number import w2n
 from intent_classifier.model_manager import ModelManager
 from intent_classifier.repository import IntentRepository
 from intent_classifier.entity_extractors import SimpleNumericExtractor, BooleanExtractor
-from domain.models import IntentResult
-# Импортируем наш новый FastText классификатор
-from intent_classifier.fasttext_classifier import FastTextClassifier
-from domain.models import FaqResult
+from domain.models import IntentResult, FaqResult
 
 logger = logging.getLogger("intent.classifier")
 
 class IntentClassifier:
-    def __init__(
-        self,
-        model_path: str,
-        repo: IntentRepository,
-        config: dict,
-        extractors: Dict[str, Any],
-        device: str = "cpu",
-        fasttext_model_path: Optional[str] = "configs/fasttext_model.bin" # Путь к модели FastText
-    ) -> None:
+    def __init__(self, model_path: str, repo: IntentRepository, config: dict, extractors: Dict[str, Any], device: str = "cpu") -> None:
         self.repo = repo
         self.config = config
         self.extractors = extractors
+        # Инициализируем ModelManager вместо хранения ссылки на модель
         ModelManager.initialize(model_path, device)
-        
-        # Инициализируем FastText классификатор
-        self.fasttext_classifier = FastTextClassifier(model_path=fasttext_model_path)
-        if not self.fasttext_classifier.model:
-            logger.warning("FastText model not found or failed to load. The secondary classifier will be disabled.")
 
     def _extract_number(self, text: str) -> Optional[Union[int, float]]:
         """Быстрое извлечение числа из текста."""
@@ -47,71 +32,8 @@ class IntentClassifier:
         # 2. Пробуем ru_word2number для текстовых чисел
         try:
             return w2n.word_to_num(text)
-        except ValueError:
+        except:
             return None
-
-    async def _classify_with_primary_model(
-        self,
-        text: str,
-        expected_intents: List[str],
-        previous_leader: Optional[str] = None
-    ) -> Optional[IntentResult]:
-        """Основная логика классификации с использованием семантической модели."""
-        user_embedding = await ModelManager.get_instance().embed([text])
-        user_embedding = user_embedding[0]
-
-        candidate_vectors = self.repo.get_intent_vectors(expected_intents)
-        if not candidate_vectors:
-            return None
-
-        scores = {intent_id: np.dot(user_embedding, centroid) for intent_id, centroid in candidate_vectors.items()}
-        sorted_scores = sorted(scores.items(), key=lambda item: item[1], reverse=True)
-
-        if not sorted_scores:
-            return None
-
-        leader_intent, leader_score = sorted_scores[0]
-
-        # Confirmation Gates
-        if leader_score < self.config["thresholds"]["confidence"]:
-            logger.debug(f"Primary model score {leader_score} is below confidence threshold.")
-            return None
-
-        if len(sorted_scores) > 1:
-            second_score = sorted_scores[1][1]
-            if (leader_score - second_score) < self.config["thresholds"]["gap"]:
-                logger.debug(f"Primary model score gap {leader_score - second_score} is below threshold.")
-                return None
-        
-        if previous_leader and leader_intent != previous_leader:
-            logger.debug(f"Primary model detected intent '{leader_intent}' which is not the previous leader '{previous_leader}'.")
-            return None
-        
-        return IntentResult(
-            intent_id=leader_intent,
-            score=leader_score,
-            entities=None, # Сущности извлекаются отдельно
-            current_leader=leader_intent
-        )
-        
-    def _classify_with_secondary_model(self, text: str) -> Optional[IntentResult]:
-        """Резервная логика классификации с использованием FastText."""
-        if not self.fasttext_classifier or not self.fasttext_classifier.model:
-            return None
-        
-        prediction = self.fasttext_classifier.predict(text)
-        if prediction:
-            intent_id, score = prediction
-            # Используем отдельный, более строгий порог для FastText
-            if score >= self.config.get("fasttext_threshold", 0.7):
-                logger.info(f"Secondary model (FastText) classified text as '{intent_id}' with score {score:.4f}")
-                return IntentResult(
-                    intent_id=intent_id,
-                    score=score,
-                    entities=None,
-                    current_leader=intent_id
-                )
-        return None
 
     async def classify_intent(
         self,
@@ -121,57 +43,106 @@ class IntentClassifier:
     ) -> Optional[IntentResult]:
         t_start = time.monotonic()
         logger.info(f"classify_intent started for text: '{text}'")
-
-        # 1. Быстрая проверка на число (эвристика)
+        
+        # Быстрая проверка на наличие числа
         number = self._extract_number(text)
+        
+        # Если нашли число и среди expected_intents есть provide_number,
+        # проверяем его первым
         if number is not None and "provide_number" in expected_intents:
             metadata = self.repo.get_intent_metadata("provide_number")
             if metadata:
+                # Возвращаем provide_number с высоким score и извлеченным числом
                 return IntentResult(
                     intent_id="provide_number",
-                    score=0.95,
+                    score=0.95,  # Высокий score, так как мы уверены что это число
                     entities={"value": number},
                     current_leader="provide_number"
                 )
+        SILENCE_MARKERS = {'...', 'хм', 'ммм', 'эм', 'эээ', 'ааа'}
+        # Проверяем точное совпадение после очистки
+        if text.strip().lower() in SILENCE_MARKERS:
+            logger.info("Heuristic applied: matched silence marker.")
+            return IntentResult(intent_id="silence", score=1.0, entities=None, current_leader="silence")
+
+        # 2. Жесткое правило для "неа": исправляем самую частую ошибку confirm_no -> confirm_yes
+        if text.strip().lower() == 'неа':
+            logger.info("Heuristic applied: matched 'неа' as confirm_no.")
+            return IntentResult(intent_id="confirm_no", score=0.99, entities=None, current_leader="confirm_no")
+
+        # 3. Эвристика для коротких вопросительных фраз, которые модель путает с confirm_yes
+        # "что", "зачем", "почем", "в чем дело" - это точно не согласие.
+        # Мы не будем пытаться угадать интент, а просто предотвратим ложное срабатывание.
+        SHORT_QUESTION_WORDS = {'что', 'зачем', 'почем', 'чего', 'как'}
+        words = text.strip().lower().split()
+        if len(words) <= 2 and any(word in SHORT_QUESTION_WORDS for word in words):
+            # Вместо того чтобы пытаться угадать, мы просто говорим "не уверен",
+            # пропуская классификацию. Оркестратор может это обработать.
+            logger.info("Heuristic applied: short question detected, skipping classification to avoid false positive.")
+            return None
         
-        # 2. Основная семантическая модель
-        result = await self._classify_with_primary_model(text, expected_intents, previous_leader)
+        # Если число не найдено или provide_number не в expected_intents,
+        # используем модель для классификации через ModelManager
+        user_embedding = await ModelManager.get_instance().embed([text])
+        user_embedding = user_embedding[0]
 
-        # 3. Если основная модель не справилась, используем вторичную (FastText)
-        if result is None:
-            logger.debug("Primary model failed. Falling back to secondary model (FastText).")
-            result = self._classify_with_secondary_model(text)
+        candidate_vectors = self.repo.get_intent_vectors(expected_intents)
+        if not candidate_vectors:
+            return None
 
-        # 4. Если результат есть (от любой из моделей), извлекаем сущности
-        if result:
-            entities = None
-            metadata = self.repo.get_intent_metadata(result.intent_id)
-            if metadata and "entity" in metadata:
-                entity_meta = metadata["entity"]
-                # Для `provide_number` мы уже извлекли число
-                if result.intent_id == "provide_number" and number is not None:
-                    entities = {"value": number}
-                else:
-                    parser_name = entity_meta.get("parser")
-                    if parser_name in self.extractors:
-                        extractor = self.extractors[parser_name]
-                        extracted_value = extractor.extract(text)
-                        if extracted_value is not None:
-                            entities = {"value": extracted_value}
-                        elif entity_meta.get("required", False):
-                            # Если сущность обязательна, но не найдена, отменяем результат
-                            logger.warning(f"Required entity for intent '{result.intent_id}' not found in text.")
-                            return None
-            result.entities = entities
-            
+        scores = {intent_id: np.dot(user_embedding, centroid) for intent_id, centroid in candidate_vectors.items()}
+        
+        sorted_scores = sorted(scores.items(), key=lambda item: item[1], reverse=True)
+        
+        if not sorted_scores:
+            return None
+
+        leader_intent, leader_score = sorted_scores[0]
+        print(f"[DEBUG] Текст: '{text}' -> Лидер: '{leader_intent}' (Score: {leader_score:.4f})")
+
+        # Confirmation Gates
+        if leader_score < self.config["thresholds"]["confidence"]:
+            return None
+
+        if len(sorted_scores) > 1:
+            second_score = sorted_scores[1][1]
+            second_intent, _ = sorted_scores[1]
+            print(f"[DEBUG] ...Второй: '{second_intent}' (Score: {second_score:.4f}), Разрыв: {(leader_score - second_score):.4f}")
+            if (leader_score - second_score) < self.config["thresholds"]["gap"]:
+                return None
+        
+        if previous_leader and leader_intent != previous_leader:
+            return None
+
+        # Entity Extraction - используем уже извлеченное число если оно есть
+        entities = None
+        metadata = self.repo.get_intent_metadata(leader_intent)
+        if metadata and "entity" in metadata:
+            entity_meta = metadata["entity"]
+            if entity_meta.get("type") == "number" and number is not None:
+                # Используем уже извлеченное число
+                entities = {"value": number}
+            else:
+                # Для других типов сущностей используем соответствующие экстракторы
+                parser_name = entity_meta.get("parser")
+                if parser_name in self.extractors:
+                    extractor = self.extractors[parser_name]
+                    extracted_value = extractor.extract(text)
+                    if extracted_value is not None:
+                        entities = {"value": extracted_value}
+                    elif entity_meta.get("required", False):
+                        return None
+        
         t_end = time.monotonic()
-        if result:
-            logger.info(f"classify_intent finished in {(t_end - t_start) * 1000:.2f}ms. Leader: {result.intent_id}")
-        else:
-            logger.info(f"classify_intent finished in {(t_end - t_start) * 1000:.2f}ms. No intent found.")
-            
-        return result
-        
+        logger.info(f"classify_intent finished in {(t_end - t_start) * 1000:.2f}ms. Leader: {leader_intent}")
+        print(f"leader_intent: {leader_intent}, score: {leader_score}")
+        return IntentResult(
+            intent_id=leader_intent,
+            score=leader_score,
+            entities=entities,
+            current_leader=leader_intent
+        )
+
     async def find_faq_answer(self, text: str) -> Optional[FaqResult]:
         t_start = time.monotonic()
         logger.info(f"find_faq_answer started for text: '{text}'")

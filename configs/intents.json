@@ -1,945 +1,332 @@
 {
   "confirm_yes": {
     "description": [
-      {
-        "response": "Да",
-        "embedding": 0
-      },
-      {
-        "response": "Верно",
-        "embedding": 0
-      },
-      {
-        "response": "Конечно",
-        "embedding": 0
-      },
-      {
-        "response": "Согласен",
-        "embedding": 0
-      },
-      {
-        "response": "Безусловно",
-        "embedding": 0
-      },
-      {
-        "response": "Подтверждаю",
-        "embedding": 0
-      },
-      {
-        "response": "Правильно",
-        "embedding": 0
-      },
-      {
-        "response": "Да, всё верно",
-        "embedding": 0
-      },
-      {
-        "response": "Ага",
-        "embedding": 0
-      },
-      {
-        "response": "Так точно",
-        "embedding": 0
-      },
-      {
-        "response": "Да, всё верно",
-        "embedding": 0
-      },
-      {
-        "response": "Я согласен с вашим предложением",
-        "embedding": 0
-      },
-      {
-        "response": "Ваше предложение мне подходит",
-        "embedding": 0
-      },
-      {
-        "response": "Да, ваше предложение является для меня интересным. Я согласен с вами. ",
-        "embedding": 0
-      },
-      {
-        "response": "Да, ваше предложение мне подходит. Я согласен с вами.",
-        "embedding": 0
-      },
-      {
-        "response": "То что вы говорите актуально для меня, я заинтересован и согласен.",
-        "embedding": 0
-      }
+      {"response": "да", "embedding": 0},
+      {"response": "ага", "embedding": 0},
+      {"response": "угу", "embedding": 0},
+      {"response": "верно", "embedding": 0},
+      {"response": "точно", "embedding": 0},
+      {"response": "конечно", "embedding": 0},
+      {"response": "да, да", "embedding": 0},
+      {"response": "так точно", "embedding": 0},
+      {"response": "подтверждаю", "embedding": 0},
+      {"response": "я согласен", "embedding": 0},
+      {"response": "согласна", "embedding": 0},
+      {"response": "ну да", "embedding": 0},
+      {"response": "правильно", "embedding": 0},
+      {"response": "да, все верно", "embedding": 0},
+      {"response": "да, это так", "embedding": 0},
+      {"response": "конеч", "embedding": 0},
+      {"response": "ага, давай", "embedding": 0},
+      {"response": "хорошо", "embedding": 0},
+      {"response": "окей", "embedding": 0},
+      {"response": "подходит", "embedding": 0},
+      {"response": "давайте", "embedding": 0}
     ]
   },
   "confirm_no": {
     "description": [
-      {
-        "response": "Нет",
-        "embedding": 0
-      },
-      {
-        "response": "Неверно",
-        "embedding": 0
-      },
-      {
-        "response": "Отрицательно",
-        "embedding": 0
-      },
-      {
-        "response": "Не согласен",
-        "embedding": 0
-      },
-      {
-        "response": "Нет, это не так",
-        "embedding": 0
-      },
-      {
-        "response": "Отмена",
-        "embedding": 0
-      },
-      {
-        "response": "Совсем нет",
-        "embedding": 0
-      },
-      {
-        "response": "Не нужно",
-        "embedding": 0
-      },
-      {
-        "response": "Я отказываюсь",
-        "embedding": 0
-      },
-      {
-        "response": "Не хочу",
-        "embedding": 0
-      },
-      {
-        "response": "Я не согласен с предложением",
-        "embedding": 0
-      },
-      {
-        "response": "Предложение не подходит",
-        "embedding": 0
-      },
-      {
-        "response": "Предложение является для меня неинтересным и неактуальным",
-        "embedding": 0
-      },
-      {
-        "response": "Является неактуальным для меня",
-        "embedding": 0
-      }
+      {"response": "нет", "embedding": 0},
+      {"response": "неа", "embedding": 0},
+      {"response": "не", "embedding": 0},
+      {"response": "не верно", "embedding": 0},
+      {"response": "неправильно", "embedding": 0},
+      {"response": "отрицаю", "embedding": 0},
+      {"response": "отмена", "embedding": 0},
+      {"response": "отбой", "embedding": 0},
+      {"response": "не согласен", "embedding": 0},
+      {"response": "я против", "embedding": 0},
+      {"response": "нет, не надо", "embedding": 0},
+      {"response": "нет, спасибо", "embedding": 0},
+      {"response": "не хочу", "embedding": 0},
+      {"response": "нет, не так", "embedding": 0},
+      {"response": "не, не хочу", "embedding": 0},
+      {"response": "категорически нет", "embedding": 0},
+      {"response": "не нужно", "embedding": 0},
+      {"response": "не актуально", "embedding": 0}
     ]
   },
   "provide_number": {
     "description": [
-      {
-        "response": "число",
-        "embedding": 0
-      },
-      {
-        "response": "Это число",
-        "embedding": 0
-      },
-      {
-        "response": "Сумма число",
-        "embedding": 0
-      },
-      {
-        "response": "Около число",
-        "embedding": 0
-      },
-      {
-        "response": "Пусть будет число",
-        "embedding": 0
-      },
-      {
-        "response": "Назовите число",
-        "embedding": 0
-      },
-      {
-        "response": "Примерно число",
-        "embedding": 0
-      },
-      {
-        "response": "Пожалуй число",
-        "embedding": 0
-      },
-      {
-        "response": "Скажем число",
-        "embedding": 0
-      },
-      {
-        "response": "Мне подходит число",
-        "embedding": 0
-      }
+      {"response": "ну пусть будет 500", "embedding": 0},
+      {"response": "где-то 100000", "embedding": 0},
+      {"response": "миллион", "embedding": 0},
+      {"response": "два миллиона", "embedding": 0},
+      {"response": "тысяч 200", "embedding": 0},
+      {"response": "сто пятьдесят", "embedding": 0},
+      {"response": "семьсот", "embedding": 0},
+      {"response": "пять тысяч", "embedding": 0},
+      {"response": "давайте 1500", "embedding": 0},
+      {"response": "а если 300", "embedding": 0},
+      {"response": "ну, скажем, 450", "embedding": 0},
+      {"response": "около 900", "embedding": 0},
+      {"response": "750", "embedding": 0},
+      {"response": "триста", "embedding": 0},
+      {"response": "две тысячи", "embedding": 0},
+      {"response": "пятьсот", "embedding": 0},
+      {"response": "полтора миллиона", "embedding": 0}
     ],
-    "entity": {
-      "type": "number"
-    }
+    "entity": { "type": "number" }
   },
   "ask_where_number": {
     "description": [
-      {
-        "response": "Откуда у вас мой номер?",
-        "embedding": 0
-      },
-      {
-        "response": "Как вы узнали мой номер?",
-        "embedding": 0
-      },
-      {
-        "response": "Кто дал вам мой номер?",
-        "embedding": 0
-      },
-      {
-        "response": "Где вы взяли мои контакты?",
-        "embedding": 0
-      },
-      {
-        "response": "Почему вы мне звоните по этому номеру?",
-        "embedding": 0
-      },
-      {
-        "response": "Как вы нашли мой номер телефона?",
-        "embedding": 0
-      },
-      {
-        "response": "Где нашли мои контакты?",
-        "embedding": 0
-      },
-      {
-        "response": "Откуда эта информация о моём номере?",
-        "embedding": 0
-      },
-      {
-        "response": "Как вы получили мой телефон?",
-        "embedding": 0
-      },
-      {
-        "response": "С какого сайта у вас мой номер?",
-        "embedding": 0
-      },
-      {
-        "response": "Скажите, пожалуйста, из какого источника вы получили мой номера телефона?",
-        "embedding": 0
-      },
-      {
-        "response": "Скажите, пожалуйста, из какого источника вы получили мой номер телефона?",
-        "embedding": 0
-      },
-      {
-        "response": "Я не помню, чтобы оставлял вам свои данные, где вы их взяли?",
-        "embedding": 0
-      },
-      {
-        "response": "Я хочу узнать, откуда вы получили мой номер телефона?",
-        "embedding": 0
-      },
-      {
-        "response": "Я хочу узнать почему вы мне звоните по этому номеру?",
-        "embedding": 0
-      }
+      {"response": "откуда номер", "embedding": 0},
+      {"response": "где мой номер", "embedding": 0},
+      {"response": "кто вам дал", "embedding": 0},
+      {"response": "откуда знаете", "embedding": 0},
+      {"response": "как вы нашли", "embedding": 0},
+      {"response": "почему по этому номеру", "embedding": 0},
+      {"response": "кто дал контакты", "embedding": 0},
+      {"response": "где взяли", "embedding": 0},
+      {"response": "как вы получили", "embedding": 0},
+      {"response": "с какого сайта", "embedding": 0},
+      {"response": "кто вам слил", "embedding": 0},
+      {"response": "откуда у вас мои данные", "embedding": 0},
+      {"response": "откуда инфа", "embedding": 0},
+      {"response": "где вы взяли мой телефон", "embedding": 0},
+      {"response": "на каком основании звоните", "embedding": 0}
     ]
   },
   "ask_previous_client": {
     "description": [
-      {
-        "response": "Я уже был вашим клиентом?",
-        "embedding": 0
-      },
-      {
-        "response": "Мы раньше сотрудничали?",
-        "embedding": 0
-      },
-      {
-        "response": "Я у вас страховал имущество раньше?",
-        "embedding": 0
-      },
-      {
-        "response": "Ранее я делал расчёт у вас?",
-        "embedding": 0
-      },
-      {
-        "response": "Вы уже работали со мной?",
-        "embedding": 0
-      },
-      {
-        "response": "Я раньше пользовался вашими услугами?",
-        "embedding": 0
-      },
-      {
-        "response": "Я был клиентом Ингосстрах?",
-        "embedding": 0
-      },
-      {
-        "response": "Раньше я был застрахован у вас?",
-        "embedding": 0
-      },
-      {
-        "response": "Я покупал у вас страховку?",
-        "embedding": 0
-      },
-      {
-        "response": "Мы уже имели дело?",
-        "embedding": 0
-      }
+      {"response": "я ваш клиент?", "embedding": 0},
+      {"response": "мы работали?", "embedding": 0},
+      {"response": "я у вас был?", "embedding": 0},
+      {"response": "я уже был вашим клиентом", "embedding": 0},
+      {"response": "мы раньше сотрудничали", "embedding": 0},
+      {"response": "я был клиентом ингосстрах", "embedding": 0},
+      {"response": "мы уже имели дело", "embedding": 0},
+      {"response": "я к вам обращался", "embedding": 0},
+      {"response": "мы сотрудничали раньше", "embedding": 0},
+      {"response": "Проверьте, я был вашим клиентом?", "embedding": 0},
+      {"response": "Я был вашим клиентом?", "embedding": 0},
+      {"response": "Мы с вами уже работали раньше?", "embedding": 0},
+      {"response": "Я к вам когда-либо обращался?", "embedding": 0}
     ]
   },
   "ask_policy_used": {
     "description": [
-      {
-        "response": "Я оформлял полис от Ингосстрах?",
-        "embedding": 0
-      },
-      {
-        "response": "У меня был полис Ингосстрах?",
-        "embedding": 0
-      },
-      {
-        "response": "Какой полис я оформлял?",
-        "embedding": 0
-      },
-      {
-        "response": "Я пользовался вашим полисом?",
-        "embedding": 0
-      },
-      {
-        "response": "У меня уже есть полис Ингосстрах?",
-        "embedding": 0
-      },
-      {
-        "response": "Вы мне уже выдавали полис?",
-        "embedding": 0
-      },
-      {
-        "response": "Я когда‑то покупал полис?",
-        "embedding": 0
-      },
-      {
-        "response": "Был ли у меня ваш полис?",
-        "embedding": 0
-      },
-      {
-        "response": "Я брал страховку у вас раньше?",
-        "embedding": 0
-      },
-      {
-        "response": "Моя предыдущая страховка была от Ингосстрах?",
-        "embedding": 0
-      }
+      {"response": "я оформлял у вас полис", "embedding": 0},
+      {"response": "у меня был ваш полис", "embedding": 0},
+      {"response": "какой полис у меня был", "embedding": 0},
+      {"response": "я пользовался вашей страховкой", "embedding": 0},
+      {"response": "вы мне выдавали полис", "embedding": 0},
+      {"response": "я покупал у вас страховку", "embedding": 0},
+      {"response": "был ли у меня ваш полис", "embedding": 0},
+      {"response": "я брал у вас страховку", "embedding": 0},
+      {"response": "какая у меня была страховка", "embedding": 0},
+      {"response": "Какой полис у меня был оформлен?", "embedding": 0},
+      {"response": "Можете найти мой предыдущий номер полиса?", "embedding": 0},
+      {"response": "Я страховался у вас по полису?", "embedding": 0}
     ]
   },
   "ask_company": {
     "description": [
-      {
-        "response": "Какая компания звонит?",
-        "embedding": 0
-      },
-      {
-        "response": "Кто мне звонит?",
-        "embedding": 0
-      },
-      {
-        "response": "Откуда вы звоните?",
-        "embedding": 0
-      },
-      {
-        "response": "Представитель какой компании?",
-        "embedding": 0
-      },
-      {
-        "response": "Какую фирму вы представляете?",
-        "embedding": 0
-      },
-      {
-        "response": "Это какая компания?",
-        "embedding": 0
-      },
-      {
-        "response": "Вы от какой страховой?",
-        "embedding": 0
-      },
-      {
-        "response": "Как называется ваша компания?",
-        "embedding": 0
-      },
-      {
-        "response": "Кто это?",
-        "embedding": 0
-      },
-      {
-        "response": "Из какой вы организации?",
-        "embedding": 0
-      }
+      {"response": "какая компания", "embedding": 0},
+      {"response": "кто звонит", "embedding": 0},
+      {"response": "откуда вы", "embedding": 0},
+      {"response": "кто вы", "embedding": 0},
+      {"response": "вы кто", "embedding": 0},
+      {"response": "что за фирма", "embedding": 0},
+      {"response": "какую фирму представляете", "embedding": 0},
+      {"response": "вы от какой компании", "embedding": 0},
+      {"response": "как называется ваша организация", "embedding": 0},
+      {"response": "кто это", "embedding": 0},
+      {"response": "из какой вы компании", "embedding": 0},
+      {"response": "что за организация", "embedding": 0}
     ]
   },
   "ask_purpose": {
     "description": [
-      {
-        "response": "Зачем вы звоните?",
-        "embedding": 0
-      },
-      {
-        "response": "Какова цель вашего звонка?",
-        "embedding": 0
-      },
-      {
-        "response": "По какому поводу звонок?",
-        "embedding": 0
-      },
-      {
-        "response": "Для чего вы звоните?",
-        "embedding": 0
-      },
-      {
-        "response": "Что вы хотите?",
-        "embedding": 0
-      },
-      {
-        "response": "О чём речь?",
-        "embedding": 0
-      },
-      {
-        "response": "Какова причина звонка?",
-        "embedding": 0
-      },
-      {
-        "response": "Почему вы мне звоните?",
-        "embedding": 0
-      },
-      {
-        "response": "По какому вопросу звонок?",
-        "embedding": 0
-      },
-      {
-        "response": "В чём дело?",
-        "embedding": 0
-      },
-      {
-        "response": "Я хочу узнать причину вашего звонка",
-        "embedding": 0
-      },
-      {
-        "response": "По какой причине вы мне звоните",
-        "embedding": 0
-      },
-      {
-        "response": "Что вы мне предлагаете, какая цель вашего звонка",
-        "embedding": 0
-      }
+      {"response": "зачем звоните", "embedding": 0},
+      {"response": "цель звонка", "embedding": 0},
+      {"response": "по какому поводу", "embedding": 0},
+      {"response": "что вы хотите", "embedding": 0},
+      {"response": "о чем речь", "embedding": 0},
+      {"response": "причина звонка", "embedding": 0},
+      {"response": "почему мне звоните", "embedding": 0},
+      {"response": "по какому вопросу", "embedding": 0},
+      {"response": "в чем дело", "embedding": 0},
+      {"response": "что хотели", "embedding": 0},
+      {"response": "с какой целью", "embedding": 0},
+      {"response": "зачем вы мне звоните", "embedding": 0}
     ]
   },
   "ask_robot": {
     "description": [
-      {
-        "response": "Вы робот?",
-        "embedding": 0
-      },
-      {
-        "response": "Я разговариваю с роботом?",
-        "embedding": 0
-      },
-      {
-        "response": "Это автоматический звонок?",
-        "embedding": 0
-      },
-      {
-        "response": "Со мной говорит машина?",
-        "embedding": 0
-      },
-      {
-        "response": "Вы реальный человек?",
-        "embedding": 0
-      },
-      {
-        "response": "Это голосовой робот?",
-        "embedding": 0
-      },
-      {
-        "response": "Вы человек или робот?",
-        "embedding": 0
-      },
-      {
-        "response": "Это запись?",
-        "embedding": 0
-      },
-      {
-        "response": "Меня набрал бот?",
-        "embedding": 0
-      },
-      {
-        "response": "Это программа?",
-        "embedding": 0
-      },
-      {
-        "response": "Я разговариваю с ботом?",
-        "embedding": 0
-      },
-      {
-        "response": "Я разговариваю с роботом?",
-        "embedding": 0
-      },
-      {
-        "response": "Я разговариваю с автоматом?",
-        "embedding": 0
-      },
-      {
-        "response": "Это голосовой автомат?",
-        "embedding": 0
-      },
-      {
-        "response": "Вы человек или бот?",
-        "embedding": 0
-      },
-      {
-        "response": "Я разговариваю с машиной?",
-        "embedding": 0
-      },
-      {
-        "response": "Это голосовой компьютер?",
-        "embedding": 0
-      },
-      {
-        "response": "Я разговариваю с программой?",
-        "embedding": 0
-      },
-      {
-        "response": "Я хочу переключиться на живого оператора",
-        "embedding": 0
-      },
-      {
-        "response": "Я разговариваю с роботом?",
-        "embedding": 0
-      }
+      {"response": "вы робот", "embedding": 0},
+      {"response": "я с роботом говорю", "embedding": 0},
+      {"response": "это автомат", "embedding": 0},
+      {"response": "со мной машина говорит", "embedding": 0},
+      {"response": "вы человек", "embedding": 0},
+      {"response": "это голосовой помощник", "embedding": 0},
+      {"response": "вы человек или робот", "embedding": 0},
+      {"response": "это запись", "embedding": 0},
+      {"response": "меня набрал бот", "embedding": 0},
+      {"response": "это программа", "embedding": 0},
+      {"response": "я с кем говорю", "embedding": 0},
+      {"response": "это не человек", "embedding": 0},
+      {"response": "я с ботом общаюсь", "embedding": 0}
     ]
   },
   "ask_cost": {
     "description": [
-      {
-        "response": "Сколько это стоит?",
-        "embedding": 0
-      },
-      {
-        "response": "Какова стоимость полиса?",
-        "embedding": 0
-      },
-      {
-        "response": "Какая цена?",
-        "embedding": 0
-      },
-      {
-        "response": "Сколько будет стоить страховка?",
-        "embedding": 0
-      },
-      {
-        "response": "Какие тарифы?",
-        "embedding": 0
-      },
-      {
-        "response": "Сколько нужно заплатить?",
-        "embedding": 0
-      },
-      {
-        "response": "Какова стоимость услуги?",
-        "embedding": 0
-      },
-      {
-        "response": "Сколько обойдётся полис?",
-        "embedding": 0
-      },
-      {
-        "response": "Какой ценник?",
-        "embedding": 0
-      },
-      {
-        "response": "Сколько стоит страховка?",
-        "embedding": 0
-      },
-      {
-        "response": "Меня интересует стоимость полиса. Я хочу узнать цену.",
-        "embedding": 0
-      },
-      {
-        "response": "Я хочу узнать цену страховки",
-        "embedding": 0
-      },
-      {
-        "response": "Я хочу узнать сколько стоит страховка",
-        "embedding": 0
-      }
+      {"response": "сколько стоит", "embedding": 0},
+      {"response": "стоимость", "embedding": 0},
+      {"response": "какая цена", "embedding": 0},
+      {"response": "сколько будет стоить", "embedding": 0},
+      {"response": "какие тарифы", "embedding": 0},
+      {"response": "сколько платить", "embedding": 0},
+      {"response": "стоимость услуги", "embedding": 0},
+      {"response": "сколько обойдется", "embedding": 0},
+      {"response": "ценник какой", "embedding": 0},
+      {"response": "почем", "embedding": 0},
+      {"response": "сколько денег", "embedding": 0},
+      {"response": "цена вопроса", "embedding": 0},
+      {"response": "сколько?", "embedding": 0},
+      {"response": "цена?", "embedding": 0}
     ]
   },
   "has_insurance": {
     "description": [
-      {
-        "response": "У меня уже есть страховка",
-        "embedding": 0
-      },
-      {
-        "response": "Я уже оформил полис",
-        "embedding": 0
-      },
-      {
-        "response": "Я уже застрахован",
-        "embedding": 0
-      },
-      {
-        "response": "У меня есть полис от военных рисков",
-        "embedding": 0
-      },
-      {
-        "response": "Я уже купил страховку",
-        "embedding": 0
-      },
-      {
-        "response": "Уже застраховал квартиру",
-        "embedding": 0
-      },
-      {
-        "response": "У меня действует полис",
-        "embedding": 0
-      },
-      {
-        "response": "Полис уже оформлен",
-        "embedding": 0
-      },
-      {
-        "response": "Страховка у меня есть",
-        "embedding": 0
-      },
-      {
-        "response": "Я уже защитил жильё",
-        "embedding": 0
-      }
+      {"response": "у меня есть", "embedding": 0},
+      {"response": "я уже оформил", "embedding": 0},
+      {"response": "я застрахован", "embedding": 0},
+      {"response": "у меня есть полис", "embedding": 0},
+      {"response": "я уже купил", "embedding": 0},
+      {"response": "уже застраховал", "embedding": 0},
+      {"response": "у меня действует страховка", "embedding": 0},
+      {"response": "полис уже оформлен", "embedding": 0},
+      {"response": "страховка есть", "embedding": 0},
+      {"response": "у меня уже есть", "embedding": 0},
+      {"response": "я уже застрахован в другой компании", "embedding": 0},
+      {"response": "у меня есть страховка", "embedding": 0},
+      {"response": "у меня уже действует полис", "embedding": 0},
+      {"response": "мне не нужно, я уже защищен", "embedding": 0}
     ]
   },
   "request_callback": {
     "description": [
-      {
-        "response": "Перезвоните позже",
-        "embedding": 0
-      },
-      {
-        "response": "Мне сейчас неудобно",
-        "embedding": 0
-      },
-      {
-        "response": "Позвоните попозже",
-        "embedding": 0
-      },
-      {
-        "response": "Давайте поговорим позже",
-        "embedding": 0
-      },
-      {
-        "response": "Я не могу говорить, перезвоните",
-        "embedding": 0
-      },
-      {
-        "response": "Можно позже?",
-        "embedding": 0
-      },
-      {
-        "response": "Свяжитесь со мной позже",
-        "embedding": 0
-      },
-      {
-        "response": "Не сейчас, пожалуйста",
-        "embedding": 0
-      },
-      {
-        "response": "Отложите звонок",
-        "embedding": 0
-      },
-      {
-        "response": "Давайте перенесём",
-        "embedding": 0
-      }
+      {"response": "перезвоните", "embedding": 0},
+      {"response": "неудобно", "embedding": 0},
+      {"response": "позвоните позже", "embedding": 0},
+      {"response": "давайте потом", "embedding": 0},
+      {"response": "я не могу говорить", "embedding": 0},
+      {"response": "можно попозже", "embedding": 0},
+      {"response": "свяжитесь позже", "embedding": 0},
+      {"response": "не сейчас", "embedding": 0},
+      {"response": "давайте перенесем", "embedding": 0},
+      {"response": "занят", "embedding": 0},
+      {"response": "попозже наберите", "embedding": 0},
+      {"response": "я на совещании, перезвоните через час", "embedding": 0}
     ]
   },
   "provide_reject_reason": {
     "description": [
-      {
-        "response": "Не интересно",
-        "embedding": 0
-      },
-      {
-        "response": "Меня не устраивает",
-        "embedding": 0
-      },
-      {
-        "response": "Это дорого",
-        "embedding": 0
-      },
-      {
-        "response": "Не хочу",
-        "embedding": 0
-      },
-      {
-        "response": "Не нужно",
-        "embedding": 0
-      },
-      {
-        "response": "Я отказываюсь",
-        "embedding": 0
-      },
-      {
-        "response": "Мне это не подходит",
-        "embedding": 0
-      },
-      {
-        "response": "Не планирую страховаться",
-        "embedding": 0
-      },
-      {
-        "response": "Не вижу смысла",
-        "embedding": 0
-      },
-      {
-        "response": "Не хочу обсуждать",
-        "embedding": 0
-      }
+      {"response": "не интересно", "embedding": 0},
+      {"response": "не устраивает", "embedding": 0},
+      {"response": "дорого", "embedding": 0},
+      {"response": "не хочу", "embedding": 0},
+      {"response": "не нужно", "embedding": 0},
+      {"response": "отказываюсь", "embedding": 0},
+      {"response": "мне не подходит", "embedding": 0},
+      {"response": "не планирую", "embedding": 0},
+      {"response": "не вижу смысла", "embedding": 0},
+      {"response": "не хочу это обсуждать", "embedding": 0},
+      {"response": "не надо, спасибо", "embedding": 0},
+      {"response": "уже есть страховка", "embedding": 0},
+      {"response": "денег нет", "embedding": 0},
+      {"response": "это слишком дорого для меня", "embedding": 0},
+      {"response": "ваше предложение неактуально", "embedding": 0},
+      {"response": "я не доверяю страховым", "embedding": 0}
     ]
   },
   "silence": {
     "description": [
-      {
-        "response": "…",
-        "embedding": 0
-      },
-      {
-        "response": "",
-        "embedding": 0
-      },
-      {
-        "response": "*тишина*",
-        "embedding": 0
-      },
-      {
-        "response": "нет ответа",
-        "embedding": 0
-      },
-      {
-        "response": "молчание",
-        "embedding": 0
-      }
+      {"response": "...", "embedding": 0},
+      {"response": "", "embedding": 0},
+      {"response": "хм", "embedding": 0},
+      {"response": "ммм", "embedding": 0},
+      {"response": "эм", "embedding": 0},
+      {"response": "ааа", "embedding": 0},
+      {"response": "эээ", "embedding": 0}
     ]
   },
   "ask_program_details": {
     "description": [
-      {
-        "response": "Что такое программа Бастион?",
-        "embedding": 0
-      },
-      {
-        "response": "Расскажите о Бастионе",
-        "embedding": 0
-      },
-      {
-        "response": "Что за страховка Бастион?",
-        "embedding": 0
-      },
-      {
-        "response": "Какие риски покрывает Бастион?",
-        "embedding": 0
-      },
-      {
-        "response": "В чём суть программы?",
-        "embedding": 0
-      },
-      {
-        "response": "Что входит в программу Бастион?",
-        "embedding": 0
-      },
-      {
-        "response": "Что за продукт Бастион?",
-        "embedding": 0
-      },
-      {
-        "response": "Можно подробнее про Бастион?",
-        "embedding": 0
-      },
-      {
-        "response": "Чем полезна программа Бастион?",
-        "embedding": 0
-      },
-      {
-        "response": "Что покрывает Бастион?",
-        "embedding": 0
-      }
+      {"response": "что за программа", "embedding": 0},
+      {"response": "о бастионе", "embedding": 0},
+      {"response": "что за страховка", "embedding": 0},
+      {"response": "какие риски покрывает", "embedding": 0},
+      {"response": "в чем суть", "embedding": 0},
+      {"response": "что входит в полис", "embedding": 0},
+      {"response": "что за продукт", "embedding": 0},
+      {"response": "расскажите подробнее", "embedding": 0},
+      {"response": "чем полезна эта страховка", "embedding": 0},
+      {"response": "что покрывает", "embedding": 0},
+      {"response": "что это такое", "embedding": 0},
+      {"response": "расскажите об этом", "embedding": 0},
+      {"response": "какие условия", "embedding": 0}
     ]
   },
   "ask_limits": {
     "description": [
-      {
-        "response": "Какая минимальная сумма?",
-        "embedding": 0
-      },
-      {
-        "response": "Какая максимальная сумма?",
-        "embedding": 0
-      },
-      {
-        "response": "Какой лимит?",
-        "embedding": 0
-      },
-      {
-        "response": "От какой суммы можно застраховаться?",
-        "embedding": 0
-      },
-      {
-        "response": "До какой суммы можно страховать?",
-        "embedding": 0
-      },
-      {
-        "response": "Сколько минимум?",
-        "embedding": 0
-      },
-      {
-        "response": "Сколько максимум?",
-        "embedding": 0
-      },
-      {
-        "response": "Каковы лимиты?",
-        "embedding": 0
-      },
-      {
-        "response": "Какие ограничения по сумме?",
-        "embedding": 0
-      },
-      {
-        "response": "Минимальная и максимальная суммы?",
-        "embedding": 0
-      }
+      {"response": "минимальная сумма", "embedding": 0},
+      {"response": "максимальная", "embedding": 0},
+      {"response": "лимит какой", "embedding": 0},
+      {"response": "от какой суммы", "embedding": 0},
+      {"response": "до какой суммы", "embedding": 0},
+      {"response": "сколько минимум", "embedding": 0},
+      {"response": "сколько максимум", "embedding": 0},
+      {"response": "каковы лимиты", "embedding": 0},
+      {"response": "ограничения по сумме есть", "embedding": 0},
+      {"response": "мин и макс", "embedding": 0},
+      {"response": "какой потолок", "embedding": 0}
     ]
   },
   "government_compensation": {
     "description": [
-      {
-        "response": "Государство всё выплатит",
-        "embedding": 0
-      },
-      {
-        "response": "Мне компенсирует государство",
-        "embedding": 0
-      },
-      {
-        "response": "Мне не нужна страховка, если есть выплаты государства",
-        "embedding": 0
-      },
-      {
-        "response": "Зачем страховка, если платит государство?",
-        "embedding": 0
-      },
-      {
-        "response": "Государство же всё покроет",
-        "embedding": 0
-      },
-      {
-        "response": "Страховка не нужна, государство поможет",
-        "embedding": 0
-      },
-      {
-        "response": "Государство же защитит",
-        "embedding": 0
-      },
-      {
-        "response": "Государство выплачивает компенсацию",
-        "embedding": 0
-      },
-      {
-        "response": "Меня спасёт государство",
-        "embedding": 0
-      },
-      {
-        "response": "Я рассчитываю на государственные выплаты",
-        "embedding": 0
-      }
+      {"response": "государство выплатит", "embedding": 0},
+      {"response": "государство компенсирует", "embedding": 0},
+      {"response": "зачем, если государство платит", "embedding": 0},
+      {"response": "государство же покроет", "embedding": 0},
+      {"response": "государство поможет", "embedding": 0},
+      {"response": "государство и так защитит", "embedding": 0},
+      {"response": "я рассчитываю на выплаты от государства", "embedding": 0},
+      {"response": "ведь есть же госвыплаты", "embedding": 0}
     ]
   },
   "ask_other_products": {
     "description": [
-      {
-        "response": "Какие ещё продукты у вас есть?",
-        "embedding": 0
-      },
-      {
-        "response": "Что вы ещё предлагаете?",
-        "embedding": 0
-      },
-      {
-        "response": "Есть другие страховки?",
-        "embedding": 0
-      },
-      {
-        "response": "Какие ещё полисы?",
-        "embedding": 0
-      },
-      {
-        "response": "Что ещё можно застраховать?",
-        "embedding": 0
-      },
-      {
-        "response": "Какие есть другие продукты?",
-        "embedding": 0
-      },
-      {
-        "response": "Я хочу узнать про другие продукты",
-        "embedding": 0
-      },
-      {
-        "response": "У вас есть ещё предложения?",
-        "embedding": 0
-      },
-      {
-        "response": "Расскажите о других продуктах",
-        "embedding": 0
-      },
-      {
-        "response": "Какие ещё страховые программы есть?",
-        "embedding": 0
-      }
+      {"response": "еще продукты есть", "embedding": 0},
+      {"response": "что еще предлагаете", "embedding": 0},
+      {"response": "другие страховки есть", "embedding": 0},
+      {"response": "еще полисы", "embedding": 0},
+      {"response": "что еще можно застраховать", "embedding": 0},
+      {"response": "какие другие продукты у вас есть", "embedding": 0},
+      {"response": "хочу узнать про другие предложения", "embedding": 0},
+      {"response": "а что еще есть", "embedding": 0},
+      {"response": "кроме этого что-нибудь есть", "embedding": 0}
     ]
   },
   "request_extension": {
     "description": [
-      {
-        "response": "Не успею сегодня",
-        "embedding": 0
-      },
-      {
-        "response": "Оплачу позже",
-        "embedding": 0
-      },
-      {
-        "response": "Нужно больше времени",
-        "embedding": 0
-      },
-      {
-        "response": "Смогу оплатить через пару дней",
-        "embedding": 0
-      },
-      {
-        "response": "Можно оставить ссылку?",
-        "embedding": 0
-      },
-      {
-        "response": "Я оплачу позже",
-        "embedding": 0
-      },
-      {
-        "response": "У меня сейчас нет времени",
-        "embedding": 0
-      },
-      {
-        "response": "Могу оплатить позже?",
-        "embedding": 0
-      },
-      {
-        "response": "Позже оформлю",
-        "embedding": 0
-      },
-      {
-        "response": "Не получится сегодня оформить",
-        "embedding": 0
-      }
+      {"response": "не успею сегодня", "embedding": 0},
+      {"response": "оплачу позже", "embedding": 0},
+      {"response": "нужно больше времени", "embedding": 0},
+      {"response": "смогу через пару дней", "embedding": 0},
+      {"response": "оставьте ссылку, я посмотрю", "embedding": 0},
+      {"response": "я оплачу потом", "embedding": 0},
+      {"response": "сейчас нет времени", "embedding": 0},
+      {"response": "могу оплатить не сегодня", "embedding": 0},
+      {"response": "позже оформлю", "embedding": 0},
+      {"response": "сегодня не получится", "embedding": 0},
+      {"response": "дайте время подумать", "embedding": 0},
+      {"response": "не сегодня", "embedding": 0},
+      {"response": "не сейчас", "embedding": 0},
+      {"response": "наберите меня через час", "embedding": 0},
+      {"response": "пусть мне перезвонит ваш менеджер", "embedding": 0},
+      {"response": "свяжитесь со мной завтра утром", "embedding": 0}
     ]
   }
-}  
+}
