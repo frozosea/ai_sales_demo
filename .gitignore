@@ -220,7 +220,6 @@ Thumbs.db
 models/
 models_onnx_quantized/
 models_onnx_unquantized/
-*.wav
 *.mp3
 *.log
 benchmark_results.log
@@ -231,4 +230,5 @@ test_embedding.py
 testing.md
 yandex_speechkit.md
 tasks.md
+task.md
  

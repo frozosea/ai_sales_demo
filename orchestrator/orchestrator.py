@@ -54,6 +54,7 @@ class Orchestrator:
             # 2. Запускает приветствие бота (первый ход).
             self.session_state.turn_state = 'BOT_TURN'
             initial_state_config = self.dialogue_map[self.session_state.current_state_id]
+            print(f"Initial state config: {initial_state_config}")
             playlist_config = initial_state_config['system_response']['playlist']
             await self._play_audio_playlist(playlist_config, outbound_stream)
 
@@ -173,7 +174,7 @@ class Orchestrator:
                     await outbound_stream.write(chunk)
 
         playback_tasks = [play_item(item) for item in playlist_config]
-        self.current_playback_task = asyncio.create_task(asyncio.gather(*playback_tasks))
+        self.current_playback_task = asyncio.gather(*playback_tasks)
         
         try:
             await self.current_playback_task

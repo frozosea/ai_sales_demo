@@ -58,7 +58,7 @@ class SessionState(BaseModel):
     Этот объект — "единый источник правды" для Оркестратора.
     """
     call_id: str
-    current_state_id: str = "start"
+    current_state_id: str = "start_greeting"
     variables: Dict[str, Any] = {}
     state_history: List[str] = []
     previous_intent_leader: Optional[str] = None

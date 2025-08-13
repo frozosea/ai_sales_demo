@@ -3,7 +3,13 @@
     "description": "Приветствие и проверка, что говорим с нужным человеком",
     "system_response": {
       "template": "Здравствуйте, меня зовут Дарья, страховая компания Ингосстрах. Александр Владимирович, верно?",
-      "redis_key": "audio_start_greeting"
+      "redis_key": "audio_start_greeting",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "audio_start_greeting"
+        }
+      ]
     },
     "transitions": {
       "confirm_yes": {
@@ -76,7 +82,13 @@
     "description": "Просьба позвать нужного человека, если по номеру ответил другой",
     "system_response": {
       "template": "Скажите, пожалуйста, я могу услышать Александра Владимировича?",
-      "redis_key": "audio_ask_for_person"
+      "redis_key": "audio_ask_for_person",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "audio_ask_for_person"
+        }
+      ]
     },
     "transitions": {
       "confirm_yes": {
@@ -141,7 +153,13 @@
     "description": "Презентация полиса и предложение защиты от военных рисков",
     "system_response": {
       "template": "От лица компании благодарю вас за доверие — мы рады, что вы с нами. Хочу напомнить: ИНГОСТРАХ платит, и вы находитесь под надежной защитой. Мы видим, что сейчас, к сожалению, некоторые клиенты сталкиваются с ущербом из-за атак беспилотников. Именно поэтому я хочу предложить вам гарантированную компенсацию за повреждённую квартиру и ремонт — если произойдёт непредвиденное. Давайте я помогу вам сделать жизнь чуть спокойнее и защищённее?",
-      "redis_key": "audio_pitch_offer"
+      "redis_key": "audio_pitch_offer",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "audio_pitch_offer"
+        }
+      ]
     },
     "transitions": {
       "confirm_yes": {
@@ -212,7 +230,15 @@
   },
   "force_ask_property_value": {
     "description": "Форсированный вопрос о стоимости недвижимости",
-    "system_response": { "template": "Чтобы я мог назвать точную цену, мне осталось узнать только стоимость недвижимости. Какая она?" },
+    "system_response": {
+      "template": "Чтобы я мог назвать точную цену, мне осталось узнать только стоимость недвижимости. Какая она?",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "static:force_ask_property_value"
+        }
+      ]
+    },
     "transitions": {
       "provide_number": {
         "next_state": "RUN_FORCE_CHECK",
@@ -224,7 +250,13 @@
     "description": "После отказа предлагаем клиенту озвучить причину отказа",
     "system_response": {
       "template": "Поняла вас. Подскажите, пожалуйста, почему отказываетесь?",
-      "redis_key": "audio_refusal_inquiry"
+      "redis_key": "audio_refusal_inquiry",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "audio_refusal_inquiry"
+        }
+      ]
     },
     "transitions": {
       "provide_reject_reason": {
@@ -285,7 +317,13 @@
     "description": "Прощаемся после отказа и фиксируем причину",
     "system_response": {
       "template": "Хорошо. Благодарю за уделённое время. Всего доброго. До свидания!",
-      "redis_key": "audio_refusal_end"
+      "redis_key": "audio_refusal_end",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "audio_refusal_end"
+        }
+      ]
     },
     "transitions": {}
   },
@@ -293,7 +331,13 @@
     "description": "Запрос стоимости недвижимости (конструктивных элементов) у клиента",
     "system_response": {
       "template": "Подскажите, на какую сумму оцениваете стоимость вашей недвижимости?",
-      "redis_key": "audio_ask_property_value"
+      "redis_key": "audio_ask_property_value",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "audio_ask_property_value"
+        }
+      ]
     },
     "transitions": {
       "provide_number": {
@@ -366,7 +410,21 @@
     "description": "Подтверждение суммы страхования конструкции, указанной клиентом",
     "system_response": {
       "template": "Правильно услышала, что хотели бы оформить полис на {{ session.variables['property_value'] }} рублей?",
-      "redis_key": "audio_confirm_property_value"
+      "redis_key": "audio_confirm_property_value",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "static:confirm_property_value_part_0"
+        },
+        {
+          "type": "tts",
+          "text_template": "{{ session.variables['property_value'] }}"
+        },
+        {
+          "type": "cache",
+          "key": "static:confirm_property_value_part_1"
+        }
+      ]
     },
     "transitions": {
       "confirm_yes": {
@@ -431,7 +489,13 @@
     "description": "Запрос суммы страхования внутренней отделки жилья",
     "system_response": {
       "template": "На какую сумму хотели бы застраховать внутреннюю отделку?",
-      "redis_key": "audio:ask_inner_amount"
+      "redis_key": "audio:ask_inner_amount",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "audio:ask_inner_amount"
+        }
+      ]
     },
     "transitions": {
       "provide_number": {
@@ -496,7 +560,21 @@
     "description": "Подтверждение суммы страхования внутренней отделки",
     "system_response": {
       "template": "Правильно услышала, сумма внутренней отделки {{ session.variables['inner_amount'] }} рублей?",
-      "redis_key": "audio_confirm_inner_amount"
+      "redis_key": "audio_confirm_inner_amount",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "static:confirm_inner_amount_part_0"
+        },
+        {
+          "type": "tts",
+          "text_template": "{{ session.variables['inner_amount'] }}"
+        },
+        {
+          "type": "cache",
+          "key": "static:confirm_inner_amount_part_1"
+        }
+      ]
     },
     "transitions": {
       "confirm_yes": {
@@ -771,7 +849,13 @@
     "description": "Выясняем, почему клиент не готов оплатить полис сегодня",
     "system_response": {
       "template": "А почему? По времени не успеете или что‑то в условиях не устроило?",
-      "redis_key": "audio_ask_payment_reason"
+      "redis_key": "audio_ask_payment_reason",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "audio_ask_payment_reason"
+        }
+      ]
     },
     "transitions": {
       "provide_reject_reason": {
@@ -836,7 +920,13 @@
     "description": "Финальное подтверждение оформления полиса и отправка ссылки на оплату",
     "system_response": {
       "template": "Отлично! Я сейчас направлю вам ссылку для оплаты. Благодарю за выбор Ингосстрах. Всего доброго!",
-      "redis_key": "audio:finalize_policy"
+      "redis_key": "audio:finalize_policy",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "audio:finalize_policy"
+        }
+      ]
     },
     "transitions": {}
   },
@@ -844,7 +934,13 @@
     "description": "Согласие клиента на перезвон",
     "system_response": {
       "template": "Хорошо. Я перезвоню вам позже. Всего доброго!",
-      "redis_key": "audio_callback_end"
+      "redis_key": "audio_callback_end",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "audio_callback_end"
+        }
+      ]
     },
     "transitions": {}
   },
@@ -852,7 +948,13 @@
     "description": "Клиент сообщил, что у него уже есть страховка; прощаемся",
     "system_response": {
       "template": "Поняла. Хорошо, что вы заботитесь об этом. Всего доброго. До свидания!",
-      "redis_key": "audio_existing_insurance_end"
+      "redis_key": "audio_existing_insurance_end",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "audio_existing_insurance_end"
+        }
+      ]
     },
     "transitions": {}
   },
@@ -860,7 +962,13 @@
     "description": "Когда клиент молчит или связь прерывается, напоминаем о себе",
     "system_response": {
       "template": "Алло, вас не слышно. Вы на линии?",
-      "redis_key": "audio_no_response"
+      "redis_key": "audio_no_response",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "audio_no_response"
+        }
+      ]
     },
     "transitions": {
       "silence": {
@@ -913,7 +1021,13 @@
     "description": "Если несколько попыток связаться не удались, завершаем звонок",
     "system_response": {
       "template": "Извините за беспокойство. Всего доброго. До свидания.",
-      "redis_key": "audio_max_attempts_end"
+      "redis_key": "audio_max_attempts_end",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "audio_max_attempts_end"
+        }
+      ]
     },
     "transitions": {}
   },
@@ -921,7 +1035,13 @@
     "description": "Отвечаем на вопрос клиента об источнике его номера",
     "system_response": {
       "template": "Ранее вы были клиентом Ингосстрах или рассчитывали страховку на нашем сайте, поэтому у нас сохранился ваш контакт.",
-      "redis_key": "audio_info_where_number"
+      "redis_key": "audio_info_where_number",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "audio_info_where_number"
+        }
+      ]
     },
     "transitions": {
       "confirm_yes": {
@@ -962,7 +1082,13 @@
     "description": "Отвечаем на вопрос о том, был ли человек клиентом ранее",
     "system_response": {
       "template": "Да, ранее вы уже являлись нашим клиентом или оставляли заявку на расчёт страховой защиты, поэтому мы решили связаться с вами.",
-      "redis_key": "audio_info_where_number"
+      "redis_key": "audio_info_where_number",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "audio_info_where_number"
+        }
+      ]
     },
     "transitions": {
       "confirm_yes": {
@@ -999,7 +1125,13 @@
     "description": "Отвечаем на вопрос о предыдущем страховом полисе",
     "system_response": {
       "template": "Вы пользовались страховым полисом от Ингосстрах ранее, поэтому мы предлагаем вам актуальное страховое решение, учитывающее новые риски.",
-      "redis_key": "audio_info_where_number"
+      "redis_key": "audio_info_where_number",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "audio_info_where_number"
+        }
+      ]
     },
     "transitions": {
       "confirm_yes": {
@@ -1036,7 +1168,13 @@
     "description": "Уточняем, какую компанию представляем",
     "system_response": {
       "template": "Это страховая компания Ингосстрах.",
-      "redis_key": "audio_info_company"
+      "redis_key": "audio_info_company",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "audio_info_company"
+        }
+      ]
     },
     "transitions": {
       "confirm_yes": {
@@ -1073,7 +1211,13 @@
     "description": "Отвечаем на вопрос о цели звонка",
     "system_response": {
       "template": "Я звоню по вопросу нового полиса страхования от военных рисков и хочу предложить вам гарантию компенсации за ущерб вашей недвижимости.",
-      "redis_key": "audio_info_call_purpose"
+      "redis_key": "audio_info_call_purpose",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "audio_info_call_purpose"
+        }
+      ]
     },
     "transitions": {
       "confirm_yes": {
@@ -1110,7 +1254,13 @@
     "description": "Сообщаем, что звонит живой специалист, а не робот",
     "system_response": {
       "template": "Да, я представляю страховую компанию Ингосстрах и отвечу на все ваши вопросы.",
-      "redis_key": "audio_info_robot"
+      "redis_key": "audio_info_robot",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "audio_info_robot"
+        }
+      ]
     },
     "transitions": {
       "confirm_yes": {
@@ -1147,7 +1297,13 @@
     "description": "Объясняем, как рассчитывается стоимость полиса",
     "system_response": {
       "template": "Стоимость страхового полиса составляет 0,1% от суммы страхования, то есть при страховании на 3 млн рублей стоимость полиса составит всего 3000 рублей. При этом полис действует 12 месяцев.",
-      "redis_key": "audio_info_cost_percentage"
+      "redis_key": "audio_info_cost_percentage",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "audio_info_cost_percentage"
+        }
+      ]
     },
     "transitions": {
       "confirm_yes": {
@@ -1184,7 +1340,13 @@
     "description": "Описание программы Бастион и покрываемых рисков",
     "system_response": {
       "template": "Программа Бастион – страхование от рисков налёта беспилотников, терактов и военных действий, в том числе на приграничных территориях. Она обеспечивает гарантированную компенсацию за повреждённую недвижимость и ремонт.",
-      "redis_key": "audio:info_program_details"
+      "redis_key": "audio:info_program_details",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "audio:info_program_details"
+        }
+      ]
     },
     "transitions": {
       "confirm_yes": {
@@ -1217,7 +1379,13 @@
     "description": "Разъяснение, почему выплаты от государства не заменяют страховку",
     "system_response": {
       "template": "Согласна, что государство приходит на помощь в сложных ситуациях. Однако выплаты от государства ограничены и не всегда покрывают реальный ущерб. Страховой полис Бастион позволяет заранее зафиксировать сумму компенсации и получить деньги независимо от государственных выплат.",
-      "redis_key": "audio_info_government_compensation"
+      "redis_key": "audio_info_government_compensation",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "audio_info_government_compensation"
+        }
+      ]
     },
     "transitions": {
       "confirm_yes": {
@@ -1250,7 +1418,13 @@
     "description": "Рассказываем о минимальных и максимальных суммах страхования и стоимости полиса",
     "system_response": {
       "template": "На конструктивные элементы действует лимит от 1 до 30 млн рублей, на внутреннюю отделку — от 500 тыс до 10 млн для квартир и комнат и до 5 млн для домов и таунхаусов. Минимальная стоимость полиса составляет 500 рублей, максимальная — 40 000 рублей.",
-      "redis_key": "audio_info_limits"
+      "redis_key": "audio_info_limits",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "audio_info_limits"
+        }
+      ]
     },
     "transitions": {
       "confirm_yes": {
@@ -1283,7 +1457,13 @@
     "description": "Сообщаем, что в рамках звонка предлагаем только полис Бастион и передаем контакт куратору",
     "system_response": {
       "template": "По другим нашим продуктам, к сожалению, не могу проконсультировать в рамках этого звонка. Я передам ваш контакт куратору, и он дополнительно свяжется с вами. Также информацию по всем продуктам можно найти на нашем сайте. Давайте вернёмся к защите от военных рисков.",
-      "redis_key": "audio_info_other_products"
+      "redis_key": "audio_info_other_products",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "audio_info_other_products"
+        }
+      ]
     },
     "transitions": {
       "confirm_yes": {
@@ -1356,7 +1536,21 @@
     "description": "Уточняем адрес объекта страхования",
     "system_response": {
       "template": "Хорошо. Давайте теперь сверим адрес. Недвижимость расположена по адресу {{ session.variables['address'] }}, верно?",
-      "redis_key": "audio_address_confirmation"
+      "redis_key": "audio_address_confirmation",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "static:address_confirmation_part_0"
+        },
+        {
+          "type": "tts",
+          "text_template": "{{ session.variables['address'] }}"
+        },
+        {
+          "type": "cache",
+          "key": "static:address_confirmation_part_1"
+        }
+      ]
     },
     "transitions": {
       "confirm_yes": {
@@ -1393,7 +1587,13 @@
     "description": "Отправляем ссылку со сроком действия 5 дней и прощаемся",
     "system_response": {
       "template": "Поняла. Смс‑сообщение со ссылкой я направлю в ближайшее время и поставлю отметку, чтобы ссылка действовала ещё 5 дней для оформления. Спасибо за уделённое время. Хорошего дня!",
-      "redis_key": "audio_send_link_extension_end"
+      "redis_key": "audio_send_link_extension_end",
+      "playlist": [
+        {
+          "type": "cache",
+          "key": "audio_send_link_extension_end"
+        }
+      ]
     },
     "transitions": {}
   }
