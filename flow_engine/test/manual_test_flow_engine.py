@@ -1,14 +1,7 @@
 import json
 from pathlib import Path
-from dataclasses import asdict, is_dataclass
 from flow_engine.engine import FlowEngine
-from domain.models import FlowResult, Task
-
-class CustomJSONEncoder(json.JSONEncoder):
-    def default(self, o):
-        if is_dataclass(o):
-            return asdict(o)
-        return super().default(o)
+from domain.models import FlowResult, Task, SessionState
 
 def run_stress_test():
     """
@@ -19,14 +12,13 @@ def run_stress_test():
     
     engine = FlowEngine(goals_config_path=goals_path, dialogue_map_path=dialogue_map_path)
     
-    def get_initial_session():
-        return {
-            "call_id": "stress_test_call",
-            "trace_id": "stress_test_trace",
-            "variables": {},
-            "task_stack": [],
-            "current_dialogue_state_id": None
-        }
+    def get_initial_session() -> SessionState:
+        return SessionState(
+            call_id="stress_test_call",
+            variables={},
+            task_stack=[],
+            current_state_id="start_greeting" # A more realistic starting point
+        )
 
     def print_state(scenario: str, action: str, result: FlowResult):
         print(f"--- SCENARIO: {scenario} ---")
@@ -40,10 +32,10 @@ def run_stress_test():
             print(f"  [{i}] Goal: {task.goal_id}, Status: {task.status}, Mode: {task.mode}, Return: {task.return_state_id}")
         print("-" * 60 + "\n")
 
-    def run_interaction(session, intent, scenario_name, action_description):
+    def run_interaction(session: SessionState, intent: str, scenario_name: str, action_description: str) -> FlowResult:
         result = engine.process_event(session, intent)
-        session["task_stack"] = result.task_stack
-        session["current_dialogue_state_id"] = result.next_state
+        session.task_stack = result.task_stack
+        session.current_state_id = result.next_state
         print_state(scenario_name, action_description, result)
         return result
 
@@ -55,7 +47,7 @@ def run_stress_test():
     
     # 1. Начинаем, пользователь подтверждает имя
     run_interaction(session, "start_dialogue", scenario_name, "1. Start & provide name")
-    session['variables']['contact_name'] = 'Александр'
+    session.variables['contact_name'] = 'Александр'
     
     # 2. Пользователь сразу уходит в сторону
     run_interaction(session, "ask_company", scenario_name, "2. User asks about the company (digression 1)")
@@ -68,7 +60,7 @@ def run_stress_test():
     
     # 5. Движок должен был очистить стек от прерываний и задать форсированный вопрос.
     # Пользователь отвечает.
-    session['variables']['property_value'] = 5000000
+    session.variables['property_value'] = 5000000
     run_interaction(session, "provide_number", scenario_name, "5. User provides property value")
     
     # 6. Движок в режиме FORCED, должен спросить про страховку отделки.
@@ -80,11 +72,11 @@ def run_stress_test():
     
     # 8. Движок все еще в FORCED режиме и должен продолжить сбор данных.
     # Пользователь соглашается на страховку отделки.
-    session['variables']['wants_inner_insurance'] = True
+    session.variables['wants_inner_insurance'] = True
     run_interaction(session, "confirm_yes", scenario_name, "8. User agrees to inner insurance")
     
     # 9. Пользователь предоставляет сумму отделки.
-    session['variables']['inner_amount'] = 1000000
+    session.variables['inner_amount'] = 1000000
     run_interaction(session, "provide_number", scenario_name, "9. User provides inner amount")
     
     # 10. Остался только адрес. Но пользователь решает отказаться.
@@ -92,7 +84,7 @@ def run_stress_test():
 
     print("===== STRESS TEST COMPLETED =====")
     print("Final session state:")
-    print(json.dumps(session, indent=2, ensure_ascii=False, cls=CustomJSONEncoder))
+    print(session.model_dump_json(indent=2))
 
 
 if __name__ == "__main__":

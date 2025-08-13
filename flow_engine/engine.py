@@ -1,7 +1,7 @@
 from typing import Dict, Any, Optional
 import json
 
-from domain.models import Task, FlowResult
+from domain.models import Task, FlowResult, SessionState
 from flow_engine.utils import load_json_config
 
 class FlowEngine:
@@ -48,13 +48,13 @@ class FlowEngine:
                 return param
         return None
 
-    def process_event(self, session_state: Dict[str, Any], intent_id: str) -> FlowResult:
+    def process_event(self, session_state: SessionState, intent_id: str) -> FlowResult:
         """
         Main event processing algorithm based on the specification.
         """
-        task_stack: list[Task] = session_state.get("task_stack", [])
-        session_variables = session_state.get("variables", {})
-        current_dialogue_state_id = session_state.get("current_dialogue_state_id")
+        task_stack = session_state.task_stack
+        session_variables = session_state.variables
+        current_dialogue_state_id = session_state.current_state_id
         
         goal_for_intent = self._get_goal_by_intent(intent_id)
 

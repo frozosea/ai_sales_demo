@@ -52,9 +52,23 @@ class Task:
     mode: Literal['NORMAL', 'FORCED'] = 'NORMAL'  # Режим выполнения
     return_state_id: Optional[str] = None # Куда вернуться после прерывания
 
+class SessionState(BaseModel):
+    """
+    Полное состояние одного звонка.
+    Этот объект — "единый источник правды" для Оркестратора.
+    """
+    call_id: str
+    current_state_id: str = "start"
+    variables: Dict[str, Any] = {}
+    state_history: List[str] = []
+    previous_intent_leader: Optional[str] = None
+    turn_state: Literal['BOT_TURN', 'USER_TURN'] = 'BOT_TURN'
+    task_stack: List[Task] = []
+
+
 @dataclass
 class FlowResult:
     """Результат работы FlowEngine."""
     next_state: str
     should_guide_back: bool = False
-    task_stack: List[Task] = field(default_factory=list)
+    task_stack: List[Task] = field(default_factory=lambda: [])

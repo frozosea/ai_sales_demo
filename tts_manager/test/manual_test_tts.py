@@ -83,7 +83,7 @@ class TTSBenchmark:
             enable_keep_alive=True,
             enable_warming=True,
             warming_threshold=30.0,
-            proxy_url="http://127.0.0.1:10807"  # Используем прокси для обхода ограничений
+            proxy_url="http://127.0.0.1:7890"  # Используем прокси для обхода ограничений
         )
         
         await self.connection_pool.start()
