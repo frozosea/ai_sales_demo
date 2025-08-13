@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional, Literal, TypedDict, List, Dict, Any 
 from pydantic import BaseModel
 
@@ -43,3 +43,18 @@ class FaqResult:
     question_id: str
     answer_text: str
     score: float
+
+@dataclass
+class Task:
+    """Описывает одну активную задачу (основную цель или отвлечение)."""
+    goal_id: str
+    status: Literal['IN_PROGRESS', 'PAUSED']
+    mode: Literal['NORMAL', 'FORCED'] = 'NORMAL'  # Режим выполнения
+    return_state_id: Optional[str] = None # Куда вернуться после прерывания
+
+@dataclass
+class FlowResult:
+    """Результат работы FlowEngine."""
+    next_state: str
+    should_guide_back: bool = False
+    task_stack: List[Task] = field(default_factory=list)

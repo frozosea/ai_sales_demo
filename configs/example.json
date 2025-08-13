@@ -1,0 +1,54 @@
+{
+    "start_greeting": {
+      "description": "Приветствие и проверка, что говорим с нужным человеком",
+      "system_response": {
+        "template": "Здравствуйте, меня зовут Дарья, страховая компания Ингосстрах. {{ session.variables.contact_name }}, верно?",
+        "redis_key": "audio_start_greeting"
+      },
+      "transitions": {
+        "confirm_yes": {
+          "next_state": "pitch_offer",
+          "execute_code": ""
+        },
+        "confirm_no": {
+          "next_state": "ask_for_person",
+          "execute_code": ""
+        }
+      }
+    }, 
+    "ask_for_person": {
+    "description": "Просьба позвать нужного человека, если по номеру ответил другой",
+    "system_response": {
+      "template": "Скажите, пожалуйста, я могу услышать {{ session.variables.contact_name }}?",
+      "redis_key": "audio_ask_for_person"
+    },
+    "transitions": {
+        "confirm_no": {
+          "next_state": "ask_for_person_no",
+          "execute_code": ""
+        },
+        "confirm_yes": {
+          "next_state": "pitch_offer",
+          "execute_code": ""
+        },
+        "purpose": {
+          "next_state": "ask_purpose",
+          "execute_code": ""
+        }
+      }
+    },
+    "ask_for_person_no": {
+    "description": "Отказ от поиска нужного человека",
+    "system_response": {
+      "template": "Извините за беспокойство. Всего доброго!",
+      "redis_key": "audio_ask_for_person_no"
+    },
+    "transitions": {
+        "end": {
+          "next_state": "END",
+          "execute_code": "",
+          "end_dialogue": true
+        }
+      }
+    }
+}  

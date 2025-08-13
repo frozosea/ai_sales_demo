@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LiveKit Voice Client</title>
+    <script src="https://unpkg.com/livekit-client@latest/dist/livekit-client.umd.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        input[type="text"], input[type="url"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        input[type="text"]:focus, input[type="url"]:focus {
+            outline: none;
+            border-color: #007AFF;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        button {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-join {
+            background: #007AFF;
+            color: white;
+        }
+        .btn-join:hover:not(:disabled) {
+            background: #0056CC;
+        }
+        .btn-leave {
+            background: #FF3B30;
+            color: white;
+        }
+        .btn-leave:hover:not(:disabled) {
+            background: #CC2E24;
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        .status.connected {
+            background: #E8F5E8;
+            color: #2E7D2E;
+            border: 1px solid #C8E6C8;
+        }
+        .status.disconnected {
+            background: #FFF2F2;
+            color: #D70015;
+            border: 1px solid #FFCCCC;
+        }
+        .status.connecting {
+            background: #FFF8E1;
+            color: #F57C00;
+            border: 1px solid #FFE082;
+        }
+        .participants {
+            margin-top: 20px;
+            padding: 15px;
+            background: #F8F9FA;
+            border-radius: 6px;
+        }
+        .participant {
+            padding: 8px 0;
+            border-bottom: 1px solid #E0E0E0;
+        }
+        .participant:last-child {
+            border-bottom: none;
+        }
+        .audio-indicator {
+            margin-top: 20px;
+            padding: 15px;
+            background: #F0F8FF;
+            border-radius: 6px;
+            border: 1px solid #B8E0FF;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 LiveKit Voice Client</h1>
+        
+        <div class="form-group">
+            <label for="serverUrl">Server URL:</label>
+            <input type="url" id="serverUrl" value="ws://localhost:7880" placeholder="ws://localhost:7880">
+        </div>
+        
+        <div class="form-group">
+            <label for="token">Access Token:</label>
+            <input type="text" id="token" placeholder="Paste your JWT token here">
+        </div>
+        
+        <div class="form-group">
+            <label for="room">Room:</label>
+            <input type="text" id="room" value="demo" placeholder="demo">
+        </div>
+        
+        <div class="form-group">
+            <label for="identity">Your Identity:</label>
+            <input type="text" id="identity" value="user" placeholder="user">
+        </div>
+        
+        <div class="button-group">
+            <button id="joinBtn" class="btn-join">🎯 Join Room</button>
+            <button id="leaveBtn" class="btn-leave" disabled>🚪 Leave Room</button>
+        </div>
+        
+        <div id="status" class="status disconnected">
+            📡 Disconnected
+        </div>
+        
+        <div id="participants" class="participants hidden">
+            <h3>👥 Participants:</h3>
+            <div id="participantList"></div>
+        </div>
+        
+        <div id="audioInfo" class="audio-indicator hidden">
+            <h3>🔊 Audio Status:</h3>
+            <div id="audioStatus">No audio tracks</div>
+        </div>
+    </div>
+
+    <script>
+        const { Room, RoomEvent, Track, TrackPublication, ConnectionState } = LiveKitClient;
+        
+        let room = null;
+        let connected = false;
+        
+        // DOM elements
+        const serverUrlInput = document.getElementById('serverUrl');
+        const tokenInput = document.getElementById('token');
+        const roomInput = document.getElementById('room');
+        const identityInput = document.getElementById('identity');
+        const joinBtn = document.getElementById('joinBtn');
+        const leaveBtn = document.getElementById('leaveBtn');
+        const statusDiv = document.getElementById('status');
+        const participantsDiv = document.getElementById('participants');
+        const participantList = document.getElementById('participantList');
+        const audioInfo = document.getElementById('audioInfo');
+        const audioStatus = document.getElementById('audioStatus');
+        
+        // Event listeners
+        joinBtn.addEventListener('click', joinRoom);
+        leaveBtn.addEventListener('click', leaveRoom);
+        
+        async function joinRoom() {
+            const serverUrl = serverUrlInput.value.trim();
+            const token = tokenInput.value.trim();
+            
+            if (!serverUrl || !token) {
+                alert('Please enter server URL and token');
+                return;
+            }
+            
+            try {
+                setStatus('connecting', '🔄 Connecting...');
+                joinBtn.disabled = true;
+                
+                // Create room instance
+                room = new Room();
+                
+                // Setup event listeners
+                room.on(RoomEvent.Connected, onConnected);
+                room.on(RoomEvent.Disconnected, onDisconnected);
+                room.on(RoomEvent.ParticipantConnected, onParticipantConnected);
+                room.on(RoomEvent.ParticipantDisconnected, onParticipantDisconnected);
+                room.on(RoomEvent.TrackSubscribed, onTrackSubscribed);
+                room.on(RoomEvent.TrackUnsubscribed, onTrackUnsubscribed);
+                
+                // Connect to room
+                await room.connect(serverUrl, token);
+                
+            } catch (error) {
+                console.error('Failed to connect:', error);
+                setStatus('disconnected', `❌ Connection failed: ${error.message}`);
+                joinBtn.disabled = false;
+            }
+        }
+        
+        async function leaveRoom() {
+            if (room) {
+                await room.disconnect();
+            }
+        }
+        
+        function onConnected() {
+            console.log('Connected to room');
+            setStatus('connected', '✅ Connected');
+            connected = true;
+            joinBtn.disabled = true;
+            leaveBtn.disabled = false;
+            
+            // Enable microphone
+            enableMicrophone();
+            
+            // Update participants
+            updateParticipants();
+        }
+        
+        function onDisconnected() {
+            console.log('Disconnected from room');
+            setStatus('disconnected', '📡 Disconnected');
+            connected = false;
+            joinBtn.disabled = false;
+            leaveBtn.disabled = true;
+            
+            participantsDiv.classList.add('hidden');
+            audioInfo.classList.add('hidden');
+            
+            room = null;
+        }
+        
+        function onParticipantConnected(participant) {
+            console.log('Participant connected:', participant.identity);
+            updateParticipants();
+        }
+        
+        function onParticipantDisconnected(participant) {
+            console.log('Participant disconnected:', participant.identity);
+            updateParticipants();
+        }
+        
+        function onTrackSubscribed(track, publication, participant) {
+            console.log('Track subscribed:', track.kind, 'from', participant.identity);
+            
+            if (track.kind === Track.Kind.Audio) {
+                // Play audio track
+                const audioElement = track.attach();
+                audioElement.autoplay = true;
+                document.body.appendChild(audioElement);
+                
+                updateAudioStatus();
+            }
+        }
+        
+        function onTrackUnsubscribed(track, publication, participant) {
+            console.log('Track unsubscribed:', track.kind, 'from', participant.identity);
+            track.detach();
+            updateAudioStatus();
+        }
+        
+        async function enableMicrophone() {
+            try {
+                // Enable microphone and camera
+                await room.localParticipant.enableCameraAndMicrophone();
+                console.log('Microphone enabled');
+                updateAudioStatus();
+            } catch (error) {
+                console.error('Failed to enable microphone:', error);
+            }
+        }
+        
+        function updateParticipants() {
+            if (!room) return;
+            
+            const participants = Array.from(room.participants.values());
+            participants.push(room.localParticipant);
+            
+            participantList.innerHTML = '';
+            
+            participants.forEach(participant => {
+                const div = document.createElement('div');
+                div.className = 'participant';
+                div.innerHTML = `
+                    <strong>${participant.identity}</strong> 
+                    ${participant.isLocal ? '(You)' : ''}
+                    - Audio: ${participant.audioTracks.size > 0 ? '🎤' : '🔇'}
+                `;
+                participantList.appendChild(div);
+            });
+            
+            participantsDiv.classList.remove('hidden');
+        }
+        
+        function updateAudioStatus() {
+            if (!room) return;
+            
+            const localTracks = Array.from(room.localParticipant.audioTracks.values());
+            const remoteTracks = [];
+            
+            room.participants.forEach(participant => {
+                participant.audioTracks.forEach(track => {
+                    remoteTracks.push({identity: participant.identity, track});
+                });
+            });
+            
+            let status = '';
+            status += `Local audio tracks: ${localTracks.length}<br>`;
+            status += `Remote audio tracks: ${remoteTracks.length}<br>`;
+            
+            if (remoteTracks.length > 0) {
+                status += 'Remote tracks:<br>';
+                remoteTracks.forEach(({identity, track}) => {
+                    status += `- ${identity}: ${track.trackInfo.name || 'unnamed'}<br>`;
+                });
+            }
+            
+            audioStatus.innerHTML = status;
+            audioInfo.classList.remove('hidden');
+        }
+        
+        function setStatus(type, message) {
+            statusDiv.className = `status ${type}`;
+            statusDiv.textContent = message;
+        }
+        
+        // Generate demo token button (for development)
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add demo token button for easy testing
+            const demoBtn = document.createElement('button');
+            demoBtn.textContent = '🎯 Generate Demo Token';
+            demoBtn.style.marginTop = '10px';
+            demoBtn.style.background = '#28A745';
+            demoBtn.style.color = 'white';
+            demoBtn.style.border = 'none';
+            demoBtn.style.padding = '8px 16px';
+            demoBtn.style.borderRadius = '4px';
+            demoBtn.style.cursor = 'pointer';
+            
+            demoBtn.addEventListener('click', () => {
+                // This would need to call your token generation endpoint
+                alert('Use scripts/gen_token.py to generate tokens');
+            });
+            
+            tokenInput.parentNode.appendChild(demoBtn);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+{
+  "provide_total_price": {
+    "parameters": [
+      {
+        "name": "contact_name",
+        "is_required": true,
+        "dialogue_state_to_ask": "start_greeting"
+      },
+      {
+        "name": "property_value",
+        "is_required": true,
+        "dialogue_state_to_ask": "ask_property_value",
+        "force_dialogue_state_to_ask": "force_ask_property_value"
+      },
+      {
+        "name": "wants_inner_insurance",
+        "is_required": true,
+        "dialogue_state_to_ask": "ask_inner_amount"
+      },
+      {
+        "name": "inner_amount",
+        "is_required": "session.variables.wants_inner_insurance == true",
+        "dialogue_state_to_ask": "ask_inner_amount"
+      },
+      {
+        "name": "address",
+        "is_required": true,
+        "dialogue_state_to_ask": "ask_address"
+      }
+    ]
+  },
+  "provide_reject_reason": {
+    "parameters": [
+      {
+        "name": "refusal_reason",
+        "is_required": true,
+        "dialogue_state_to_ask": "refusal_inquiry"
+      }
+    ],
+    "is_terminal": true
+  },
+  "demand_final_answer_cost": {
+    "is_forcing": true
+  },
+  "handle_payment_confirmation": {
+    "parameters": [
+      {
+        "name": "payment_today",
+        "is_required": true,
+        "dialogue_state_to_ask": "finalize_amount"
+      }
+    ]
+  },
+  "handle_expensive_policy": {
+    "parameters": [
+      {
+        "name": "new_coast_1",
+        "is_required": true,
+        "dialogue_state_to_ask": "expensive_amount"
+      },
+      {
+        "name": "new_final_sum",
+        "is_required": true,
+        "dialogue_state_to_ask": "expensive_amount"
+      }
+    ]
+  },
+  "handle_address_correction": {
+    "parameters": [
+      {
+        "name": "correct_address",
+        "is_required": true,
+        "dialogue_state_to_ask": "adress_agent_ask"
+      }
+    ],
+    "is_terminal": true
+  },
+  "handle_faq_ask_phone": {
+    "is_digression": true
+  },
+  "handle_faq_ask_company": {
+    "is_digression": true
+  },
+  "handle_faq_purpose": {
+    "is_digression": true
+  },
+  "handle_faq_has_insurance": {
+    "parameters": [
+      {
+        "name": "existing_insurance_type",
+        "is_required": true,
+        "dialogue_state_to_ask": "has_insurance"
+      }
+    ],
+    "is_digression": true
+  },
+  "handle_faq_ask_price": {
+    "is_digression": true
+  },
+  "handle_faq_ask_limits": {
+    "is_digression": true
+  },
+  "handle_faq_ask_details": {
+    "is_digression": true
+  },
+  "handle_faq_gov_help": {
+    "is_digression": true
+  },
+  "handle_faq_ask_robot": {
+    "is_digression": true
+  },
+  "handle_faq_info_products": {
+    "parameters": [
+      {
+        "name": "other_product_interest",
+        "is_required": true,
+        "dialogue_state_to_ask": "info_products"
+      }
+    ],
+    "is_digression": true
+  },
+  "handle_technical_issues": {
+    "parameters": [
+      {
+        "name": "connection_status",
+        "is_required": true,
+        "dialogue_state_to_ask": "check_connection"
+      }
+    ],
+    "is_terminal": true
+  },
+  "handle_voicemail": {
+    "is_terminal": true
+  },
+  "handle_negative_response": {
+    "is_terminal": true
+  },
+  "force_continue_dialogue": {
+    "is_forcing": true
+  },
+  "force_end_dialogue": {
+    "is_forcing": true,
+    "is_terminal": true
+  }
+}

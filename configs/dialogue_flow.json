@@ -210,6 +210,16 @@
       }
     }
   },
+  "force_ask_property_value": {
+    "description": "Форсированный вопрос о стоимости недвижимости",
+    "system_response": { "template": "Чтобы я мог назвать точную цену, мне осталось узнать только стоимость недвижимости. Какая она?" },
+    "transitions": {
+      "provide_number": {
+        "next_state": "RUN_FORCE_CHECK",
+        "execute_code": "set_variable('property_value', entities.number)"
+      }
+    }
+  },
   "refusal_inquiry": {
     "description": "После отказа предлагаем клиенту озвучить причину отказа",
     "system_response": {

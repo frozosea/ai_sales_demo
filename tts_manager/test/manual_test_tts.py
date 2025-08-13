@@ -10,8 +10,12 @@ import logging
 import argparse
 import statistics
 import os
+import io
+import tempfile
+import subprocess
+import platform
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 from datetime import datetime
 from dotenv import load_dotenv
 
@@ -31,10 +35,12 @@ def jlog(event: str, **kwargs):
 class TTSBenchmark:
     """Класс для проведения бенчмарка TTS"""
     
-    def __init__(self, config_path: str, output_dir: str, repeats: int = 3):
+    def __init__(self, config_path: str, output_dir: str, repeats: int = 3, save_audio: bool = False, play_audio: bool = False):
         self.config_path = config_path
         self.output_dir = Path(output_dir)
         self.repeats = repeats
+        self.save_audio = save_audio
+        self.play_audio = play_audio
         self.cfg = None
         self.connection_pool = None
         
@@ -46,8 +52,11 @@ class TTSBenchmark:
             "http_long": {"connection_ms": [], "ttfa_ms": [], "total_ms": [], "connection_latency_ms": [], "streaming_latency_ms": [], "request_send_ms": [], "response_time_ms": [], "network_ops_ms": []}
         }
         
-        # Создаем директорию для отчетов
+        # Создаем директории для отчетов и аудио
         self.output_dir.mkdir(parents=True, exist_ok=True)
+        if self.save_audio:
+            self.audio_dir = self.output_dir / "audio_samples"
+            self.audio_dir.mkdir(exist_ok=True)
     
     async def setup(self):
         """Инициализация конфигурации и пула соединений"""
@@ -86,6 +95,56 @@ class TTSBenchmark:
             await self.connection_pool.close()
         jlog("bench_cleanup_complete")
     
+    def save_audio_file(self, audio_data: bytes, filename: str) -> Optional[Path]:
+        """Сохраняет аудио данные в файл"""
+        if not self.save_audio:
+            return None
+        
+        try:
+            file_path = self.audio_dir / filename
+            with open(file_path, 'wb') as f:
+                f.write(audio_data)
+            jlog("audio_saved", path=str(file_path), size_bytes=len(audio_data))
+            return file_path
+        except Exception as e:
+            jlog("audio_save_error", error=str(e))
+            return None
+    
+    def play_audio_file(self, file_path: Path) -> bool:
+        """Воспроизводит аудио файл"""
+        if not self.play_audio or not file_path.exists():
+            return False
+        
+        try:
+            system = platform.system().lower()
+            
+            if system == "darwin":  # macOS
+                subprocess.run(["afplay", str(file_path)], check=True)
+            elif system == "linux":
+                # Пробуем разные плееры
+                for player in ["aplay", "paplay", "mpg123", "ffplay"]:
+                    try:
+                        subprocess.run([player, str(file_path)], check=True, 
+                                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                        break
+                    except (subprocess.CalledProcessError, FileNotFoundError):
+                        continue
+                else:
+                    jlog("audio_play_error", error="No audio player found")
+                    return False
+            elif system == "windows":
+                subprocess.run(["start", str(file_path)], shell=True, check=True)
+            else:
+                jlog("audio_play_error", error=f"Unsupported system: {system}")
+                return False
+            
+            jlog("audio_played", path=str(file_path))
+            return True
+            
+        except Exception as e:
+            jlog("audio_play_error", error=str(e))
+            return False
+    
     async def run_ws_case(self, text: str, case_name: str) -> Dict[str, List[float]]:
         """Запуск WebSocket теста"""
         jlog("ws_case_start", case_name=case_name, text_length=len(text), repeats=self.repeats)
@@ -117,6 +176,7 @@ class TTSBenchmark:
                 first_audio_time = None
                 total_bytes = 0
                 chunks_count = 0
+                audio_chunks = []  # Собираем все чанки для сохранения
                 
                 while True:
                     audio_chunk = await audio_q.get()
@@ -129,9 +189,24 @@ class TTSBenchmark:
                     
                     total_bytes += len(audio_chunk)
                     chunks_count += 1
+                    audio_chunks.append(audio_chunk)
                 
                 total_ms = (time.perf_counter() - send_start) * 1000
                 jlog("ws_stream_end", total_ms=round(total_ms, 2), chunks=chunks_count, bytes=total_bytes, call_id=call_id)
+                
+                # Сохраняем и воспроизводим аудио если нужно
+                if audio_chunks and (self.save_audio or self.play_audio):
+                    audio_data = b''.join(audio_chunks)
+                    filename = f"{call_id}_{datetime.now().strftime('%H%M%S')}.mp3"
+                    
+                    # Сохраняем аудио
+                    if self.save_audio:
+                        file_path = self.save_audio_file(audio_data, filename)
+                        
+                        # Воспроизводим аудио
+                        if self.play_audio and file_path:
+                            jlog("audio_play_start", call_id=call_id, filename=filename)
+                            self.play_audio_file(file_path)
                 
                 # Освобождаем соединение
                 await self.connection_pool.release_connection(call_id, ConnectionType.WEBSOCKET)
@@ -213,16 +288,32 @@ class TTSBenchmark:
                 # Продолжаем стриминг
                 total_bytes = len(first_chunk)
                 chunks_count = 1
+                audio_chunks = [first_chunk]  # Собираем все чанки для сохранения
                 
                 try:
                     async for chunk in stream_generator:
                         total_bytes += len(chunk)
                         chunks_count += 1
+                        audio_chunks.append(chunk)
                 except StopAsyncIteration:
                     pass
                 
                 total_ms = (time.perf_counter() - request_start) * 1000
                 jlog("http_stream_end", total_ms=round(total_ms, 2), chunks=chunks_count, bytes=total_bytes, call_id=call_id)
+                
+                # Сохраняем и воспроизводим аудио если нужно
+                if audio_chunks and (self.save_audio or self.play_audio):
+                    audio_data = b''.join(audio_chunks)
+                    filename = f"{call_id}_{datetime.now().strftime('%H%M%S')}.mp3"
+                    
+                    # Сохраняем аудио
+                    if self.save_audio:
+                        file_path = self.save_audio_file(audio_data, filename)
+                        
+                        # Воспроизводим аудио
+                        if self.play_audio and file_path:
+                            jlog("audio_play_start", call_id=call_id, filename=filename)
+                            self.play_audio_file(file_path)
                 
                 # Освобождаем соединение
                 await self.connection_pool.release_connection(call_id, ConnectionType.HTTP)
@@ -464,11 +555,13 @@ async def main():
     parser.add_argument("--http-long",
                        default="Это длинная проверочная реплика для тестирования производительности системы преобразования текста в речь. Она содержит более трехсот символов и включает в себя различные элементы: числа (например, 12345), пунктуацию (точки, запятые, восклицательные знаки!), а также разнообразные слова для проверки качества синтеза речи на русском языке. Такие длинные фразы позволяют оценить стабильность работы системы и качество генерации аудио при обработке больших объемов текста.",
                        help="Long text for HTTP test")
+    parser.add_argument("--save-audio", action="store_true", help="Save generated audio files")
+    parser.add_argument("--play-audio", action="store_true", help="Play generated audio files")
     
     args = parser.parse_args()
     
     # Создаем и запускаем бенчмарк
-    benchmark = TTSBenchmark(args.config, args.out, args.repeats)
+    benchmark = TTSBenchmark(args.config, args.out, args.repeats, args.save_audio, args.play_audio)
     await benchmark.run_benchmark(
         args.ws_chunk, args.ws_long, 
         args.http_chunk, args.http_long

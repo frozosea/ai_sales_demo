@@ -1,0 +1,388 @@
+{
+  "start_greeting": {
+    "description": "Приветствие и проверка, что говорим с нужным человеком",
+    "system_response": {
+      "template": "Здравствуйте, меня зовут Дарья, Страховая компания Ингосстрах. {{ session.variables.contact_name }}, верно?",
+      "redis_key": "audio_start_greeting"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "confirm_no": {
+        "next_state": "ask_for_person",
+        "execute_code": ""
+      }
+    }
+  },
+  "ask_for_person": {
+    "description": "Просьба позвать нужного человека, если по номеру ответил другой",
+    "system_response": {
+      "template": "Скажите, пожалуйста, я могу услышать {{ session.variables.contact_name }}?",
+      "redis_key": "audio_ask_for_person"
+    },
+    "transitions": {
+      "confirm_no": {
+        "next_state": "ask_for_person_no",
+        "execute_code": ""
+      },
+      "confirm_yes": {
+        "next_state": "pitch_offer",
+        "execute_code": ""
+      },
+      "purpose": {
+        "next_state": "purpose_no",
+        "execute_code": ""
+      }
+    }
+  },
+  "ask_for_person_no": {
+    "description": "Отказ от поиска нужного человека",
+    "system_response": {
+      "template": "Извините за беспокойство. Всего доброго!",
+      "redis_key": "audio_ask_for_person_no"
+    },
+    "transitions": {
+      "end": {
+        "next_state": "END",
+        "execute_code": "",
+        "end_dialogue": true
+      }
+    }
+  },
+  "purpose_no": {
+    "description": "Отказ от разговора о цели звонка",
+    "system_response": {
+      "template": "Извините за беспокойство. Всего доброго",
+      "redis_key": "audio_purpose_no"
+    },
+    "transitions": {
+      "end": {
+        "next_state": "END",
+        "execute_code": "",
+        "end_dialogue": true
+      }
+    }
+  },
+  "pitch_offer": {
+    "description": "Презентация страхового предложения",
+    "system_response": {
+      "template": "От лица компании благодарю вас за доверие — мы рады, что вы с нами. Хочу напомнить: ИНГОСТРАХ платит, и Вы находитесь под надежной защитой. Мы видим, что сейчас, к сожалению, некоторые клиенты сталкиваются с ущербом из-за атак беспилотников. Именно поэтому я хочу предложить вам гарантированную компенсацию за повреждённую квартиру и ремонт — если произойдёт непредвиденное. Давайте я помогу вам сделать жизнь чуть спокойнее и защищённее?",
+      "redis_key": "audio_pitch_offer"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "ask_property_value",
+        "execute_code": ""
+      },
+      "confirm_no": {
+        "next_state": "refusal_inquiry",
+        "execute_code": ""
+      }
+    }
+  },
+  "refusal_inquiry": {
+    "description": "Запрос причины отказа",
+    "system_response": {
+      "template": "Поняла Вас. Подскажите почему отказываетесь?",
+      "redis_key": "audio_refusal_inquiry"
+    },
+    "transitions": {
+      "call_end": {
+        "next_state": "save_reason",
+        "execute_code": ""
+      }
+    }
+  },
+  "save_reason": {
+    "description": "Сохранение причины отказа",
+    "system_response": {
+      "template": "",
+      "redis_key": ""
+    },
+    "transitions": {
+      "call_end": {
+        "next_state": "call_end",
+        "execute_code": "session.variables.reason = user_input"
+      }
+    }
+  },
+  "call_end": {
+    "description": "Завершение звонка с благодарностью",
+    "system_response": {
+      "template": "Хорошо. Благодарю за уделенное время. Всего доброго. До свидания!",
+      "redis_key": "audio_call_end"
+    },
+    "transitions": {
+      "end": {
+        "next_state": "END",
+        "execute_code": "",
+        "end_dialogue": true
+      }
+    }
+  },
+  "ask_property_value": {
+    "description": "Запрос стоимости недвижимости",
+    "system_response": {
+      "template": "Подскажите, на какую сумму оцениваете стоимость Вашей недвижимости?",
+      "redis_key": "audio_ask_property_value"
+    },
+    "transitions": {
+      "value_out_range": {
+        "next_state": "property_condition",
+        "execute_code": ""
+      },
+      "value_in_range": {
+        "next_state": "confirm_property_value",
+        "execute_code": "session.variables.sum_1 = user_input"
+      }
+    }
+  },
+  "property_condition": {
+    "description": "Объяснение лимитов страхования недвижимости",
+    "system_response": {
+      "template": "Смотрите, мы можем оформить страховой полис от 1 млн рублей до 30 для квартиры и до 15 миллионов для жилого дома. На какую сумму в этих пределах хотели бы застраховать имущество?",
+      "redis_key": "audio_property_condition"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "confirm_property_value",
+        "execute_code": "session.variables.sum_1 = user_input"
+      },
+      "confirm_no": {
+        "next_state": "property_condition",
+        "execute_code": ""
+      }
+    }
+  },
+
+  "confirm_property_value": {
+    "description": "Подтверждение суммы страхования недвижимости",
+    "system_response": {
+      "template": "Правильно услышала, что хотели бы оформить полис на {{ session.variables.sum_1 }} рублей?",
+      "redis_key": "audio_confirm_property_value"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "ask_inner_amount",
+        "execute_code": ""
+      },
+      "confirm_no": {
+        "next_state": "property_condition",
+        "execute_code": ""
+      }
+    }
+  },
+  "ask_inner_amount": {
+    "description": "Запрос суммы страхования внутренней отделки",
+    "system_response": {
+      "template": "На какую сумму хотели бы застраховать внутренню отделку?",
+      "redis_key": "audio_ask_inner_amount"
+    },
+    "transitions": {
+      "not_interest": {
+        "next_state": "inner_cover_again",
+        "execute_code": ""
+      },
+      "value_in_range": {
+        "next_state": "confirm_inner_amount",
+        "execute_code": "session.variables.sum_2 = user_input"
+      },
+      "value_out_range": {
+        "next_state": "inner_condition",
+        "execute_code": ""
+      }
+    }
+  },
+  "inner_cover_again": {
+    "description": "Повторное предложение страхования внутренней отделки",
+    "system_response": {
+      "template": "Как Вы наверняка знаете сейчас ремонт может быть очень дорогостоящим, может быть включим в полис страхование внутренней отдеки на миллион рублей? По стоимости это всего 1000 руб.",
+      "redis_key": "audio_inner_cover_again"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "confirm_inner_amount",
+        "execute_code": "session.variables.sum_2 = 1000000"
+      },
+      "confirm_no": {
+        "next_state": "confirm_only_property",
+        "execute_code": ""
+      }
+    }
+  },
+  "confirm_only_property": {
+    "description": "Подтверждение страхования только конструктивных элементов",
+    "system_response": {
+      "template": "Хорошо, тогда фикисрую только конструктивные элементы",
+      "redis_key": "audio_confirm_only_property"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "price_sum",
+        "execute_code": ""
+      }
+    }
+  },
+  "inner_condition": {
+    "description": "Объяснение лимитов страхования внутренней отделки",
+    "system_response": {
+      "template": "Для страхования внутренней отделки предусмотрены лимиты: от 500 тыс рублей до 10 млн для квартир и комнат и от 500 тыс руб до 5 млн для домов и таунхайсов. Какую сумму в этих пределах укажем?",
+      "redis_key": "audio_inner_condition"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "confirm_inner_amount",
+        "execute_code": "session.variables.sum_2 = user_input"
+      },
+      "confirm_no": {
+        "next_state": "inner_condition",
+        "execute_code": ""
+      }
+    }
+  },
+
+  "confirm_inner_amount": {
+    "description": "Подтверждение суммы страхования внутренней отделки",
+    "system_response": {
+      "template": "Правильно услышала, сумма внутренней отделки {{ session.variables.sum_2 }} рублей?",
+      "redis_response": "audio_confirm_inner_amount"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "price_sum",
+        "execute_code": ""
+      },
+      "confirm_no": {
+        "next_state": "inner_condition",
+        "execute_code": ""
+      }
+    }
+  },
+  "price_sum": {
+    "description": "Расчет суммы страхования",
+    "system_response": {
+      "template": "",
+      "redis_key": ""
+    },
+    "transitions": {
+      "calculate": {
+        "next_state": "finalize_amount",
+        "execute_code": "session.variables.coast_1 = session.variables.sum_1 * 0.001; session.variables.coast_2 = session.variables.sum_2 * 0.001; session.variables.final_sum = session.variables.coast_1 + session.variables.coast_2"
+      }
+    }
+  },
+
+  "finalize_amount": {
+    "description": "Финальное предложение с расчетом",
+    "system_response": {
+      "template": "Стоимость страхового полиса составит {{ session.variables.final_sum }} рублей из них {{ session.variables.coast_1 }} рублей - это взнос за страхование конструктивных элементов и {{ session.variables.coast_2 }} - внутренней отделки. Полис будет действовать в течение 12 месцев. Адрес объекта страхования {{ session.variables.address }}. Для подписания документов в ближайшее время я направлю Вам ссылку в смс сообщении. Получится произвести оплату и оформить полис в течение сегодняшнего дня?",
+      "redis_key": "audio_finalize_amount"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "payment_today",
+        "execute_code": ""
+      },
+      "confirm_no": {
+        "next_state": "payment_next_time",
+        "execute_code": ""
+      },
+      "expensive": {
+        "next_state": "expensive_amount",
+        "execute_code": ""
+      }
+    }
+  },
+  "ask_address": {
+    "description": "Подтверждение адреса недвижимости",
+    "system_response": {
+      "template": "Хорошо. Давайте теперь сверим адрес. Недвижимость расположена по адресу {{ session.variables.address }}, верно?",
+      "redis_key": "audio_ask_address"
+    },
+    "transitions": {
+      "adress_correct": {
+        "next_state": "finalize_amount",
+        "execute_code": ""
+      },
+      "adress_incorrect": {
+        "next_state": "adress_agent_ask",
+        "execute_code": ""
+      }
+    }
+  },
+  "adress_agent_ask": {
+    "description": "Передача контакта куратору при неверном адресе",
+    "system_response": {
+      "template": "Поняла Вас. В таком случае я передам Ваш контакт куратору, он дополнительно свяжется с Вами в ближайшее время для уточнения деталей. Будьте на связи, пожалуйста. Я эе с Вами прощаюсь. Всего доброго! До свидания",
+      "redis_key": "audio_adress_agent_ask"
+    },
+    "transitions": {
+      "end": {
+        "next_state": "END",
+        "execute_code": "",
+        "end_dialogue": true
+      }
+    }
+  },
+  "payment_today": {
+    "description": "Подтверждение оплаты сегодня",
+    "system_response": {
+      "template": "Хорошо. Смс-сообщение поступит в ближайшее время. Рада была Вам помочь. Хорошего дня!",
+      "redis_key": "audio_payment_today"
+    },
+    "transitions": {
+      "end": {
+        "next_state": "END",
+        "execute_code": "",
+        "end_dialogue": true
+      }
+    }
+  },
+  "payment_next_time": {
+    "description": "Отложенная оплата",
+    "system_response": {
+      "template": "Поняла. Смс-сообщение со ссылкой я направлю в ближайшее время и поставлю отметку, чтобы ссылка действовала еще 5 дней для оформления. Спасибо за уделенное время. Хорошего дня!",
+      "redis_key": "audio_payment_next_time"
+    },
+    "transitions": {
+      "end": {
+        "next_state": "END",
+        "execute_code": "",
+        "end_dialogue": true
+      }
+    }
+  },
+  "expensive_amount": {
+    "description": "Запрос комфортной суммы при дорогом полисе",
+    "system_response": {
+      "template": "Поняла Вас. Подскажите, какая сумма страхового полиса за конструктивные элементы была бы для Вас комфортна ?",
+      "redis_key": "audio_expensive_amount"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "offer_new_amount",
+        "execute_code": "session.variables.new_coast_1 = user_input; session.variables.new_final_sum = session.variables.new_coast_1 / 0.001"
+      }
+    }
+  },
+
+  "offer_new_amount": {
+    "description": "Предложение новой суммы",
+    "system_response": {
+      "template": "Новая сумма страхового полиса составит {{ session.variables.new_final_sum }} рублей. Подходит ли вам данная сумма и готовы ли вы оплатить сегодня?",
+      "redis_key": "audio_offer_new_amount"
+    },
+    "transitions": {
+      "confirm_yes": {
+        "next_state": "payment_today",
+        "execute_code": ""
+      },
+      "confirm_no": {
+        "next_state": "call_end",
+        "execute_code": ""
+      }
+    }
+  }
+}
