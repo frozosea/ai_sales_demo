@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LiveKit Echo Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/livekit-client/dist/livekit-client.umd.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .controls {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .connected {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .disconnected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        #volumeMeter {
+            width: 100%;
+            height: 20px;
+            background-color: #f0f0f0;
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        #volumeBar {
+            width: 0%;
+            height: 100%;
+            background-color: #4CAF50;
+            transition: width 0.1s ease;
+        }
+        .debug {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>LiveKit Echo Test</h1>
+    
+    <div class="controls">
+        <button id="connectBtn">Connect</button>
+        <button id="startAudioBtn" disabled>Start Audio</button>
+        <button id="stopAudioBtn" disabled>Stop Audio</button>
+        <button id="disconnectBtn" disabled>Disconnect</button>
+    </div>
+
+    <div id="status" class="status disconnected">
+        Status: Disconnected
+    </div>
+
+    <div id="volumeMeter">
+        <div id="volumeBar"></div>
+    </div>
+
+    <div id="debug" class="debug"></div>
+
+    <script>
+        let room;
+        let audioTrack;
+        let audioContext;
+        let analyser;
+        let dataArray;
+        let animationFrame;
+        
+        // UI elements
+        const connectBtn = document.getElementById('connectBtn');
+        const startAudioBtn = document.getElementById('startAudioBtn');
+        const stopAudioBtn = document.getElementById('stopAudioBtn');
+        const disconnectBtn = document.getElementById('disconnectBtn');
+        const statusDiv = document.getElementById('status');
+        const volumeBar = document.getElementById('volumeBar');
+        const debugDiv = document.getElementById('debug');
+
+        // Debug logging
+        function log(message) {
+            console.log(message);
+            debugDiv.textContent += message + '\n';
+            debugDiv.scrollTop = debugDiv.scrollHeight;
+        }
+
+        // Update UI status
+        function updateStatus(message, isConnected = false) {
+            statusDiv.textContent = `Status: ${message}`;
+            statusDiv.className = `status ${isConnected ? 'connected' : 'disconnected'}`;
+            log(message);
+        }
+
+        // Get token from server
+        async function getToken() {
+            const response = await fetch('/token');
+            if (!response.ok) {
+                throw new Error('Failed to get token');
+            }
+            return response.json();
+        }
+
+        // Connect to LiveKit room
+        async function connect() {
+            try {
+                updateStatus('Connecting...');
+                const { url, token } = await getToken();
+                log(`Got token for URL: ${url}`);
+
+                // Configure room
+                room = new LivekitClient.Room({
+                    adaptiveStream: true,
+                    dynacast: true,
+                    audioCaptureDefaults: {
+                        autoGainControl: true,
+                        echoCancellation: true,
+                        noiseSuppression: true
+                    }
+                });
+                
+                // Handle room events
+                room.on(LivekitClient.RoomEvent.Connected, () => {
+                    log('Connected to room');
+                    updateStatus('Connected to room', true);
+                    connectBtn.disabled = true;
+                    startAudioBtn.disabled = false;
+                    disconnectBtn.disabled = false;
+                });
+
+                room.on(LivekitClient.RoomEvent.Disconnected, () => {
+                    log('Disconnected from room');
+                    updateStatus('Disconnected from room');
+                    connectBtn.disabled = false;
+                    startAudioBtn.disabled = true;
+                    stopAudioBtn.disabled = true;
+                    disconnectBtn.disabled = true;
+                    stopVolumeMetering();
+                });
+
+                // Handle remote tracks (echo)
+                room.on(LivekitClient.RoomEvent.TrackSubscribed, (track, publication, participant) => {
+                    log(`Track subscribed: ${track.kind} from ${participant.identity}`);
+                    if (track.kind === 'audio') {
+                        const audioElement = new Audio();
+                        audioElement.srcObject = new MediaStream([track]);
+                        audioElement.play().catch(error => log(`Audio play error: ${error.message}`));
+                    }
+                });
+
+                room.on(LivekitClient.RoomEvent.TrackUnsubscribed, (track, publication, participant) => {
+                    log(`Track unsubscribed: ${track.kind} from ${participant.identity}`);
+                });
+
+                // Connect with audio enabled
+                await room.connect(url, token, {
+                    autoSubscribe: true
+                });
+                
+            } catch (error) {
+                console.error('Connection error:', error);
+                log(`Connection error: ${error.message}`);
+                updateStatus(`Error: ${error.message}`);
+            }
+        }
+
+        // Start volume metering
+        function startVolumeMetering(stream) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioContext.createAnalyser();
+            const source = audioContext.createMediaStreamSource(stream);
+            source.connect(analyser);
+            
+            analyser.fftSize = 256;
+            dataArray = new Uint8Array(analyser.frequencyBinCount);
+            
+            function updateVolume() {
+                analyser.getByteFrequencyData(dataArray);
+                const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
+                const volume = Math.min(100, average * 2); // Scale up for better visibility
+                volumeBar.style.width = `${volume}%`;
+                animationFrame = requestAnimationFrame(updateVolume);
+            }
+            
+            updateVolume();
+        }
+
+        // Stop volume metering
+        function stopVolumeMetering() {
+            if (animationFrame) {
+                cancelAnimationFrame(animationFrame);
+            }
+            if (audioContext) {
+                audioContext.close();
+            }
+            volumeBar.style.width = '0%';
+        }
+
+        // Start audio streaming
+        async function startAudio() {
+            try {
+                log('Requesting audio permissions...');
+                const audioStream = await navigator.mediaDevices.getUserMedia({
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    }
+                });
+                
+                log('Got audio stream, publishing...');
+                audioTrack = audioStream.getAudioTracks()[0];
+                await room.localParticipant.publishTrack(audioTrack, {
+                    source: LivekitClient.Track.Source.Microphone,
+                    dtx: true
+                });
+                
+                startAudioBtn.disabled = true;
+                stopAudioBtn.disabled = false;
+                updateStatus('Streaming audio', true);
+
+                // Start volume metering
+                startVolumeMetering(audioStream);
+                log('Audio publishing complete');
+            } catch (error) {
+                console.error('Audio error:', error);
+                log(`Audio error: ${error.message}`);
+                updateStatus(`Audio error: ${error.message}`);
+            }
+        }
+
+        // Stop audio streaming
+        async function stopAudio() {
+            if (audioTrack) {
+                log('Stopping audio...');
+                await room.localParticipant.unpublishTrack(audioTrack);
+                audioTrack.stop();
+                audioTrack = null;
+                
+                startAudioBtn.disabled = false;
+                stopAudioBtn.disabled = true;
+                updateStatus('Connected (audio stopped)', true);
+
+                // Stop volume metering
+                stopVolumeMetering();
+                log('Audio stopped');
+            }
+        }
+
+        // Disconnect from room
+        async function disconnect() {
+            if (audioTrack) {
+                await stopAudio();
+            }
+            if (room) {
+                log('Disconnecting from room...');
+                await room.disconnect();
+                room = null;
+                log('Disconnected');
+            }
+        }
+
+        // Event listeners
+        connectBtn.addEventListener('click', connect);
+        startAudioBtn.addEventListener('click', startAudio);
+        stopAudioBtn.addEventListener('click', stopAudio);
+        disconnectBtn.addEventListener('click', disconnect);
+    </script>
+</body>
+</html> 

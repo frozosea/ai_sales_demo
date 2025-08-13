@@ -1,0 +1,22 @@
+api_key: "${ELEVEN_API_KEY}"
+voice_id: "${ELEVEN_VOICE_ID}"
+model_id: "eleven_flash_v2_5"
+
+http_base_url: "https://api.elevenlabs.io"
+http_timeout_sec: 20
+http_output_format: "pcm_8000"
+optimize_streaming_latency: 0
+
+ws_base_url: "wss://api.elevenlabs.io"
+ws_inactivity_timeout: 20
+ws_auto_mode: true
+ws_enable_ssml_parsing: false
+ws_output_format: "pcm_8000"
+ws_keep_alive_sec: 15
+ws_connect_timeout_sec: 10
+ws_chunk_length_schedule: [20, 30, 50, 80]
+
+voice_speed: 1.2
+voice_stability: 0.3
+voice_similarity_boost: 0.5
+language_code: "ru"

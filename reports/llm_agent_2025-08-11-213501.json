@@ -1,0 +1,166 @@
+{
+  "metrics": [
+    {
+      "user_text": "Привет! Скажи в двух фразах, чем ты полезен клиентам страховой компании?",
+      "context_before": 0.0028076171875,
+      "ttft_ms": 2514.4227079872508,
+      "network_latency_ms": null,
+      "inference_ttft_ms": null,
+      "total_ms": 5081.507457987755,
+      "assistant_text": "```json\n{\n  \"benefits\": [\n    \"Я помогаю клиентам быстро находить информацию о страховых продуктах и условиях, что упрощает процесс выбора подходящей страховки.\",\n    \"Я предоставляю поддержку в процессе подачи заявлений и отвечаю на вопросы, чтобы сделать взаимодействие со страховой компанией максимально удобным.\"\n  ]\n}\n```",
+      "context_after": 0.0146484375,
+      "warmup_started": false,
+      "warmup_time_ms": null,
+      "handover_ms": null
+    },
+    {
+      "user_text": "А теперь в одном предложении объясни выгоды вежливо и без воды.",
+      "context_before": 0.0146484375,
+      "ttft_ms": 1053.0998750036815,
+      "network_latency_ms": null,
+      "inference_ttft_ms": null,
+      "total_ms": 3407.859583006939,
+      "assistant_text": "```json\n{\n  \"benefit_summary\": \"Я ускоряю поиск информации о страховых продуктах и облегчаю процесс подачи заявлений для клиентов.\"\n}\n```",
+      "context_after": 0.02099609375,
+      "warmup_started": false,
+      "warmup_time_ms": null,
+      "handover_ms": null
+    },
+    {
+      "user_text": "Суммаризируй весь диалог списком из 3 пунктов.",
+      "context_before": 0.02099609375,
+      "ttft_ms": 3104.7784999973373,
+      "network_latency_ms": null,
+      "inference_ttft_ms": null,
+      "total_ms": 9450.466290989425,
+      "assistant_text": "```json\n{\n  \"summary\": [\n    \"Я помогаю клиентам быстро находить информацию о страховых продуктах и условиях.\",\n    \"Я предоставляю поддержку в процессе подачи заявлений и отвечаю на вопросы.\",\n    \"Я ускоряю поиск информации о страховых продуктах и облегчаю процесс подачи заявлений для клиентов.\"\n  ]\n}\n```",
+      "context_after": 0.0322265625,
+      "warmup_started": false,
+      "warmup_time_ms": null,
+      "handover_ms": null
+    },
+    {
+      "user_text": "Суммаризируй весь диалог списком из 3 пунктов.",
+      "context_before": 0.0322265625,
+      "ttft_ms": 3668.8548749953043,
+      "network_latency_ms": null,
+      "inference_ttft_ms": null,
+      "total_ms": 8511.252040989348,
+      "assistant_text": "```json\n{\n  \"summary\": [\n    \"Я помогаю клиентам быстро находить информацию о страховых продуктах и условиях.\",\n    \"Я предоставляю поддержку в процессе подачи заявлений и отвечаю на вопросы.\",\n    \"Я ускоряю поиск информации о страховых продуктах и облегчаю процесс подачи заявлений для клиентов.\"\n  ]\n}\n```",
+      "context_after": 0.04345703125,
+      "warmup_started": false,
+      "warmup_time_ms": null,
+      "handover_ms": null
+    }
+  ],
+  "events": [
+    {
+      "event": "turn_start",
+      "text": "Привет! Скажи в двух фразах, чем ты полезен клиентам страховой компании?",
+      "ts": 1754912073.973967
+    },
+    {
+      "event": "first_token",
+      "ttft_ms": 2514.4227079872508,
+      "network_latency_ms": null,
+      "inference_ttft_ms": null
+    },
+    {
+      "event": "turn_complete",
+      "metrics": {
+        "user_text": "Привет! Скажи в двух фразах, чем ты полезен клиентам страховой компании?",
+        "context_before": 0.0028076171875,
+        "ttft_ms": 2514.4227079872508,
+        "network_latency_ms": null,
+        "inference_ttft_ms": null,
+        "total_ms": 5081.507457987755,
+        "assistant_text": "```json\n{\n  \"benefits\": [\n    \"Я помогаю клиентам быстро находить информацию о страховых продуктах и условиях, что упрощает процесс выбора подходящей страховки.\",\n    \"Я предоставляю поддержку в процессе подачи заявлений и отвечаю на вопросы, чтобы сделать взаимодействие со страховой компанией максимально удобным.\"\n  ]\n}\n```",
+        "context_after": 0.0146484375,
+        "warmup_started": false,
+        "warmup_time_ms": null,
+        "handover_ms": null
+      }
+    },
+    {
+      "event": "turn_start",
+      "text": "А теперь в одном предложении объясни выгоды вежливо и без воды.",
+      "ts": 1754912079.55696
+    },
+    {
+      "event": "first_token",
+      "ttft_ms": 1053.0998750036815,
+      "network_latency_ms": null,
+      "inference_ttft_ms": null
+    },
+    {
+      "event": "turn_complete",
+      "metrics": {
+        "user_text": "А теперь в одном предложении объясни выгоды вежливо и без воды.",
+        "context_before": 0.0146484375,
+        "ttft_ms": 1053.0998750036815,
+        "network_latency_ms": null,
+        "inference_ttft_ms": null,
+        "total_ms": 3407.859583006939,
+        "assistant_text": "```json\n{\n  \"benefit_summary\": \"Я ускоряю поиск информации о страховых продуктах и облегчаю процесс подачи заявлений для клиентов.\"\n}\n```",
+        "context_after": 0.02099609375,
+        "warmup_started": false,
+        "warmup_time_ms": null,
+        "handover_ms": null
+      }
+    },
+    {
+      "event": "turn_start",
+      "text": "Суммаризируй весь диалог списком из 3 пунктов.",
+      "ts": 1754912083.46616
+    },
+    {
+      "event": "first_token",
+      "ttft_ms": 3104.7784999973373,
+      "network_latency_ms": null,
+      "inference_ttft_ms": null
+    },
+    {
+      "event": "turn_complete",
+      "metrics": {
+        "user_text": "Суммаризируй весь диалог списком из 3 пунктов.",
+        "context_before": 0.02099609375,
+        "ttft_ms": 3104.7784999973373,
+        "network_latency_ms": null,
+        "inference_ttft_ms": null,
+        "total_ms": 9450.466290989425,
+        "assistant_text": "```json\n{\n  \"summary\": [\n    \"Я помогаю клиентам быстро находить информацию о страховых продуктах и условиях.\",\n    \"Я предоставляю поддержку в процессе подачи заявлений и отвечаю на вопросы.\",\n    \"Я ускоряю поиск информации о страховых продуктах и облегчаю процесс подачи заявлений для клиентов.\"\n  ]\n}\n```",
+        "context_after": 0.0322265625,
+        "warmup_started": false,
+        "warmup_time_ms": null,
+        "handover_ms": null
+      }
+    },
+    {
+      "event": "turn_start",
+      "text": "Суммаризируй весь диалог списком из 3 пунктов.",
+      "ts": 1754912092.9170508
+    },
+    {
+      "event": "first_token",
+      "ttft_ms": 3668.8548749953043,
+      "network_latency_ms": null,
+      "inference_ttft_ms": null
+    },
+    {
+      "event": "turn_complete",
+      "metrics": {
+        "user_text": "Суммаризируй весь диалог списком из 3 пунктов.",
+        "context_before": 0.0322265625,
+        "ttft_ms": 3668.8548749953043,
+        "network_latency_ms": null,
+        "inference_ttft_ms": null,
+        "total_ms": 8511.252040989348,
+        "assistant_text": "```json\n{\n  \"summary\": [\n    \"Я помогаю клиентам быстро находить информацию о страховых продуктах и условиях.\",\n    \"Я предоставляю поддержку в процессе подачи заявлений и отвечаю на вопросы.\",\n    \"Я ускоряю поиск информации о страховых продуктах и облегчаю процесс подачи заявлений для клиентов.\"\n  ]\n}\n```",
+        "context_after": 0.04345703125,
+        "warmup_started": false,
+        "warmup_time_ms": null,
+        "handover_ms": null
+      }
+    }
+  ]
+}

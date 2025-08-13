@@ -22,42 +22,91 @@ class DualContextController:
         
         self._warmup_threshold = warmup_threshold
         self._handover_threshold = handover_threshold
+        self._warmup_start_time: Optional[float] = None
         self._warmup_ready_time: Optional[float] = None
+        self._handover_time: Optional[float] = None
 
     def on_user_message(self, message: ConversationMessage) -> float:
         self.active_context.add_message(message)
         return self.active_context.estimate_usage_ratio()
 
     def should_warmup(self, usage_ratio: float) -> bool:
-        return usage_ratio >= self._warmup_threshold and self.warmup_task is None and self.standby_context is None
+        should_start = (
+            usage_ratio >= self._warmup_threshold and 
+            self.warmup_task is None and 
+            self.standby_context is None
+        )
+        if should_start:
+            self._warmup_start_time = time.monotonic()
+            jlog({
+                "event": "warmup_threshold_reached",
+                "usage_ratio": usage_ratio,
+                "threshold": self._warmup_threshold
+            })
+        return should_start
 
     def should_handover(self, usage_ratio: float) -> bool:
-        return usage_ratio >= self._handover_threshold and self.standby_context is not None
+        should_switch = (
+            usage_ratio >= self._handover_threshold and 
+            self.standby_context is not None
+        )
+        if should_switch:
+            jlog({
+                "event": "handover_threshold_reached",
+                "usage_ratio": usage_ratio,
+                "threshold": self._handover_threshold
+            })
+        return should_switch
 
     def set_standby(self, context: LLMContext):
-        jlog({"event": "warmup_ready"})
         self._warmup_ready_time = time.monotonic()
         self.standby_context = context
         if self.warmup_task:
             self.warmup_task = None
+        
+        warmup_duration = None
+        if self._warmup_start_time:
+            warmup_duration = (self._warmup_ready_time - self._warmup_start_time) * 1000
+        
+        jlog({
+            "event": "warmup_ready",
+            "warmup_duration_ms": warmup_duration,
+            "new_context_ratio": context.estimate_usage_ratio()
+        })
 
     def perform_handover(self):
         if self.standby_context:
-            t_handover = time.monotonic()
+            self._handover_time = time.monotonic()
+            
+            metrics = {
+                "event": "handover_perform",
+                "new_context_ratio": self.standby_context.estimate_usage_ratio()
+            }
+            
             if self._warmup_ready_time:
-                ms_since_ready = (t_handover - self._warmup_ready_time) * 1000
-                jlog({"event": "handover_perform", "ms_from_warmup_ready": ms_since_ready})
+                wait_duration = (self._handover_time - self._warmup_ready_time) * 1000
+                metrics["wait_duration_ms"] = wait_duration
+            
+            if self._warmup_start_time:
+                total_duration = (self._handover_time - self._warmup_start_time) * 1000
+                metrics["total_duration_ms"] = total_duration
+            
+            jlog(metrics)
             
             self.active_context = self.standby_context
             self.standby_context = None
-            self._warmup_ready_time = None
-            # The new active context now reflects the summarized history
-            jlog({"event": "handover_complete", "new_active_context_ratio": self.active_context.estimate_usage_ratio()})
+            
+            # Keep timing info for metrics collection
+            # self._warmup_start_time = None  # Keep for total duration calculation
+            # self._warmup_ready_time = None  # Keep for wait duration calculation
+            # self._handover_time = None      # Keep for timing verification
 
     def cancel_warmup_if_running(self):
         if self.warmup_task and not self.warmup_task.done():
             self.warmup_task.cancel()
             self.warmup_task = None
+            self._warmup_start_time = None
+            self._warmup_ready_time = None
             jlog({"event": "warmup_cancelled"})
 
 if __name__ == "__main__":

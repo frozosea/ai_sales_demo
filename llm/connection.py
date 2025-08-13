@@ -122,7 +122,8 @@ class LLMConnectionManagerImpl:
             limits=limits,
             transport=transport,
             http2=True,
-            verify=True
+            verify=True,
+            proxy="http://localhost:7890"
         )
 
         # Test connection with a simple request

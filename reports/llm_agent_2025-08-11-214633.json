@@ -1,0 +1,929 @@
+{
+  "metrics": [
+    {
+      "user_text": "Привет! Скажи в двух фразах, чем ты полезен клиентам страховой компании?",
+      "context_before": 0.0028076171875,
+      "ttft_ms": 1386.6534999979194,
+      "network_latency_ms": null,
+      "inference_ttft_ms": null,
+      "total_ms": 2926.0182500001974,
+      "chunks": 38,
+      "assistant_text": "```json\n{\n  \"benefits\": [\n    \"Я быстро предоставляю информацию о страховых продуктах и условиях, помогая клиентам сделать осознанный выбор.\",\n    \"Я отвечаю на вопросы и помогаю в процессе оформления страховых полисов, улучшая клиентский опыт.\"\n  ]\n}\n```",
+      "context_after": 0.013671875,
+      "warmup_started": false,
+      "warmup_time_ms": null,
+      "handover_ms": null
+    },
+    {
+      "user_text": "А теперь в одном предложении объясни выгоды вежливо и без воды.",
+      "context_before": 0.013671875,
+      "ttft_ms": 920.6310419976944,
+      "network_latency_ms": null,
+      "inference_ttft_ms": null,
+      "total_ms": 1966.0322080017067,
+      "chunks": 23,
+      "assistant_text": "```json\n{\n  \"benefit_summary\": \"Я предоставляю быструю информацию о страховых продуктах и помогаю в оформлении полисов, улучшая общий клиентский опыт.\"\n}\n```",
+      "context_after": 0.0211181640625,
+      "warmup_started": false,
+      "warmup_time_ms": null,
+      "handover_ms": null
+    },
+    {
+      "user_text": "Суммаризируй весь диалог списком из 3 пунктов.",
+      "context_before": 0.0211181640625,
+      "ttft_ms": 3696.6455829970073,
+      "network_latency_ms": null,
+      "inference_ttft_ms": null,
+      "total_ms": 5958.329458007938,
+      "chunks": 45,
+      "assistant_text": "```json\n{\n  \"summary\": [\n    \"Я предоставляю информацию о страховых продуктах и условиях, помогая клиентам сделать осознанный выбор.\",\n    \"Я отвечаю на вопросы и помогаю в процессе оформления страховых полисов.\",\n    \"Я улучшаю общий клиентский опыт, предоставляя быструю и точную помощь.\"\n  ]\n}\n```",
+      "context_after": 0.0330810546875,
+      "warmup_started": false,
+      "warmup_time_ms": null,
+      "handover_ms": null
+    },
+    {
+      "user_text": "Суммаризируй весь диалог списком из 3 пунктов.",
+      "context_before": 0.0330810546875,
+      "ttft_ms": 1173.314916988602,
+      "network_latency_ms": null,
+      "inference_ttft_ms": null,
+      "total_ms": 5996.989958992344,
+      "chunks": 45,
+      "assistant_text": "```json\n{\n  \"summary\": [\n    \"Я предоставляю информацию о страховых продуктах и условиях, помогая клиентам сделать осознанный выбор.\",\n    \"Я отвечаю на вопросы и помогаю в процессе оформления страховых полисов.\",\n    \"Я улучшаю общий клиентский опыт, предоставляя быструю и точную помощь.\"\n  ]\n}\n```",
+      "context_after": 0.0450439453125,
+      "warmup_started": false,
+      "warmup_time_ms": null,
+      "handover_ms": null
+    }
+  ],
+  "events": [
+    {
+      "event": "turn_start",
+      "text": "Привет! Скажи в двух фразах, чем ты полезен клиентам страховой компании?",
+      "ts": 1754912775.766342
+    },
+    {
+      "event": "first_token",
+      "ttft_ms": 1386.6534999979194,
+      "network_latency_ms": null,
+      "inference_ttft_ms": null
+    },
+    {
+      "event": "chunk",
+      "i": 1,
+      "bytes": 3
+    },
+    {
+      "event": "chunk",
+      "i": 2,
+      "bytes": 5
+    },
+    {
+      "event": "chunk",
+      "i": 3,
+      "bytes": 4
+    },
+    {
+      "event": "chunk",
+      "i": 4,
+      "bytes": 14
+    },
+    {
+      "event": "chunk",
+      "i": 5,
+      "bytes": 4
+    },
+    {
+      "event": "chunk",
+      "i": 6,
+      "bytes": 3
+    },
+    {
+      "event": "chunk",
+      "i": 7,
+      "bytes": 7
+    },
+    {
+      "event": "chunk",
+      "i": 8,
+      "bytes": 13
+    },
+    {
+      "event": "chunk",
+      "i": 9,
+      "bytes": 11
+    },
+    {
+      "event": "chunk",
+      "i": 10,
+      "bytes": 2
+    },
+    {
+      "event": "chunk",
+      "i": 11,
+      "bytes": 10
+    },
+    {
+      "event": "chunk",
+      "i": 12,
+      "bytes": 10
+    },
+    {
+      "event": "chunk",
+      "i": 13,
+      "bytes": 2
+    },
+    {
+      "event": "chunk",
+      "i": 14,
+      "bytes": 9
+    },
+    {
+      "event": "chunk",
+      "i": 15,
+      "bytes": 1
+    },
+    {
+      "event": "chunk",
+      "i": 16,
+      "bytes": 8
+    },
+    {
+      "event": "chunk",
+      "i": 17,
+      "bytes": 9
+    },
+    {
+      "event": "chunk",
+      "i": 18,
+      "bytes": 8
+    },
+    {
+      "event": "chunk",
+      "i": 19,
+      "bytes": 11
+    },
+    {
+      "event": "chunk",
+      "i": 20,
+      "bytes": 9
+    },
+    {
+      "event": "chunk",
+      "i": 21,
+      "bytes": 4
+    },
+    {
+      "event": "chunk",
+      "i": 22,
+      "bytes": 3
+    },
+    {
+      "event": "chunk",
+      "i": 23,
+      "bytes": 8
+    },
+    {
+      "event": "chunk",
+      "i": 24,
+      "bytes": 3
+    },
+    {
+      "event": "chunk",
+      "i": 25,
+      "bytes": 8
+    },
+    {
+      "event": "chunk",
+      "i": 26,
+      "bytes": 2
+    },
+    {
+      "event": "chunk",
+      "i": 27,
+      "bytes": 8
+    },
+    {
+      "event": "chunk",
+      "i": 28,
+      "bytes": 2
+    },
+    {
+      "event": "chunk",
+      "i": 29,
+      "bytes": 9
+    },
+    {
+      "event": "chunk",
+      "i": 30,
+      "bytes": 11
+    },
+    {
+      "event": "chunk",
+      "i": 31,
+      "bytes": 10
+    },
+    {
+      "event": "chunk",
+      "i": 32,
+      "bytes": 8
+    },
+    {
+      "event": "chunk",
+      "i": 33,
+      "bytes": 1
+    },
+    {
+      "event": "chunk",
+      "i": 34,
+      "bytes": 8
+    },
+    {
+      "event": "chunk",
+      "i": 35,
+      "bytes": 11
+    },
+    {
+      "event": "chunk",
+      "i": 36,
+      "bytes": 7
+    },
+    {
+      "event": "chunk",
+      "i": 37,
+      "bytes": 6
+    },
+    {
+      "event": "chunk",
+      "i": 38,
+      "bytes": 3
+    },
+    {
+      "event": "turn_complete",
+      "metrics": {
+        "user_text": "Привет! Скажи в двух фразах, чем ты полезен клиентам страховой компании?",
+        "context_before": 0.0028076171875,
+        "ttft_ms": 1386.6534999979194,
+        "network_latency_ms": null,
+        "inference_ttft_ms": null,
+        "total_ms": 2926.0182500001974,
+        "chunks": 38,
+        "assistant_text": "```json\n{\n  \"benefits\": [\n    \"Я быстро предоставляю информацию о страховых продуктах и условиях, помогая клиентам сделать осознанный выбор.\",\n    \"Я отвечаю на вопросы и помогаю в процессе оформления страховых полисов, улучшая клиентский опыт.\"\n  ]\n}\n```",
+        "context_after": 0.013671875,
+        "warmup_started": false,
+        "warmup_time_ms": null,
+        "handover_ms": null
+      }
+    },
+    {
+      "event": "turn_start",
+      "text": "А теперь в одном предложении объясни выгоды вежливо и без воды.",
+      "ts": 1754912779.194069
+    },
+    {
+      "event": "first_token",
+      "ttft_ms": 920.6310419976944,
+      "network_latency_ms": null,
+      "inference_ttft_ms": null
+    },
+    {
+      "event": "chunk",
+      "i": 1,
+      "bytes": 3
+    },
+    {
+      "event": "chunk",
+      "i": 2,
+      "bytes": 5
+    },
+    {
+      "event": "chunk",
+      "i": 3,
+      "bytes": 4
+    },
+    {
+      "event": "chunk",
+      "i": 4,
+      "bytes": 19
+    },
+    {
+      "event": "chunk",
+      "i": 5,
+      "bytes": 3
+    },
+    {
+      "event": "chunk",
+      "i": 6,
+      "bytes": 13
+    },
+    {
+      "event": "chunk",
+      "i": 7,
+      "bytes": 8
+    },
+    {
+      "event": "chunk",
+      "i": 8,
+      "bytes": 11
+    },
+    {
+      "event": "chunk",
+      "i": 9,
+      "bytes": 2
+    },
+    {
+      "event": "chunk",
+      "i": 10,
+      "bytes": 10
+    },
+    {
+      "event": "chunk",
+      "i": 11,
+      "bytes": 10
+    },
+    {
+      "event": "chunk",
+      "i": 12,
+      "bytes": 2
+    },
+    {
+      "event": "chunk",
+      "i": 13,
+      "bytes": 8
+    },
+    {
+      "event": "chunk",
+      "i": 14,
+      "bytes": 2
+    },
+    {
+      "event": "chunk",
+      "i": 15,
+      "bytes": 11
+    },
+    {
+      "event": "chunk",
+      "i": 16,
+      "bytes": 8
+    },
+    {
+      "event": "chunk",
+      "i": 17,
+      "bytes": 1
+    },
+    {
+      "event": "chunk",
+      "i": 18,
+      "bytes": 8
+    },
+    {
+      "event": "chunk",
+      "i": 19,
+      "bytes": 6
+    },
+    {
+      "event": "chunk",
+      "i": 20,
+      "bytes": 11
+    },
+    {
+      "event": "chunk",
+      "i": 21,
+      "bytes": 7
+    },
+    {
+      "event": "chunk",
+      "i": 22,
+      "bytes": 2
+    },
+    {
+      "event": "chunk",
+      "i": 23,
+      "bytes": 3
+    },
+    {
+      "event": "turn_complete",
+      "metrics": {
+        "user_text": "А теперь в одном предложении объясни выгоды вежливо и без воды.",
+        "context_before": 0.013671875,
+        "ttft_ms": 920.6310419976944,
+        "network_latency_ms": null,
+        "inference_ttft_ms": null,
+        "total_ms": 1966.0322080017067,
+        "chunks": 23,
+        "assistant_text": "```json\n{\n  \"benefit_summary\": \"Я предоставляю быструю информацию о страховых продуктах и помогаю в оформлении полисов, улучшая общий клиентский опыт.\"\n}\n```",
+        "context_after": 0.0211181640625,
+        "warmup_started": false,
+        "warmup_time_ms": null,
+        "handover_ms": null
+      }
+    },
+    {
+      "event": "turn_start",
+      "text": "Суммаризируй весь диалог списком из 3 пунктов.",
+      "ts": 1754912781.661607
+    },
+    {
+      "event": "first_token",
+      "ttft_ms": 3696.6455829970073,
+      "network_latency_ms": null,
+      "inference_ttft_ms": null
+    },
+    {
+      "event": "chunk",
+      "i": 1,
+      "bytes": 3
+    },
+    {
+      "event": "chunk",
+      "i": 2,
+      "bytes": 5
+    },
+    {
+      "event": "chunk",
+      "i": 3,
+      "bytes": 4
+    },
+    {
+      "event": "chunk",
+      "i": 4,
+      "bytes": 13
+    },
+    {
+      "event": "chunk",
+      "i": 5,
+      "bytes": 4
+    },
+    {
+      "event": "chunk",
+      "i": 6,
+      "bytes": 3
+    },
+    {
+      "event": "chunk",
+      "i": 7,
+      "bytes": 13
+    },
+    {
+      "event": "chunk",
+      "i": 8,
+      "bytes": 11
+    },
+    {
+      "event": "chunk",
+      "i": 9,
+      "bytes": 2
+    },
+    {
+      "event": "chunk",
+      "i": 10,
+      "bytes": 10
+    },
+    {
+      "event": "chunk",
+      "i": 11,
+      "bytes": 10
+    },
+    {
+      "event": "chunk",
+      "i": 12,
+      "bytes": 2
+    },
+    {
+      "event": "chunk",
+      "i": 13,
+      "bytes": 9
+    },
+    {
+      "event": "chunk",
+      "i": 14,
+      "bytes": 1
+    },
+    {
+      "event": "chunk",
+      "i": 15,
+      "bytes": 8
+    },
+    {
+      "event": "chunk",
+      "i": 16,
+      "bytes": 9
+    },
+    {
+      "event": "chunk",
+      "i": 17,
+      "bytes": 8
+    },
+    {
+      "event": "chunk",
+      "i": 18,
+      "bytes": 11
+    },
+    {
+      "event": "chunk",
+      "i": 19,
+      "bytes": 9
+    },
+    {
+      "event": "chunk",
+      "i": 20,
+      "bytes": 4
+    },
+    {
+      "event": "chunk",
+      "i": 21,
+      "bytes": 3
+    },
+    {
+      "event": "chunk",
+      "i": 22,
+      "bytes": 8
+    },
+    {
+      "event": "chunk",
+      "i": 23,
+      "bytes": 3
+    },
+    {
+      "event": "chunk",
+      "i": 24,
+      "bytes": 8
+    },
+    {
+      "event": "chunk",
+      "i": 25,
+      "bytes": 2
+    },
+    {
+      "event": "chunk",
+      "i": 26,
+      "bytes": 8
+    },
+    {
+      "event": "chunk",
+      "i": 27,
+      "bytes": 2
+    },
+    {
+      "event": "chunk",
+      "i": 28,
+      "bytes": 9
+    },
+    {
+      "event": "chunk",
+      "i": 29,
+      "bytes": 11
+    },
+    {
+      "event": "chunk",
+      "i": 30,
+      "bytes": 10
+    },
+    {
+      "event": "chunk",
+      "i": 31,
+      "bytes": 11
+    },
+    {
+      "event": "chunk",
+      "i": 32,
+      "bytes": 4
+    },
+    {
+      "event": "chunk",
+      "i": 33,
+      "bytes": 3
+    },
+    {
+      "event": "chunk",
+      "i": 34,
+      "bytes": 8
+    },
+    {
+      "event": "chunk",
+      "i": 35,
+      "bytes": 6
+    },
+    {
+      "event": "chunk",
+      "i": 36,
+      "bytes": 11
+    },
+    {
+      "event": "chunk",
+      "i": 37,
+      "bytes": 5
+    },
+    {
+      "event": "chunk",
+      "i": 38,
+      "bytes": 1
+    },
+    {
+      "event": "chunk",
+      "i": 39,
+      "bytes": 13
+    },
+    {
+      "event": "chunk",
+      "i": 40,
+      "bytes": 8
+    },
+    {
+      "event": "chunk",
+      "i": 41,
+      "bytes": 2
+    },
+    {
+      "event": "chunk",
+      "i": 42,
+      "bytes": 7
+    },
+    {
+      "event": "chunk",
+      "i": 43,
+      "bytes": 9
+    },
+    {
+      "event": "chunk",
+      "i": 44,
+      "bytes": 6
+    },
+    {
+      "event": "chunk",
+      "i": 45,
+      "bytes": 3
+    },
+    {
+      "event": "turn_complete",
+      "metrics": {
+        "user_text": "Суммаризируй весь диалог списком из 3 пунктов.",
+        "context_before": 0.0211181640625,
+        "ttft_ms": 3696.6455829970073,
+        "network_latency_ms": null,
+        "inference_ttft_ms": null,
+        "total_ms": 5958.329458007938,
+        "chunks": 45,
+        "assistant_text": "```json\n{\n  \"summary\": [\n    \"Я предоставляю информацию о страховых продуктах и условиях, помогая клиентам сделать осознанный выбор.\",\n    \"Я отвечаю на вопросы и помогаю в процессе оформления страховых полисов.\",\n    \"Я улучшаю общий клиентский опыт, предоставляя быструю и точную помощь.\"\n  ]\n}\n```",
+        "context_after": 0.0330810546875,
+        "warmup_started": false,
+        "warmup_time_ms": null,
+        "handover_ms": null
+      }
+    },
+    {
+      "event": "turn_start",
+      "text": "Суммаризируй весь диалог списком из 3 пунктов.",
+      "ts": 1754912787.620286
+    },
+    {
+      "event": "first_token",
+      "ttft_ms": 1173.314916988602,
+      "network_latency_ms": null,
+      "inference_ttft_ms": null
+    },
+    {
+      "event": "chunk",
+      "i": 1,
+      "bytes": 3
+    },
+    {
+      "event": "chunk",
+      "i": 2,
+      "bytes": 5
+    },
+    {
+      "event": "chunk",
+      "i": 3,
+      "bytes": 4
+    },
+    {
+      "event": "chunk",
+      "i": 4,
+      "bytes": 13
+    },
+    {
+      "event": "chunk",
+      "i": 5,
+      "bytes": 4
+    },
+    {
+      "event": "chunk",
+      "i": 6,
+      "bytes": 3
+    },
+    {
+      "event": "chunk",
+      "i": 7,
+      "bytes": 13
+    },
+    {
+      "event": "chunk",
+      "i": 8,
+      "bytes": 11
+    },
+    {
+      "event": "chunk",
+      "i": 9,
+      "bytes": 2
+    },
+    {
+      "event": "chunk",
+      "i": 10,
+      "bytes": 10
+    },
+    {
+      "event": "chunk",
+      "i": 11,
+      "bytes": 10
+    },
+    {
+      "event": "chunk",
+      "i": 12,
+      "bytes": 2
+    },
+    {
+      "event": "chunk",
+      "i": 13,
+      "bytes": 9
+    },
+    {
+      "event": "chunk",
+      "i": 14,
+      "bytes": 1
+    },
+    {
+      "event": "chunk",
+      "i": 15,
+      "bytes": 8
+    },
+    {
+      "event": "chunk",
+      "i": 16,
+      "bytes": 9
+    },
+    {
+      "event": "chunk",
+      "i": 17,
+      "bytes": 8
+    },
+    {
+      "event": "chunk",
+      "i": 18,
+      "bytes": 11
+    },
+    {
+      "event": "chunk",
+      "i": 19,
+      "bytes": 9
+    },
+    {
+      "event": "chunk",
+      "i": 20,
+      "bytes": 4
+    },
+    {
+      "event": "chunk",
+      "i": 21,
+      "bytes": 3
+    },
+    {
+      "event": "chunk",
+      "i": 22,
+      "bytes": 8
+    },
+    {
+      "event": "chunk",
+      "i": 23,
+      "bytes": 3
+    },
+    {
+      "event": "chunk",
+      "i": 24,
+      "bytes": 8
+    },
+    {
+      "event": "chunk",
+      "i": 25,
+      "bytes": 2
+    },
+    {
+      "event": "chunk",
+      "i": 26,
+      "bytes": 8
+    },
+    {
+      "event": "chunk",
+      "i": 27,
+      "bytes": 2
+    },
+    {
+      "event": "chunk",
+      "i": 28,
+      "bytes": 9
+    },
+    {
+      "event": "chunk",
+      "i": 29,
+      "bytes": 11
+    },
+    {
+      "event": "chunk",
+      "i": 30,
+      "bytes": 10
+    },
+    {
+      "event": "chunk",
+      "i": 31,
+      "bytes": 11
+    },
+    {
+      "event": "chunk",
+      "i": 32,
+      "bytes": 4
+    },
+    {
+      "event": "chunk",
+      "i": 33,
+      "bytes": 3
+    },
+    {
+      "event": "chunk",
+      "i": 34,
+      "bytes": 8
+    },
+    {
+      "event": "chunk",
+      "i": 35,
+      "bytes": 6
+    },
+    {
+      "event": "chunk",
+      "i": 36,
+      "bytes": 11
+    },
+    {
+      "event": "chunk",
+      "i": 37,
+      "bytes": 5
+    },
+    {
+      "event": "chunk",
+      "i": 38,
+      "bytes": 1
+    },
+    {
+      "event": "chunk",
+      "i": 39,
+      "bytes": 13
+    },
+    {
+      "event": "chunk",
+      "i": 40,
+      "bytes": 8
+    },
+    {
+      "event": "chunk",
+      "i": 41,
+      "bytes": 2
+    },
+    {
+      "event": "chunk",
+      "i": 42,
+      "bytes": 7
+    },
+    {
+      "event": "chunk",
+      "i": 43,
+      "bytes": 9
+    },
+    {
+      "event": "chunk",
+      "i": 44,
+      "bytes": 6
+    },
+    {
+      "event": "chunk",
+      "i": 45,
+      "bytes": 3
+    },
+    {
+      "event": "turn_complete",
+      "metrics": {
+        "user_text": "Суммаризируй весь диалог списком из 3 пунктов.",
+        "context_before": 0.0330810546875,
+        "ttft_ms": 1173.314916988602,
+        "network_latency_ms": null,
+        "inference_ttft_ms": null,
+        "total_ms": 5996.989958992344,
+        "chunks": 45,
+        "assistant_text": "```json\n{\n  \"summary\": [\n    \"Я предоставляю информацию о страховых продуктах и условиях, помогая клиентам сделать осознанный выбор.\",\n    \"Я отвечаю на вопросы и помогаю в процессе оформления страховых полисов.\",\n    \"Я улучшаю общий клиентский опыт, предоставляя быструю и точную помощь.\"\n  ]\n}\n```",
+        "context_after": 0.0450439453125,
+        "warmup_started": false,
+        "warmup_time_ms": null,
+        "handover_ms": null
+      }
+    }
+  ]
+}

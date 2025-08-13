@@ -1,0 +1,90 @@
+{
+  "ws_short": {
+    "handshake_ms": {
+      "avg": null,
+      "p50": null,
+      "p95": null,
+      "min": null,
+      "max": null
+    },
+    "ttft_ms": {
+      "avg": null,
+      "p50": null,
+      "p95": null,
+      "min": null,
+      "max": null
+    },
+    "total_ms": {
+      "avg": null,
+      "p50": null,
+      "p95": null,
+      "min": null,
+      "max": null
+    }
+  },
+  "ws_long": {
+    "handshake_ms": {
+      "avg": null,
+      "p50": null,
+      "p95": null,
+      "min": null,
+      "max": null
+    },
+    "ttft_ms": {
+      "avg": null,
+      "p50": null,
+      "p95": null,
+      "min": null,
+      "max": null
+    },
+    "total_ms": {
+      "avg": null,
+      "p50": null,
+      "p95": null,
+      "min": null,
+      "max": null
+    }
+  },
+  "http_short": {
+    "ttfa_ms": {
+      "avg": null,
+      "p50": null,
+      "p95": null,
+      "min": null,
+      "max": null
+    },
+    "total_ms": {
+      "avg": null,
+      "p50": null,
+      "p95": null,
+      "min": null,
+      "max": null
+    }
+  },
+  "http_long": {
+    "ttfa_ms": {
+      "avg": null,
+      "p50": null,
+      "p95": null,
+      "min": null,
+      "max": null
+    },
+    "total_ms": {
+      "avg": null,
+      "p50": null,
+      "p95": null,
+      "min": null,
+      "max": null
+    }
+  },
+  "goals": {
+    "ttft_ms": 800,
+    "ttfa_ms": 1000,
+    "handshake_ms": 500
+  },
+  "conclusions": {
+    "ws_ttft_meets_goal": false,
+    "http_ttfa_meets_goal": false,
+    "ws_handshake_meets_goal": false
+  }
+}

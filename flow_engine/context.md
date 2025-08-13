@@ -1,142 +1,226 @@
-### **Задача: Модуль FlowEngine (v2, отказоустойчивая версия)**
+### **Спецификация: FlowEngine v4 (Адаптивный Менеджер Задач)**
 
-Этот документ описывает обновленную спецификацию для модуля FlowEngine. Версия 2 добавляет механизмы возврата состояния, валидации данных и обработки ошибок, делая систему значительно более надежной и готовой к реальным сценариям.
+#### **1. Концепция и Роль**
 
-#### **1. Контекст и цель модуля (CONTEXT)**
+`FlowEngine` — это **умный, целе-ориентированный мозг** диалоговой системы. Он является stateless-синглтоном. Его задача — не просто переключать состояния, а **динамически планировать, приостанавливать, возобновлять и отменять задачи** на основе целей диалога, зависимостей между данными и поведения пользователя в реальном времени.
 
-**FlowEngine — это "мозг" диалогового сценария. Его задача — управлять ходом диалога, изменять состояние сессии и выполнять бизнес-логику (расчеты, проверки) на основе команд от Orchestrator. Он отвечает на вопрос: "Что делать дальше по сценарию?**
+-----
 
-#### **2. Архитектура и компоненты**
+#### **2. Ключевые Сущности и Файлы Конфигурации**
 
-**Модуль будет состоять из одного основного класса, находящегося в пакете flow_engine/.**
+##### **2.1. `goals.json` (Карта Целей и Зависимостей)**
 
-**2.1. flow_engine/engine.py -> Класс FlowEngine**
+Это декларативное описание **ЧТО** система может делать и **ЧТО** ей для этого нужно.
 
-* **Назначение: Реализует всю логику управления состоянием и выполнения кода из сценария.**  
-* **Зависимости:**  
-* **dialogue_map: Загруженный в память словарь из dialogue_map.json.** 
-  ```json
-    {
-      "dialogue_flow": {
-          "ask_engine_power": {
-              "description": "Система запрашивает мощность двигателя",
-              "system_response": {
-                  "playlist": [
-                      {
-                          "type": "cache",
-                          "key": "static:final_price_intro"
-                      },
-                      {
-                          "type": "filler",
-                          "key": "filler:hmm"
-                      },
-                      {
-                          "type": "tts",
-                          "text_template": "{{ session.variables.final_price }}"
-                      },
-                      {
-                          "type": "cache",
-                          "key": "static:currency_rubles"
-                      }
-                  ]
-              },
-              "transitions": {
-                  "provide_number": {
-                      "next_state": "ask_about_drivers",
-                      "execute_code": "session['variables']['engine_power'] = entities['value']nif entities['value'] > 200:n    session['variables']['base_tariff'] = 15000nelse:n    session['variables']['base_tariff'] = 12000"
-                  }
-              },
-              "long_operation": true
-          }
-      }
-    }
-  ```
-* **Данные, с которыми оперирует:**  
-  * **SessionState: data class. FlowEngine получает его на вход, модифицирует и возвращает обратно.**:
-  * ```python
-    @dataclass
-    class SessionState:
-        """
-        Полное состояние одного звонка.
-        Этот объект — "единый источник правды" для Оркестратора.
-        """
-        call_id: str
-        current_state_id: str = "start"
-        variables: Dict[str, Any] = field(default_factory=dict)
-        state_history: List[str] = field(default_factory=list)  # Для логики возврата
-        previous_intent_leader: Optional[str] = None
-        turn_state: Literal['BOT_TURN', 'USER_TURN'] = 'BOT_TURN'
-    ```
-  * **IntentResult: Объект (или словарь) от IntentClassifier, содержащий intent_id и извлеченные entities.**
+  * **Структура:**
+      * `goal_id`: Уникальное имя цели (например, `provide_total_price`).
+      * `parameters`: Список "слотов" (данных), которые необходимо собрать для достижения цели.
+          * `name`: Имя переменной (e.g., `inner_amount`).
+          * `is_required`: Условие необходимости. Может быть `true` или **строкой-условием** (e.g., `"session.variables.wants_inner_insurance == true"`).
+          * `dialogue_state_to_ask`: ID состояния из `dialogue_map` для запроса этой переменной в обычном режиме.
+          * `force_dialogue_state_to_ask`: ID состояния для запроса в **форсированном режиме**.
+      * `is_digression`: Флаг `true` для целей, являющихся отвлечениями (FAQ).
+      * `is_terminal`: Флаг `true` для целей, которые необратимо завершают основной сценарий.
+      * `is_forcing`: Флаг `true` для интентов-требований.
 
-#### **3. Детальная спецификация FlowEngine (v2)**
+##### **2.2. `dialogue_map.json` (Библиотека Реплик и Микро-сценариев)**
 
-**3.1. __init__(self, dialogue_map_path: str)**
+Роль `dialogue_map` **упрощается**. Он больше не является жестким графом. Теперь это хранилище:
 
-* **Назначение: Конструктор класса.**  
-* **Логика:**  
-  * **Принимает путь к файлу dialogue_map.json.**  
-  * **Загружает и парсит JSON в атрибут self.dialogue_map.**  
-  * **Выполняет валидацию карты диалога (проверяет целостность ссылок next_state и т.д.), чтобы упасть при старте, а не во время звонка.**
-  * Каждый transition и каждый блок execute_code вызываются в последовательности, чтобы избежать кривого кода. Делается это через отдельный метод utils.check_exec_valid()
+  * **Состояний-вопросов:** (`ask_property_value`, `force_ask_property_value`).
+  * **Состояний-ответов:** (`info_company`).
+  * **Локальных переходов:** Например, подтверждение только что названной суммы (`confirm_property_value`).
+  * **Специальных команд:** Переход с `next_state: "RESUME_PREVIOUS_TASK"` или `next_state: "RUN_FORCE_CHECK"`.
 
-**3.2. process_event(self, session_state: SessionState, intent_id: str, entities: Optional[Dict]) -> FlowResult**
 
-* **Назначение:** Основной метод, который теперь возвращает не просто словарь, а структурированный объект FlowResult, содержащий статус выполнения. Метод process_event должен быть полностью самодостаточным. Он получает entities и сам проверяет наличие всех полей, которые нужны ему для конкретного шага сценария. Это полностью убирает «вакуумность» и делает контракт явным: «Дайте мне entities в любом виде, я сам разберусь, подходят они или нет, и верну вам статус».
-* **Логика:**  
-  1. Получает на вход session_state, intent_id и entities.  
-  2. ** Шаг валидации:** Перед выполнением, проверяет, что entities содержат необходимые данные, если они требуются для execute_code. Например, если код использует entities['value'], а оно None, немедленно возвращает FlowResult(status='MISSING_ENTITY').  
-  3. Находит соответствующий блок transition в dialogue_map.json.  
-  4. Извлекает execute_code и next_state.  
-  5. **Безопасное выполнение кода с обработкой ошибок:**  
-     * Использование copy.deepcopy(session_state) внутри FlowEngine гарантирует атомарнось операции
-     * Оборачивает вызов exec() в try...except Exception as e.  
-     * **В случае успеха:** exec() модифицирует session_state.  
-     * **В случае ошибки:** Логирует исключение e и немедленно возвращает FlowResult(status='EXECUTION_ERROR').  
-  6. **Логика возврата состояния:** Если intent_id — это интент коррекции (например, intent_correction_sum_1), то execute_code должен содержать логику очистки зависимых переменных (например, session.variables['coast_1'] = None), а next_state будет указывать на предыдущее состояние (например, ask_initial_sum).  
-  7. Обновляет session_state.current_state_id = next_state.  
-  8. Возвращает FlowResult(status='SUCCESS', updated_session=session_state).
+#### **2.3. Пример файлов **
+dialogue_map.json:
+```json
+{
 
-**3.3. Класс FlowResult**
+  "ask_property_value": {
 
-* Это простой dataclass для структурирования ответа от FlowEngine, чтобы Orchestrator четко понимал результат.  
-  from dataclasses import dataclass  
-  from typing import Optional, Literal
+    "system_response": { "template": "Подскажите, на какую сумму оцениваете стоимость вашей недвижимости?" },
 
-  Status = Literal['SUCCESS', 'EXECUTION_ERROR', 'MISSING_ENTITY']
+    "transitions": { ... }
 
-  @dataclass  
-  class FlowResult:  
-      status: Status  
-      updated_session: Optional[SessionState] = None
+  },
 
-#### **4. Обработка исключительных ситуаций (Ответы на твои вопросы)**
+  "force_ask_property_value": {
 
-**4.1. Возврат состояния (User-driven Rollback)**
+    "system_response": { "template": "Чтобы я мог назвать точную цену, мне осталось узнать только стоимость недвижимости. Какая она?" },
 
-* **Решение:** В dialogue_map.json мы создаем специальные интенты, например, intent_correction_sum_1. В любом состоянии, где пользователь может "передумать", мы добавляем переход для этого интента.  
-  "final_confirmation": {  
-      "transitions": {  
-          "intent_correction_sum_1": {  
-              "next_state": "ask_initial_sum", // Возвращаемся к шагу задания суммы  
-              "execute_code": "session['variables']['sum_1'] = Nonensession['variables']['coast_1'] = Nonensession['variables']['final_price'] = None" // Очищаем все зависимые расчеты  
-          }  
-      }  
-  }
+    "transitions": {
 
-**4.2. Валидация данных и отсутствующие сущности**
+        "provide_number": {
 
-* **Решение:** Ответственность разделена.  
-  1. **IntentClassifier:** Если он должен был извлечь число, но не смог, он вернет entities=None.  
-  2. **Orchestrator:** Перед вызовом FlowEngine, он проверяет: если интент требует сущность, а entities пусто, он **не вызывает FlowEngine**, а сразу запускает аудио-филлер "Не расслышал, повторите, пожалуйста".  
-  3. **FlowEngine:** Как вторая линия защиты, он выполняет базовую проверку типов внутри себя (шаг 3.2.2).
+            "next_state": "RUN_FORCE_CHECK", // Специальная команда для FlowEngine
 
-**4.3. Ошибки выполнения кода (System-driven Fallback)**
+            "execute_code": "..." 
 
-* **Решение:** FlowEngine теперь всегда возвращает FlowResult.  
-  * **Orchestrator:** result = flow_engine.process_event(...)  
-  * if result.status == 'EXECUTION_ERROR':  
-    * // Запускаем аудио-филлер "Извините, технические неполадки"  
-  * elif result.status == 'SUCCESS':  
-    * // Продолжаем нормальный флоу
+        }
 
+    }
+
+  }
+
+}
+```
+RUN_FORCE_CHECK — это специальный next_state, который говорит FlowEngine: "Переменную я получил, проверь, нужно ли что-то еще из форсированного списка, и перейди к следующему прямому вопросу".
+
+
+goals.json:
+```json
+{
+
+  "provide_total_price": {
+
+    "parameters": [
+
+      {
+
+        "name": "wants_inner_insurance",
+
+        "is_required": true,
+
+        "dialogue_state_to_ask": "ask_if_wants_inner_insurance" 
+
+      },
+
+      {
+
+        "name": "property_value",
+
+        "is_required": true,
+
+        "dialogue_state_to_ask": "ask_property_value"
+
+      },
+
+      {
+
+        "name": "inner_amount",
+
+        "is_required": "session.variables.wants_inner_insurance == true", // УСЛОВИЕ!
+
+        "dialogue_state_to_ask": "ask_inner_amount"
+
+      }
+
+    ]
+
+  },
+
+  "handle_faq_ask_product": {
+
+     // ...
+
+  }
+```
+
+-----
+
+#### **3. Модели Данных в `SessionState`**
+
+```python
+# domain/models.py
+from dataclasses import dataclass, field
+from typing import Optional, List, Literal
+
+@dataclass
+class Task:
+    """Описывает одну активную задачу (основную цель или отвлечение)."""
+    goal_id: str
+    status: Literal['IN_PROGRESS', 'PAUSED']
+    mode: Literal['NORMAL', 'FORCED'] = 'NORMAL'  # Режим выполнения
+    return_state_id: Optional[str] = None # Куда вернуться после прерывания
+
+@dataclass
+class SessionState:
+    # ... call_id, trace_id, variables, etc.
+    
+    # Стек задач. Вершина стека (последний элемент) - текущая активная задача.
+    task_stack: List[Task] = field(default_factory=list)
+```
+
+-----
+
+#### **4. Основной Алгоритм: `process_event`**
+
+Это сердце движка. Логика выполняется в строгом порядке приоритетов.
+
+**`process_event(session_state, intent_id)` -\> `FlowResult`**
+
+1.  **ПРИОРИТЕТ 0: ТЕРМИНАЛЬНЫЙ ИНТЕНТ**
+
+      * Найти цель, соответствующую `intent_id`. Если у нее `is_terminal: true`:
+          * **Очистить `session_state.task_stack`**.
+          * Поместить в стек новую, финальную задачу (e.g., `Task(goal_id='handle_rejection')`).
+          * Вернуть `next_state` для этой задачи (e.g., `refusal_end`). **ВЫХОД**.
+
+2.  **ПРИОРИТЕТ 1: ФОРСИРОВАННЫЙ ИНТЕНТ (`demand_final_answer_...`)**
+
+      * Найти цель для `intent_id`. Если у нее `is_forcing: true`:
+          * Найти в стеке основную "паузнутую" бизнес-цель (например, `provide_total_price`).
+          * **Очистить стек от всех прерываний**, которые лежат выше основной цели.
+          * Установить у основной цели `mode = 'FORCED'`.
+          * Запустить "Режим быстрого сбора" (см. ниже). **ВЫХОД**.
+
+3.  **ПРИОРИТЕТ 2: ВОЗВРАТ ПО ИНИЦИАТИВЕ ПОЛЬЗОВАТЕЛЯ (`return_to_main_goal`)**
+
+      * Если `intent_id == 'return_to_main_goal'`:
+          * Снять (`pop`) со стека текущую задачу (которая является прерыванием).
+          * Взять новую вершину стека (паузнутую задачу), установить `status = 'IN_PROGRESS'`.
+          * Вернуть `next_state = task.return_state_id`. **ВЫХОД**.
+
+4.  **ПРИОРИТЕТ 3: ГЛОБАЛЬНОЕ ПРЕРЫВАНИЕ (FAQ)**
+
+      * Найти цель для `intent_id`. Если у нее `is_digression: true`:
+          * **Проверить "правило здравого смысла"**: Если `len(task_stack) >= 3`, вернуть флаг `should_guide_back: true` для `Orchestrator`.
+          * Поставить текущую задачу на `PAUSED`, сохранив `return_state_id`.
+          * Поместить на стек новую задачу для обработки FAQ.
+          * Вернуть `next_state` для ответа на FAQ. **ВЫХОД**.
+
+5.  **ПРИОРИТЕТ 4: ОБРАБОТКА ТЕКУЩЕЙ ЗАДАЧИ (Happy Path)**
+
+      * Взять текущую задачу с вершины стека.
+      * Выполнить `execute_code` для текущего перехода.
+      * **"Режим быстрого сбора" (если `task.mode == 'FORCED'`)**:
+          * Определить следующий **обязательный** и **незаполненный** параметр цели.
+          * Если такой параметр есть, вернуть `next_state` из его `force_dialogue_state_to_ask`.
+          * Если все параметры собраны, выполнить финальный расчет, завершить задачу и вернуть `next_state` для показа результата (e.g. `summary_single`).
+      * **"Нормальный режим" (если `task.mode == 'NORMAL'`)**:
+          * Вернуть `next_state` из `dialogue_map` для текущего "счастливого" пути.
+
+-----
+
+#### **5. Разбор Реальных Сценариев**
+
+##### **Сценарий №1: "Нетерпеливый пользователь"**
+
+  * **Стек:** `[Task(provide_total_price, PAUSED)]`
+  * **Пользователь:** "Хватит вопросов, какая цена?\!" (`intent: 'demand_final_answer_cost'`)
+  * **`FlowEngine`:** Срабатывает **Приоритет 1**. Находит задачу, ставит `mode='FORCED'`. Определяет, что не хватает `property_value`. Возвращает `next_state: 'force_ask_property_value'`.
+  * **Робот:** "Чтобы я мог назвать точную цену, мне осталось узнать только стоимость недвижимости. Какая она?"
+
+##### **Сценарий №2: "Любопытный, но сговорчивый"**
+
+  * **Стек:** `[Task(provide_total_price, IN_PROGRESS)]`. Робот спрашивает про недвижимость.
+  * **Пользователь:** "А вы робот?" (`intent: 'ask_robot'`)
+  * **`FlowEngine`:** Срабатывает **Приоритет 3**. Ставит `provide_total_price` на `PAUSED`. Наверх стека кладется `Task(handle_faq_ask_robot)`. Возвращает `next_state: 'info_robot'`.
+  * **Робот:** "Нет, я не робот..."
+  * **Пользователь:** "А, понятно, давайте вернемся к делу" (`intent: 'return_to_main_goal'`)
+  * **`FlowEngine`:** Срабатывает **Приоритет 2**. Снимает со стека `handle_faq_ask_robot`. Возобновляет `provide_total_price` и возвращает `next_state` оттуда.
+  * **Робот:** "Так на какую сумму оцениваете стоимость вашей недвижимости?"
+
+##### **Сценарий №3: "Решительный отказ"**
+
+  * **Стек:** `[Task(provide_total_price, PAUSED), Task(handle_faq_ask_company, IN_PROGRESS)]`
+  * **Пользователь:** "Мне это не интересно" (`intent: 'provide_reject_reason'`)
+  * **`FlowEngine`:** Срабатывает **Приоритет 0**. Интент — терминальный.
+      * **`task_stack` очищается: `[]`**.
+      * В стек кладется `[Task(handle_rejection)]`.
+      * Возвращается `next_state: 'refusal_end'`.
+  * **Робот:** "Хорошо. Благодарю за уделённое время. Всего доброго." (После этого диалог завершается, попыток вернуться к старым задачам нет).
+
+Эта спецификация описывает движок, который является не просто исполнителем, а **адаптивным менеджером диалога**. Он готов к хаосу реального разговора.

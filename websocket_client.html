@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Audio Client</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .controls {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .connected {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .disconnected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        #volumeMeter {
+            width: 100%;
+            height: 20px;
+            background-color: #f0f0f0;
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        #volumeBar {
+            width: 0%;
+            height: 100%;
+            background-color: #4CAF50;
+            transition: width 0.1s ease;
+        }
+        .debug {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>WebSocket Audio Client</h1>
+    
+    <div class="controls">
+        <button id="connectBtn">Connect</button>
+        <button id="startAudioBtn" disabled>Start Audio</button>
+        <button id="stopAudioBtn" disabled>Stop Audio</button>
+        <button id="disconnectBtn" disabled>Disconnect</button>
+    </div>
+
+    <div id="status" class="status disconnected">
+        Status: Disconnected
+    </div>
+
+    <div id="volumeMeter">
+        <div id="volumeBar"></div>
+    </div>
+
+    <div id="debug" class="debug"></div>
+
+    <script>
+        // Audio settings
+        const SAMPLE_RATE = 48000;
+        const BUFFER_SIZE = 4096;
+        let audioContext;
+        let mediaStream;
+        let websocket;
+        let processor;
+        let isStreaming = false;
+
+        // UI elements
+        const connectBtn = document.getElementById('connectBtn');
+        const startAudioBtn = document.getElementById('startAudioBtn');
+        const stopAudioBtn = document.getElementById('stopAudioBtn');
+        const disconnectBtn = document.getElementById('disconnectBtn');
+        const statusDiv = document.getElementById('status');
+        const volumeBar = document.getElementById('volumeBar');
+        const debugDiv = document.getElementById('debug');
+
+        // Debug logging
+        function log(message) {
+            console.log(message);
+            debugDiv.textContent += message + '\n';
+            debugDiv.scrollTop = debugDiv.scrollHeight;
+        }
+
+        // Update UI status
+        function updateStatus(message, isConnected = false) {
+            statusDiv.textContent = `Status: ${message}`;
+            statusDiv.className = `status ${isConnected ? 'connected' : 'disconnected'}`;
+            log(message);
+        }
+
+        // Get token from server
+        async function getToken() {
+            const response = await fetch('/token');
+            if (!response.ok) {
+                throw new Error('Failed to get token');
+            }
+            return response.json();
+        }
+
+        // Connect to WebSocket server
+        async function connect() {
+            try {
+                updateStatus('Getting token...');
+                const { token, room } = await getToken();
+                log(`Got token for room: ${room}`);
+
+                // Connect to WebSocket server
+                websocket = new WebSocket('ws://localhost:8765');
+                
+                websocket.onopen = () => {
+                    log('WebSocket connected');
+                    // Send room info
+                    websocket.send(JSON.stringify({ token, room }));
+                    updateStatus('Connected to server', true);
+                    connectBtn.disabled = true;
+                    startAudioBtn.disabled = false;
+                    disconnectBtn.disabled = false;
+                };
+
+                websocket.onclose = () => {
+                    log('WebSocket disconnected');
+                    updateStatus('Disconnected from server');
+                    connectBtn.disabled = false;
+                    startAudioBtn.disabled = true;
+                    stopAudioBtn.disabled = true;
+                    disconnectBtn.disabled = true;
+                    stopAudio();
+                };
+
+                websocket.onerror = (error) => {
+                    log(`WebSocket error: ${error}`);
+                    updateStatus(`Error: ${error}`);
+                };
+
+                websocket.onmessage = (event) => {
+                    // Handle incoming audio data if needed
+                    log(`Received message: ${event.data.length} bytes`);
+                };
+
+            } catch (error) {
+                log(`Connection error: ${error}`);
+                updateStatus(`Error: ${error.message}`);
+            }
+        }
+
+        // Start audio streaming
+        async function startAudio() {
+            try {
+                log('Requesting audio permissions...');
+                mediaStream = await navigator.mediaDevices.getUserMedia({
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true,
+                        sampleRate: SAMPLE_RATE
+                    }
+                });
+
+                audioContext = new AudioContext({
+                    sampleRate: SAMPLE_RATE
+                });
+
+                const source = audioContext.createMediaStreamSource(mediaStream);
+                processor = audioContext.createScriptProcessor(BUFFER_SIZE, 1, 1);
+
+                processor.onaudioprocess = (e) => {
+                    if (!isStreaming) return;
+
+                    const inputData = e.inputBuffer.getChannelData(0);
+                    
+                    // Convert float32 to int16
+                    const int16Data = new Int16Array(inputData.length);
+                    for (let i = 0; i < inputData.length; i++) {
+                        int16Data[i] = inputData[i] * 32767;
+                    }
+
+                    // Send audio data to server
+                    if (websocket && websocket.readyState === WebSocket.OPEN) {
+                        websocket.send(int16Data.buffer);
+                    }
+
+                    // Update volume meter
+                    const rms = Math.sqrt(inputData.reduce((acc, val) => acc + val * val, 0) / inputData.length);
+                    const db = 20 * Math.log10(rms);
+                    const normalizedDb = Math.max(0, Math.min(100, (db + 60) * 1.67)); // Map -60dB - 0dB to 0-100
+                    volumeBar.style.width = `${normalizedDb}%`;
+                };
+
+                source.connect(processor);
+                processor.connect(audioContext.destination);
+
+                isStreaming = true;
+                startAudioBtn.disabled = true;
+                stopAudioBtn.disabled = false;
+                updateStatus('Streaming audio', true);
+                log('Audio streaming started');
+
+            } catch (error) {
+                log(`Audio error: ${error}`);
+                updateStatus(`Audio error: ${error.message}`);
+            }
+        }
+
+        // Stop audio streaming
+        function stopAudio() {
+            isStreaming = false;
+            
+            if (processor) {
+                processor.disconnect();
+                processor = null;
+            }
+            
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(track => track.stop());
+                mediaStream = null;
+            }
+            
+            if (audioContext) {
+                audioContext.close();
+                audioContext = null;
+            }
+
+            volumeBar.style.width = '0%';
+            startAudioBtn.disabled = false;
+            stopAudioBtn.disabled = true;
+            updateStatus('Connected (audio stopped)', true);
+            log('Audio streaming stopped');
+        }
+
+        // Disconnect from server
+        function disconnect() {
+            if (isStreaming) {
+                stopAudio();
+            }
+            
+            if (websocket) {
+                websocket.close();
+                websocket = null;
+            }
+            
+            log('Disconnected from server');
+        }
+
+        // Event listeners
+        connectBtn.addEventListener('click', connect);
+        startAudioBtn.addEventListener('click', startAudio);
+        stopAudioBtn.addEventListener('click', stopAudio);
+        disconnectBtn.addEventListener('click', disconnect);
+    </script>
+</body>
+</html> 

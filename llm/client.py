@@ -53,6 +53,10 @@ class OpenAILLMClient(AbstractLLMClient):
         self._endpoint = endpoint
         self._chunk_buffer = SmartChunkBuffer()
         self._parallel_warmup_task: Optional[asyncio.Task] = None
+        self._current_metrics = {
+            'network_latency_ms': None,
+            'inference_ttft_ms': None
+        }
 
     async def _prepare_next_request(self, http_client: httpx.AsyncClient, model: str):
         """Параллельный прогрев для следующего запроса."""
@@ -75,6 +79,11 @@ class OpenAILLMClient(AbstractLLMClient):
         response_model: Type[BaseModel],
         low_latency_mode: bool = False
     ) -> AsyncGenerator[BaseModel, None]:
+        # Reset metrics for new stream
+        self._current_metrics = {
+            'network_latency_ms': None,
+            'inference_ttft_ms': None
+        }
         
         # Оптимизированное тело запроса
         request_body = {
@@ -96,8 +105,6 @@ class OpenAILLMClient(AbstractLLMClient):
         jlog({"event": "request_send", "model": model, "low_latency_mode": low_latency_mode, "ts": time.time()})
         
         seq_counter = 0  # Initialize counter here
-        network_latency_ms = None
-        inference_ttft_ms = None
         try:
             async with http_client.stream(
                 "POST",
@@ -119,8 +126,8 @@ class OpenAILLMClient(AbstractLLMClient):
                 async for chunk in response.aiter_bytes():
                     if t_first_byte is None:
                         t_first_byte = time.monotonic()
-                        network_latency_ms = (t_first_byte - t_start_request) * 1000
-                        jlog({"event": "first_byte_received", "network_latency_ms": network_latency_ms})
+                        self._current_metrics['network_latency_ms'] = (t_first_byte - t_start_request) * 1000
+                        jlog({"event": "first_byte_received", "network_latency_ms": self._current_metrics['network_latency_ms']})
 
                     buffer += chunk.decode('utf-8')
                     
@@ -141,8 +148,8 @@ class OpenAILLMClient(AbstractLLMClient):
                                 if content:
                                     if t_first_content is None:
                                         t_first_content = time.monotonic()
-                                        inference_ttft_ms = (t_first_content - t_first_byte) * 1000
-                                        jlog({"event": "first_content_parsed", "inference_ttft_ms": inference_ttft_ms})
+                                        self._current_metrics['inference_ttft_ms'] = (t_first_content - t_first_byte) * 1000
+                                        jlog({"event": "first_content_parsed", "inference_ttft_ms": self._current_metrics['inference_ttft_ms']})
 
                                     # Send the very first content chunk immediately
                                     if seq_counter == 0:
@@ -150,8 +157,7 @@ class OpenAILLMClient(AbstractLLMClient):
                                         seq_counter += 1
                                         yield response_model(
                                             answer=content,
-                                            network_latency_ms=network_latency_ms,
-                                            inference_ttft_ms=inference_ttft_ms
+                                            **self._current_metrics
                                         )
                                     else:
                                         # Buffer subsequent chunks into meaningful parts
@@ -159,7 +165,10 @@ class OpenAILLMClient(AbstractLLMClient):
                                         if buffered_chunk:
                                             jlog({"event": "chunk", "size": len(buffered_chunk), "seq": seq_counter})
                                             seq_counter += 1
-                                            yield response_model(answer=buffered_chunk)
+                                            yield response_model(
+                                                answer=buffered_chunk,
+                                                **self._current_metrics
+                                            )
 
                             except (json.JSONDecodeError, ValidationError) as e:
                                 jlog({"event": "parsing_error", "error": str(e), "data": data_str})
@@ -169,7 +178,10 @@ class OpenAILLMClient(AbstractLLMClient):
                 if remaining_content:
                     jlog({"event": "chunk", "size": len(remaining_content), "seq": seq_counter})
                     seq_counter += 1
-                    yield response_model(answer=remaining_content)
+                    yield response_model(
+                        answer=remaining_content,
+                        **self._current_metrics
+                    )
 
         except httpx.HTTPStatusError as e:
             jlog({"event": "http_error", "status_code": e.response.status_code, "error": str(e)})
@@ -177,7 +189,12 @@ class OpenAILLMClient(AbstractLLMClient):
             jlog({"event": "stream_error", "error": str(e)})
         finally:
             t_end_stream = time.monotonic()
-            jlog({"event": "stream_end", "total_ms": (t_end_stream - t_start_request) * 1000, "chunks": seq_counter})
+            jlog({
+                "event": "stream_end",
+                "total_ms": (t_end_stream - t_start_request) * 1000,
+                "chunks": seq_counter,
+                **self._current_metrics
+            })
             
             # Отменяем параллельный прогрев, если он еще выполняется
             if self._parallel_warmup_task:
