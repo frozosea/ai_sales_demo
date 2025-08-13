@@ -1,1 +1,34 @@
- 
+# Web & Async
+fastapi
+uvicorn[standard]
+websockets
+httpx
+asyncio
+redis[hiredis]
+pydantic
+
+# AI & Machine Learning
+openai
+tiktoken
+numpy
+onnxruntime
+onnx
+transformers
+tokenizers
+optimum
+huggingface_hub
+
+# Audio Processing
+pydub
+soundfile
+
+# STT/TTS Services
+yandexcloud
+yandex
+elevenlabs
+livekit
+
+# Utilities
+python-dotenv
+PyYAML
+backoff
