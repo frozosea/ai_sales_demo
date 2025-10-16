@@ -1,141 +1,124 @@
-# Live Stand: "Диалоговый ИИ-Ассистент"
+Live Stand: “Dialogue AI Assistant”
 
-## 1. Видение и Цель
+1. Vision and Goal
 
-Цель этого проекта — демонстрация прототипа голосового ИИ-ассистента нового поколения, способного вести естественный, бесшовный диалог в реальном времени. Мы показываем, что технология позволяет уйти от роботизированных ответов и раздражающих пауз, создавая эффективный инструмент для бизнес-коммуникаций.
+The goal of this project is to demonstrate a prototype of a next-generation voice AI assistant capable of conducting natural, seamless real-time dialogue. We show that the technology makes it possible to move away from robotic responses and annoying pauses, creating an effective tool for business communications.
 
-**Ключевые "Вау-эффекты":**
+Key “Wow Effects”:
+	•	Instant reaction: The assistant answers standard questions with no delay.
+	•	“Real-time thinking”: The response to complex questions begins almost immediately, creating the illusion of a live thought process.
+	•	Full dialogue control: The user can interrupt the assistant at any moment, and it will instantly yield, like a polite conversation partner (Barge-in).
+	•	Premium voice quality: The assistant’s voice sounds natural and convincing.
 
-*   **Мгновенная реакция:** Ассистент отвечает на стандартные вопросы без задержки.
-*   **"Мышление в реальном времени":** Ответ на сложные вопросы начинается практически сразу, создавая иллюзию живого мыслительного процесса.
-*   **Полный контроль диалога:** Пользователь может в любой момент перебить ассистента, и тот мгновенно уступит, как вежливый собеседник (Barge-in).
-*   **Премиальное качество голоса:** Голос ассистента звучит естественно и убедительно.
+⸻
 
----
+2. System Architecture
 
-## 2. Архитектура Системы
+The system is built on the principles of speed, intelligence, and quality. Each module contributes to the final result.
 
-Система построена на принципах скорости, интеллекта и качества. Каждый модуль вносит свой вклад в финальный результат.
+ 
 
-![Архитектура](https://i.imgur.com/your-architecture-diagram.png) <!-- Замените на реальную диаграмму -->
+Component	Technology	Business Justification
+Frontend	React / Next.js	Fast start and focus on visualizing the assistant’s “thought process.”
+Media Server	LiveKit	Ensures reliable low-latency WebRTC connection for seamless voice transfer.
+Orchestrator	Python (Asyncio)	A flexible core managing the best AI services on the market.
+In-Memory Cache	Redis	Provides instant access to ready audio responses, creating the “wow effect.”
+STT	Yandex SpeechKit	Best-in-class Russian speech recognition with minimal delay.
+LLM	OpenAI GPT-4o mini	Allows the assistant to hold meaningful dialogue, not just follow a script.
+TTS	ElevenLabs	Delivers premium, natural voice output, increasing trust.
 
-| Компонент | Технология | Бизнес-обоснование |
-| :--- | :--- | :--- |
-| **Frontend** | React / Next.js | Быстрый старт и фокус на визуализации "мыслительного процесса" ассистента. |
-| **Media Server**| **LiveKit** | Гарантирует надежную WebRTC-связь с низкой задержкой для бесшовной передачи голоса. |
-| **Orchestrator**| Python (Asyncio) | Гибкое ядро, управляющее лучшими AI-сервисами на рынке. |
-| **In-Memory Cache**| Redis | Обеспечивает мгновенный доступ к готовым аудио-ответам, создавая "вау-эффект". |
-| **STT** | Yandex SpeechKit | Лучшее на рынке распознавание русской речи с минимальной задержкой. |
-| **LLM** | OpenAI GPT-4o mini | Позволяет ассистенту вести осмысленный диалог, а не просто отвечать по скрипту. |
-| **TTS** | ElevenLabs | Обеспечивает премиальное, естественное звучание голоса, повышая доверие. |
 
----
+⸻
 
-## 3. Быстрый старт для разработчика
+3. Quick Start for Developers
 
-### 3.1. Установка зависимостей
+3.1. Installing dependencies
+	1.	Set up environment:
 
-1.  **Настройте окружение:**
-    ```bash
-    python -m venv venv
-    source venv/bin/activate
-    ```
+python -m venv venv
+source venv/bin/activate
 
-2.  **Установите `requirements.txt`:**
-    ```bash
-    pip install -r requirements.txt
-    ```
 
-3.  **Настройте переменные окружения:**
-    Скопируйте `env.example` в `.env` и заполните своими API-ключами и настройками.
-    ```bash
-    cp env.example .env
-    # nano .env
-    ```
+	2.	Install requirements.txt:
 
-### 3.2. Локальный запуск LiveKit и Redis
+pip install -r requirements.txt
 
-Для полноценной работы необходим запущенный сервер LiveKit и Redis.
-Используйте Docker для быстрого развертывания:
 
-```bash
-# Запуск LiveKit
+	3.	Set up environment variables:
+Copy env.example to .env and fill it with your API keys and settings.
+
+cp env.example .env
+# nano .env
+
+
+
+3.2. Local launch of LiveKit and Redis
+
+For full functionality you need a running LiveKit server and Redis.
+Use Docker for quick deployment:
+
+# Run LiveKit
 docker run --rm -it -p 7880:7880 -p 7881:7881 livekit/livekit-server --dev
 
-# Запуск Redis
+# Run Redis
 docker run --rm -d -p 6379:6379 --name redis-cache redis
-```
 
-Это запустит LiveKit в режиме разработки. `API Key` и `Secret` будут выведены в консоль — их нужно будет добавить в ваш `.env` файл.
+This will launch LiveKit in development mode. API Key and Secret will be printed to the console — add them to your .env file.
 
----
+⸻
 
-## 4. Структура проекта и Описание модулей
+4. Project Structure and Module Description
 
-Ниже представлено описание ключевых директорий и их содержимого.
+Below is the description of the key directories and their contents.
 
-```
 project_root/
-├─ README.md              # Этот файл
-├─ .env.example           # Образец переменных окружения
-├─ requirements.txt       # Зависимости Python
-├─ configs/               # Все конфигурационные файлы
-├─ scripts/               # Вспомогательные скрипты для сборки и тестов
-├─ infra/                 # Конфигурация инфраструктуры (логи, метрики, Redis)
-├─ domain/                # Общие модели данных и интерфейсы
-├─ cache/                 # Модуль кэширования (Redis)
-├─ llm/                   # Логика работы с Large Language Models (OpenAI)
-├─ flow_engine/           # Управление диалоговыми сценариями
-├─ intent_classifier/     # Распознавание намерений пользователя
-├─ stt_yandex/            # Распознавание речи (Speech-to-Text)
-├─ tts_manager/           # Синтез речи (Text-to-Speech)
-├─ orchestrator/          # "Дирижер" всего процесса
-└─ webapi/                # WebSocket API для взаимодействия с Frontend
-```
+├─ README.md              # This file
+├─ .env.example           # Sample environment variables
+├─ requirements.txt       # Python dependencies
+├─ configs/               # All configuration files
+├─ scripts/               # Helper scripts for build and tests
+├─ infra/                 # Infrastructure configs (logs, metrics, Redis)
+├─ domain/                # Common data models and interfaces
+├─ cache/                 # Caching module (Redis)
+├─ llm/                   # Logic for working with Large Language Models (OpenAI)
+├─ flow_engine/           # Dialogue scenario management
+├─ intent_classifier/     # User intent recognition
+├─ stt_yandex/            # Speech recognition (Speech-to-Text)
+├─ tts_manager/           # Speech synthesis (Text-to-Speech)
+├─ orchestrator/          # "Conductor" of the whole process
+└─ webapi/                # WebSocket API for Frontend interaction
 
-### Детальное описание модулей:
+Detailed module description:
+	•	configs/: Contains all static configuration:
+	•	config.yml: Global settings (keys, timeouts).
+	•	prompts.yml: System prompts for LLM.
+	•	dialogue_map.json: Map of dialogue states and transitions.
+	•	goals.json: Goals and parameters for FlowEngine.
+	•	scripts/: Utility set for preparing and maintaining the project:
+	•	load_static_audio.py: Loads pre-recorded WAV files into Redis cache. Used for “warming up” the cache with static audio responses for minimal latency.
+	•	prepare_embeddings.py: Creates vector embeddings of phrases from dialogue_map.json. Required for IntentClassifier which uses semantic search to detect user intent.
+	•	validate_dialogue_map.py: Validates references and fields in dialogue_map.json to prevent runtime errors.
+	•	gen_token.py: Generates JWT tokens for connecting to LiveKit.
+	•	benchmark_embed.py: Script for measuring embedding model performance.
+	•	download_model.py: Script for downloading models from HuggingFace.
+	•	domain/: Central place for defining shared data structures (models.py) and abstract interfaces (interfaces/). Helps avoid circular dependencies and ensures loose coupling.
+	•	cache/: Redis-based cache implementation. Stores three types of data: static audio fragments, TTS synthesis cache, and LLM dialogue summaries.
+	•	intent_classifier/: Determines user intent (intent) from speech. Uses a local ONNX model for fast semantic search over pre-built embeddings.
+	•	flow_engine/: The “brain” of the dialogue system. Manages tasks, slots, and scenarios based on goals.json and dialogue_map.json. Stateless singleton: receives current session state and event, outputs a new state.
+	•	stt_yandex/: Module for streaming speech recognition via Yandex SpeechKit. Provides both partial and final recognition results.
+	•	tts_manager/: Responsible for speech synthesis via ElevenLabs, using a hybrid approach (HTTP for short phrases, WebSocket for LLM streaming responses).
+	•	llm/: Manages interaction with OpenAI, including dialogue context management, prompt engineering, and handling streaming responses.
+	•	orchestrator/: The “conductor” of the call. Coordinates all modules: receives audio from LiveKit, sends it to STT, passes result to IntentClassifier and FlowEngine/LLM, gets audio from TTS or Cache and sends it back to LiveKit. A new Orchestrator instance is created per call.
+	•	webapi/: Application entry point. Implements a FastAPI WebSocket server, accepts client connections, creates an Orchestrator instance per call, and manages its lifecycle.
 
-*   **`configs/`**: Содержит всю статическую конфигурацию:
-    *   `config.yml`: Глобальные настройки (ключи, таймауты).
-    *   `prompts.yml`: Системные промпты для LLM.
-    *   `dialogue_map.json`: Карта диалоговых состояний и переходов.
-    *   `goals.json`: Цели и параметры для `FlowEngine`.
+⸻
 
-*   **`scripts/`**: Набор утилит для подготовки и обслуживания проекта:
-    *   `load_static_audio.py`: Загружает предзаписанные WAV-файлы в Redis-кэш. Используется для "прогрева" кэша статическими аудио-ответами, чтобы они были доступны с минимальной задержкой.
-    *   `prepare_embeddings.py`: Создает векторные представления (эмбеддинги) фраз из `dialogue_map.json`. Это необходимо для работы `IntentClassifier`, который использует семантический поиск для определения намерений пользователя.
-    *   `validate_dialogue_map.py`: Проверяет корректность ссылок и полей в `dialogue_map.json`, чтобы избежать ошибок во время выполнения диалога.
-    *   `gen_token.py`: Генерирует JWT-токены для подключения к LiveKit.
-    *   `benchmark_embed.py`: Скрипт для замера производительности эмбеддинг-модели.
-    *   `download_model.py`: Скрипт для скачивания моделей из HuggingFace.
+5. Visualization API (WebSocket)
 
-*   **`domain/`**: Центральное место для определения общих структур данных (`models.py`) и абстрактных интерфейсов (`interfaces/`). Это позволяет избежать циклических зависимостей и обеспечивает слабую связанность между модулями.
-
-*   **`cache/`**: Реализация кэша на базе Redis. Хранит три типа данных: статические аудио-фрагменты, кэш TTS-синтеза и кэш суммаризаций диалогов от LLM.
-
-*   **`intent_classifier/`**: Определяет намерение пользователя (`intent`) по его речи. Использует локальную ONNX-модель для быстрого семантического поиска по заранее подготовленным эмбеддингам.
-
-*   **`flow_engine/`**: "Мозг" диалоговой системы. Управляет задачами, слотами и сценариями на основе `goals.json` и `dialogue_map.json`. Это stateless-синглтон, который принимает текущее состояние сессии и событие, а на выходе отдает новое состояние.
-
-*   **`stt_yandex/`**: Модуль для потокового распознавания речи через Yandex SpeechKit. Обеспечивает получение как промежуточных (`partial`), так и финальных (`final`) результатов распознавания.
-
-*   **`tts_manager/`**: Отвечает за синтез речи через ElevenLabs, используя гибридный подход (HTTP для коротких фраз, WebSocket для потоковых ответов LLM).
-
-*   **`llm/`**: Управляет взаимодействием с OpenAI, включая управление контекстом диалога, промпт-инжиниринг и обработку потоковых ответов.
-
-*   **`orchestrator/`**: "Дирижер" звонка. Координирует работу всех модулей: принимает аудио от `LiveKit`, отправляет его в `STT`, получает результат, передает в `IntentClassifier` и `FlowEngine`/`LLM`, получает аудио от `TTS` или `Cache` и отправляет его обратно в `LiveTKit`. На каждый звонок создается свой экземпляр Оркестратора.
-
-*   **`webapi/`**: Точка входа в приложение. Реализует WebSocket сервер на FastAPI, который принимает подключения от клиентов, создает экземпляр `Orchestrator` на каждый звонок и управляет его жизненным циклом.
-
----
-
-## 5. API визуализации (WebSocket)
-
-API спроектировано для того, чтобы Frontend мог в реальном времени показывать "мысли" ассистента.
-
-*   **Отправка на сервер:** `start_demo_call`, `user_interrupted`.
-*   **Получение от сервера:**
-    *   `demo_call_started`: Сессия началась.
-    *   `bot_mind_state_update`: **Ключевое сообщение** с текущим состоянием (`IDLE`, `LISTENING`, `ANALYZING_SPEECH`, `CHECKING_CACHE`, `ROUTING_TO_LLM`, `GENERATING_SPEECH`, `SPEAKING`).
-    *   `llm_text_chunk`: Потоковая передача генерируемого текста от LLM.
-    *   `error_occurred`: Сообщение об ошибке.
+The API is designed so that the Frontend can display the assistant’s “thoughts” in real time.
+	•	Sending to server: start_demo_call, user_interrupted.
+	•	Receiving from server:
+	•	demo_call_started: Session started.
+	•	bot_mind_state_update: Key message with current state (IDLE, LISTENING, ANALYZING_SPEECH, CHECKING_CACHE, ROUTING_TO_LLM, GENERATING_SPEECH, SPEAKING).
+	•	llm_text_chunk: Streaming delivery of generated LLM text.
+	•	error_occurred: Error message.
